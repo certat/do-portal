@@ -1,0 +1,35 @@
+{
+  "add_deliverable": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      }
+    },
+    "required": ["name"]
+  },
+  "update_deliverable": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      }
+    },
+    "required": ["name"]
+  },
+  "add_files": {
+      "type": "object",
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deliverable_id": {
+          "type": "integer"
+        }
+      },
+      "required": ["deliverable_id", "files"]
+    }
+}

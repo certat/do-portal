@@ -1,0 +1,67 @@
+<div id="vulnerabilities">
+  <h3>Vulnerabilities
+      <a ui-sref="vuln-add" class="btn btn-default">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          Add vulnerability
+      </a>
+  </h3>
+  <table class="table table-condensed table-striped" ng-show="!!vulnerabilities.length">
+      <colgroup>
+        <col width="2%" />
+        <col width="7%" />
+        <col width="15%" />
+        <col width="5%" />
+        <col width="10%" />
+        <col width="40%" />
+        <col width="5%" />
+        <col width="5%" />
+        <col width="5%" />
+        <col width="5%" />
+      </colgroup>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Report date</th>
+      <th>Reporter</th>
+      <th>Constituent</th>
+      <th>Type</th>
+      <th>PoC</th>
+      <th>RTIR #</th>
+      <th class="text-center">Patched</th>
+      <th class="text-center">Published</th>
+      <th class="text-right">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="v in vulnerabilities | filter:search:strict">
+      <td>{{v.id}}</td>
+      <td> {{ v.reported | date: "yyyy-MM-dd" }} </td>
+      <td> {{ v.reporter_name }} ({{ v.reporter_email }})</td>
+      <td> {{ v.constituent }}</td>
+      <td> {{ v.types.join(', ') }}</td>
+      <td class="breaklines"> {{ v.url }}</td>
+      <td> {{ v.incident_id }}</td>
+      <td class="text-center" ng-class="{'alert-success': v.patched, 'alert-danger': !v.patched}">
+        <span ng-show="!v.patched">NO</span>
+        {{ v.patched | date}}
+      </td>
+      <td>{{ v.published }}</td>
+
+        <td class="text-right" nowrap>
+            <button ui-sref="vuln-edit({id: v.id})"
+                    title="Edit vulnerability" type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            </button>
+            <button ng-click="deleteVulnerability({id: v.id})" title="Remove this vulnerability"
+                    type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </button>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+  <uib-pagination total-items="totalItems" ng-change="pageChanged()" ng-show="!!vulnerabilities.length"
+                  ng-model="currentPage" items-per-page="20"
+                  class="pagination-sm" boundary-links="true" rotate="false">
+  </uib-pagination>
+</div>

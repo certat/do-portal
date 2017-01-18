@@ -1,0 +1,39 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th ng-repeat="prop in properties">{{ prop | humanize }}</th>
+            <th class="text-right">
+                <button ng-click="toggleAdd()" title="Add item"
+                        type="submit" class="btn btn-default btn-small">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="o in objects">
+            <td ng-repeat="prop in properties">
+                <span ng-show="o.active == null || o.active == false" ng-dblclick="toggleEditMode(o)">{{ o[prop] }}</span>
+                <input ng-model=o[prop] ng-show="o.active"
+                       ui-keyup="{ 27: 'toggleEditMode(o)', 13: 'updateItem(o, $event)'}"
+                       type="text" class="form-control">
+            </td>
+            <td class="text-right">
+                <button ng-show="!o.active" ng-click="toggleEditMode(o)" title="Edit item"
+                        type="submit" class="btn btn-default btn-small">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>
+                <button ng-show="o.active" ng-click="updateItem(o)" title="Update item"
+                        type="submit" class="btn btn-default btn-small">
+                    <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                </button>
+
+
+                <button ng-click="deleteItem(o)" title="Remove this item"
+                        type="submit" class="btn btn-default btn-small">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

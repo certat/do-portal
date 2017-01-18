@@ -1,0 +1,55 @@
+<h4>My Account</h4>
+<uib-tabset>
+    <uib-tab heading="Details">
+        <hr>
+        <table class="table table-condensed table-plain">
+            <tbody>
+            <tr ng-repeat="(key, value) in account">
+                <td><strong>{{ key | humanize }}</strong></td>
+                <td> {{ value }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </uib-tab>
+    <uib-tab heading="API Key">
+        <div class="panel panel-default panel-tab">
+            <div class="panel-body"><p>
+                <p>You API key: </p>
+                <pre><b>{{ account.api_key }}</b></pre>
+                <p>Using the API key: </p>
+        <pre>$ curl -H "Content-Type: application/json" -H "Accept: application/json" \<br>-H "API-Authorization: {{ account.api_key }}" \<br>"https://do.cert.europa.eu/api/1.0/organizations"
+        </pre>
+
+                <p>Alternatively, you can login using your credentials and pass the cookie to subsequent requests:</p>
+                <pre>$ curl -v -H "Accept: application/json" -H "Content-Type: application/json" -X POST "https://do.cert.europa.eu/auth/login" \<br>-d '{"email": "user@domain.tld", "password": "qkQhJwh6DvCuc0A"}'</pre>
+        <pre>$ curl -v -H "Accept: application/json" -H "Content-Type: application/json" -H \<br>"Cookie: rm=.eJwNzsEKwjAMANB_GTuKNE3TNJ704Mm7COIh6RIUnRP3_6DvC951WJfZ97M-Xtu-zMNm-Nhzirxb70qQd5ASjP19-\<br>srhgsfz2M0mNorutbqHqapnTkTCtWM3ghRJJwM3J5MQKCCGRWpEZcgQudbiSmhJwhuqkQc0AQRKHFNWwdKDW8tNTaETFyzEJBgM-\<br>g_CcPsBdHAzng.CTS4pA.7XllCsBFv7q0GyNiMG6W4BrQAa0xvvMBY1dF1YZ1SCQ" \<br>-X GET "https://do.cert.europa.eu/api/1.0/organizations"
+</pre>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-default"
+                        ng-click="resetAPIKey()">Reset key
+                </button>
+            </div>
+        </div>
+    </uib-tab>
+    <!--uib-tab heading="2FA">
+        <div class="panel panel-default panel-tab">
+            <div class="panel-body">
+                <img id="qrcode" src="/auth/2fa-qrcode">
+            </div>
+
+            <div class="panel-footer">
+                <div class="row show-grid">
+                    <div class="col-xs-1">Verification code</div>
+                    <div class="col-xs-2">
+                        <input type="text" class="form-control input-sm"
+                               placeholder="Enter the 6-digit code" ng-model="totp">
+                    </div>
+                </div>
+                <button class="btn btn-default"
+                        ng-click="enable2FA()">Enable two factor authentication
+                </button>
+            </div>
+        </div>
+    </uib-tab-->
+</uib-tabset>

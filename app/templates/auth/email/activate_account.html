@@ -1,0 +1,11 @@
+<p>Dear {{ user.name }},</p>
+
+<p>Your account has been created. Please follow the link below to setup your password:</p>
+
+<p>{{webroot}}{{ url_for('auth.set_password', token=token) }}</p>
+
+<small>This URL expires in {{ expiry }} minutes.</small>
+
+<p></p>
+<p>Sincerely,</p>
+<p>The CERT-EU Team</p>

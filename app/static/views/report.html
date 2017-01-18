@@ -1,0 +1,24 @@
+<uib-tabset>
+    <uib-tab>
+        <uib-tab-heading>Details</uib-tab-heading>
+        <do-sample-details hash="{{ sha256 }}"></do-sample-details>
+    </uib-tab>
+    <uib-tab>
+        <uib-tab-heading>Static analysis</uib-tab-heading>
+        <do-static-analysis-report hash="{{ sha256 }}"></do-static-analysis-report>
+    </uib-tab>
+    <uib-tab>
+        <uib-tab-heading>AV results</uib-tab-heading>
+        <do-av-report hash="{{sha256}}"></do-av-report>
+    </uib-tab>
+    <uib-tab>
+        <uib-tab-heading>Dynamic analysis</uib-tab-heading>
+        <do-dynamic-analysis-report hash="{{ sha256 }}" product="vxstream">
+        </do-dynamic-analysis-report>
+    </uib-tab>
+</uib-tabset>
+
+<a ui-sref="samples" class="btn btn-default">
+    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+    Back to sample listing
+</a>

@@ -1,0 +1,69 @@
+<div id="distribution-lists">
+  <h3>Distribution lists
+    <a ng-click="addList('lg')" class="btn btn-default">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      Add list
+    </a>
+  </h3>
+  <button class="btn btn-neutral" ng-show="!lists">
+    <span class="glyphicon glyphicon-refresh spinning"
+          aria-hidden="true"></span>
+    Loading...
+  </button>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <!--th style="width:1%;">Id</th-->
+      <th>Name</th>
+      <th>Description</th>
+      <th>Email</th>
+      <th class="text-right">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="l in lists">
+      <!--td>{{ l.id }}</td-->
+      <td>
+        <span ng-show="l.active == null || l.active == false"
+              ng-dblclick="toggleEditMode(l)">{{ l.name }}</span>
+        <input ng-model=l.name ng-show="l.active"
+               ui-keyup="{ 27: 'toggleEditMode(l)', 13: 'updateItem(l, $event)'}"
+               type="text" class="form-control">
+      </td>
+      <td><span ng-show="l.active == null || l.active == false"
+                ng-dblclick="toggleEditMode(l)">{{ l.description }}</span>
+        <input ng-model=l.description ng-show="l.active"
+               ui-keyup="{ 27: 'toggleEditMode(l)', 13: 'updateItem(l, $event)'}"
+               type="text" class="form-control">
+      </td>
+      <td>{{ l.fqdn_listname }}</td>
+      <td class="text-right">
+        <button ui-sref="listSettings({id: l.id})" title="List settings"
+                type="submit" class="btn btn-default btn-small">
+          <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        </button>
+        <button ng-click="toggleMembersList(l)" title="Show members list"
+                type="submit" class="btn btn-default btn-small">
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        </button>
+
+        <button ng-click="massSubscribe(l)" title="Mass subscribe/unsubscribe"
+                type="submit" class="btn btn-default btn-small">
+          <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+        </button>
+
+        <button ui-sref="editList({id: l.id})" title="Edit list membership"
+                type="submit" class="btn btn-default btn-small">
+          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+        </button>
+
+        <button ng-click="deleteItem(l)" title="Remove this list"
+                type="submit" class="btn btn-default btn-small">
+          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

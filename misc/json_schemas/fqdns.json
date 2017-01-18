@@ -1,0 +1,20 @@
+{
+  "add_fqdn": {
+    "type": "object",
+    "properties": {
+      "fqdn": {
+        "type": "string"
+      }
+    },
+    "required": ["fqdn"]
+  },
+  "update_fqdn": {
+    "type": "object",
+    "properties": {
+      "fqdn": {
+        "type": "string"
+      }
+    },
+    "required": ["fqdn"]
+  }
+}

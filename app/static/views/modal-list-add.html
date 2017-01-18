@@ -1,0 +1,35 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        <span ng-show="!list">Add</span>
+        <span ng-show="list">Edit</span>
+        distribution list
+    </h3>
+</div>
+
+<div class="modal-body">
+    <div class="alert alert-danger" ng-show="msg">{{ msg }}</div>
+    <div class="row show-grid">
+        <div class="col-xs-2">Name</div>
+        <div class="col-xs-10">
+            <input type="text" class="form-control input-sm"
+            placeholder="Name" required
+            ng-model="list.name">
+        </div>
+    </div>
+    <div class="row show-grid">
+        <div class="col-xs-2">Description</div>
+        <div class="col-xs-10">
+            <input type="text" class="form-control input-sm"
+            placeholder="description" required
+            ng-model="list.description">
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="save(list)">
+        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+        Save
+    </button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+</div>

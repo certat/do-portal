@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block html_tag %}<html lang="en">{% endblock %}
+{% block header_alerts %}
+    <div class="container media">
+    <div class="row show-grid">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages%}
+                    <div class="alert alert-{{ category }}" close="closeAlert">
+                        <strong>{{ message }}</strong>
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    </div>
+{% endblock %}
+{% block main_content %}
+    <div class="row login-form">
+    <div class="row col-md-5 col-xs-1"></div>
+    <div class="row col-md-4 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Login</h3>
+            </div>
+            <div class="panel-body">
+                <form action="{{ url_for('auth.login') }}" method="POST" class="show-grid">
+                    {{ form.hidden_tag() }}
+
+                    {{ form.email(class='form-control', placeholder="Email", type="email") }}
+                    <p></p>
+                    {{ form.password(class='form-control', placeholder="Password") }}
+
+                    <p></p>
+                    <button class="btn btn-default clearfix">Login</button>
+                </form>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-6 col-xs-6">
+
+                    </div>
+                    <div class="col-md-6 col-xs-6 text-right">
+                        <a  role="button">Forgot password</a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="row col-md-3 col-xs-1"></div>
+    </div>
+{% endblock %}
+{% block header %} {% endblock %}
+{% block footer_scripts %} {% endblock %}
+{% block footer_copyright %} {% endblock %}

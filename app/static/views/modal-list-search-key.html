@@ -1,0 +1,46 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Select PGP Public Key for {{email}}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-danger" ng-show="msg">{{ msg }}</div>
+        <div class="row show-grid col-md-12">
+            <button class="btn btn-neutral show-grid" ng-show="!gpgkeys" ng-hide="msg">
+                <span class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></span>
+                Loading...
+            </button>
+        </div>
+        <div class="row col-md-12">
+            <table ng-show="gpgkeys" class="table table-striped table-condensed">
+                <thead>
+                    <th>Fingerprint</th>
+                    <th>Expires</th>
+                    <th>Actions</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="k in gpgkeys">
+                        <td>{{ k.keyid }}</td>
+                        <td><span ng-show="k.expires">{{ k.expires+'000' | date:"yyyy-MM-dd" }}</span></td>
+                        <td>
+                            <button class="btn btn-neutral show-grid" ng-show="k.expires" ng-click="importKey([k.keyid])">
+                                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                Import
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="form-group col-md-10 col-xs-10">
+            </div>
+            <div class="col-md-2 col-xs-10">
+                <div class="text-right">
+                    <button class="btn btn-default" ng-click="close()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

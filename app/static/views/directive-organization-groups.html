@@ -1,0 +1,36 @@
+<div id="organization_groups">
+    <h3>Group types
+        <a ng-click="editGroup('lg')" class="btn btn-default">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            Add group
+        </a>
+    </h3>
+    <table class="table table-condensed table-bordered table-striped" ng-show="!!groups.length">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Color code</th>
+            <th style="width:0.5%;">Color</th>
+            <th class="text-right">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="g in groups | filter:search:strict">
+            <td> {{ g.name }} </td>
+            <td> {{ g.color }}</td>
+            <td style="background-color:{{g.color}}" title="{{g.color}}"></td>
+
+            <td class="text-right" nowrap>
+                <button ng-click="editGroup('lg', g)"
+                        title="Edit group" type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>
+                <button ng-click="deleteGroup({id: g.id})" title="Remove this group"
+                        type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>

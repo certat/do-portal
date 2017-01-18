@@ -1,0 +1,11 @@
+.gnupg
+config.*cfg
+*.db
+.coverage
+app/static/data/*
+app/static/docs/*
+app/static/docs-cp/*
+docs/_build
+docs-cp/_build
+logs/
+tmp/

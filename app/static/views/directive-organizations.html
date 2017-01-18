@@ -1,0 +1,75 @@
+<div id="organizations">
+    <h3>Organizations
+        <a ui-sref="org-add" class="btn btn-default">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            Add
+        </a>
+    </h3>
+
+    <div class="show-grid" ng-show="!!organizations.length">
+        <div class="input-group">
+            <input type="text" ng-model="search.$" placeholder="Filter by anything" class="form-control" aria-describedby="strict-addon">
+            <span class="input-group-addon" id="strict-addon">
+                <input type="checkbox" ng-model="strict"> Strict
+            </span>
+        </div>
+    </div>
+
+    <table class="table table-condensed table-bordered table-striped" ng-show="!!organizations.length">
+        <thead>
+            <tr>
+                <th style="width:0.5%;"></th>
+                <th>ID</th>
+                <th>Abbr</th>
+                <th>ASN</th>
+                <th style="width:50%">IP Range</th>
+                <th>Contact Emails</th>
+                <th>FQDN</th>
+                <th class="text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="o in organizations | filter:search:strict">
+                <td style="background-color:{{o.group.color}}" title="{{o.group.color}}"></td>
+                <td>{{ o.old_ID }}</td>
+                <td title="{{ o.full_name }}"><b>{{ o.abbreviation }}</b></td>
+                <td>
+                    <span ng-repeat="asn in o.asns track by $index">
+                        <span>{{ asn }}</span>
+                    </span>
+                </td>
+                <td>
+                    <span ng-repeat="i in o.ip_ranges track by $index">
+                        <span>{{ i }}</span>
+                    </span>
+                </td>
+                <td>
+                    <span ng-repeat="e in o.contact_emails track by $index">
+                        <span>{{ e.email }}</span>
+                    </span>
+                    <span ng-show="!o.contact_emails.length"
+                          ng-repeat="ae in o.abuse_emails track by $index">
+                        <span>{{ ae }}</span>
+                    </span>
+
+                </td>
+                <td>
+                    <span ng-repeat="f in o.fqdns track by $index">
+                        <span>{{ f }}</span>
+                    </span>
+                </td>
+                <td class="text-right" nowrap>
+                    <a ui-sref="org-edit({id: o.id})"
+                            title="Edit organization" type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </a>
+                    <button ng-click="deleteOrg({id: o.id})" title="Remove this organization"
+                            do-confirm="Are you sure?"
+                            type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

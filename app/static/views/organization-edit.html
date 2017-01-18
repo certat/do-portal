@@ -1,0 +1,310 @@
+<div class="panel panel-primary" ng-cloak>
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <span ng-show="!org">Add</span>
+      <span ng-show="org">Edit</span>
+      organization
+    </h3>
+  </div>
+  <div class="panel-body">
+    <div class="row show-grid">
+      <div class="col-xs-2">Group</div>
+      <div class="col-xs-10">
+        <select class="form-control input-sm"
+                ng-model="org.group_id"
+                ng-options="g.id as g.name for g in groups">
+          <option value="">-- select group --</option>
+        </select>
+      </div>
+
+    </div>
+    <div class="row show-grid">
+      <div class="col-xs-2">ID</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="ID" ng-model="org.old_ID">
+      </div>
+    </div>
+    <div class="row show-grid">
+      <div class="col-xs-2">Abbreviation</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="Abbreviation" required
+               ng-model="org.abbreviation">
+      </div>
+    </div>
+    <div class="row show-grid">
+      <div class="col-xs-2">Name</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="Name" required
+               ng-model="org.full_name">
+      </div>
+    </div>
+    <div class="row show-grid">
+      <div class="col-xs-2">Mail Template</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="Mail Template" required
+               ng-model="org.mail_template">
+      </div>
+    </div>
+    <div class="row show-grid">
+      <div class="col-xs-2">Mailing interval</div>
+      <div class="col-xs-10">
+        <input class="form-control input-sm"
+               placeholder="Mail Times" required type="number"
+               ng-model="org.mail_times">
+      </div>
+    </div>
+    <div class="row show-grid">
+      <div class="col-xs-2">Extended services (SLA)</div>
+      <div class="col-xs-1">
+        <ui-switch ng-model="org.is_sla"></ui-switch>
+      </div>
+      <div class="col-xs-9">
+        <span ng-show="!org.is_sla">No SLA</span>
+        <span ng-show="org.is_sla">This organization has signed an SLA</span>
+      </div>
+    </div>
+
+    <div class="row show-grid" ng-show="!org.ip_ranges.length">
+      <div class="col-xs-2">IP ranges</div>
+      <div class="col-xs-10">
+        <button ng-click="appendItem('ip_ranges', org)"
+                title="Add CIDR block"
+
+                type="button" class="btn btn-default btn-small text-right">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row show-grid" ng-repeat="i in org.ip_ranges track by $index">
+      <div class="col-xs-3">
+        <div class="row">
+          <div class="col-xs-9">
+            <span ng-show="$index == 0">IP ranges</span>
+          </div>
+          <div class="col-xs-1 text-right">
+            <button ng-click="appendItem('ip_ranges', org)"
+                    title="Add CIDR block" ng-show="$index == 0"
+
+                    type="button" class="btn btn-default btn-small text-right">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+        <!--<span ng-show="$index == 0">IP ranges</span>
+        <button ng-click="appendItem('ip_ranges', org)"
+                title="Add CIDR block" ng-show="$index == 0"
+
+                type="button" class="btn btn-default btn-small text-right">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>-->
+      </div>
+      <div class="col-xs-7">
+        <input type="text" class="form-control input-sm"
+               placeholder="IP range" required
+               ng-model="org.ip_ranges[$index]">
+      </div>
+      <div class="col-xs-2">
+        <button class="btn btn-default btn-smal" type="button"
+                title="Remove this CIDR block"
+                ng-click="removeItem('ip_ranges', org, i)">
+          <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row show-grid" ng-show="!org.asns.length">
+      <div class="col-xs-2">ASNs</div>
+      <div class="col-xs-10">
+        <button ng-click="appendItem('asns', org)"
+                title="Add ASN"
+
+                type="button" class="btn btn-default btn-small text-right">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row show-grid" ng-repeat="a in org.asns track by $index">
+      <div class="col-xs-3">
+        <div class="row">
+          <div class="col-xs-9">
+            <span ng-show="$index == 0">ASNs</span>
+          </div>
+          <div class="col-xs-1">
+            <button ng-click="appendItem('asns', org)"
+                    title="Add ASN" ng-show="$index == 0"
+                    type="button" class="btn btn-default btn-small">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-7">
+        <input type="text" class="form-control input-sm"
+               placeholder="ASN" required
+               ng-model="org.asns[$index]">
+      </div>
+      <div class="col-xs-2">
+        <button class="btn btn-default btn-smal" type="button"
+                title="Remove this ASN"
+                ng-click="removeItem('asns', org, a)">
+          <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row show-grid" ng-show="!org.abuse_emails.length">
+      <div class="col-xs-2">Abuse E-mails</div>
+      <div class="col-xs-10">
+        <button ng-click="appendItem('abuse_emails', org)"
+                title="Add abuse email"
+
+                type="button" class="btn btn-default btn-small text-right">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row show-grid"
+         ng-repeat="e in org.abuse_emails track by $index">
+      <div class="col-xs-3">
+        <div class="row">
+          <div class="col-xs-9">
+            <span ng-show="$index == 0">Abuse E-mails</span>
+          </div>
+          <div class="col-xs-1">
+            <button ng-click="appendItem('abuse_emails', org)"
+                    title="Add abuse email" ng-show="$index == 0"
+                    type="button" class="btn btn-default btn-small">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-7">
+        <input type="text" class="form-control input-sm"
+               placeholder="Abuse E-mail" required
+               ng-model="org.abuse_emails[$index]">
+      </div>
+      <div class="col-xs-2">
+        <button class="btn btn-default btn-smal" type="button"
+                title="Remove this abuse email"
+                ng-click="removeItem('abuse_emails', org, e)">
+          <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row show-grid" ng-show="!org.contact_emails.length">
+      <div class="col-xs-2">Contact E-mails</div>
+      <div class="col-xs-10">
+        <button ng-click="appendItem('contact_emails', org)"
+                title="Add contact email"
+
+                type="button" class="btn btn-default btn-small text-right">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row show-grid"
+         ng-repeat="ce in org.contact_emails track by $index">
+      <div class="col-xs-3">
+        <div class="row">
+          <div class="col-xs-9">
+            <span ng-show="$index == 0">Contact E-mails</span>
+          </div>
+          <div class="col-xs-1">
+            <button ng-click="appendItem('contact_emails', org)"
+                    title="Add contact email" ng-show="$index == 0"
+                    type="button" class="btn btn-default btn-small">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-7">
+        <input type="text" class="form-control input-sm"
+               placeholder="Contact E-mail" required
+               ng-model="org.contact_emails[$index].email">
+      </div>
+      <div class="col-xs-2">
+        <button class="btn btn-default btn-smal" type="button"
+                title="Remove this contact email"
+                ng-click="removeItem('contact_emails', org, ce)">
+          <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+        </button>
+        <button ng-show="!ce.cp" class="btn btn-success btn-smal" type="button"
+                title="Create customer portal credentials"
+                do-confirm="This will create an account, grant access to this organization details and send an email to {{ ce.email }}. Do you want to continue?"
+                ng-click="cpAccess(org, ce.email)">
+          CP
+          <span class="glyphicon glyphicon-plus-sign"
+                aria-hidden="true"></span>
+        </button>
+        <button ng-show="ce.cp" class="btn btn-danger btn-smal" type="button"
+                title="Revoke CP access"
+                do-confirm="This will revoke access of {{ ce.email }} to this organization details. Do you want to continue?"
+                ng-click="cpRevokeAccess(org, ce.email)">
+          CP
+          <span class="glyphicon glyphicon-minus-sign"
+                aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row show-grid" ng-show="!org.fqdns.length">
+      <div class="col-xs-2">FQDNS</div>
+      <div class="col-xs-10">
+        <button ng-click="appendItem('fqdns', org)"
+                title="Add FQDN"
+                type="button" class="btn btn-default btn-small text-right">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row show-grid" ng-repeat="(f,v) in org.fqdns track by $index">
+      <div class="col-xs-3">
+        <div class="row">
+          <div class="col-xs-9">
+            <span ng-show="$index == 0">FQDNs</span>
+          </div>
+          <div class="col-xs-1" ng-show="fuzzed[v]">
+            <button ng-click="toggleTyposquatsList(fuzzed[v], v)" title="Possible typosquats" type="button"
+              class="btn btn-default btn-small">
+              <span class="glyphicon glyphicon-info-sign" aria-hidden="true">
+                          </span>
+            </button>
+          </div>
+          <div class="col-xs-1">
+            <button ng-click="appendItem('fqdns', org)"
+                    title="Add FQDN" ng-show="$index == 0"
+                    type="button" class="btn btn-default btn-small">
+                        <span class="glyphicon glyphicon-plus"
+                              aria-hidden="true">
+                        </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-7">
+        <input type="text" class="form-control input-sm"
+               placeholder="FQDN" required
+               ng-model="org.fqdns[$index]">
+      </div>
+      <div class="col-xs-2">
+        <button class="btn btn-default btn-smal" type="button"
+                title="Remove this FQDN"
+                ng-click="removeItem('fqdns', org, v)">
+          <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-footer">
+    <button class="btn btn-default" ng-click="save(org)">
+            <span class="glyphicon glyphicon-floppy-disk"
+                  aria-hidden="true"></span>
+      Save
+    </button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+  </div>
+</div>

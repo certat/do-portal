@@ -1,0 +1,26 @@
+{
+  "add_group": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "color": {
+        "type": "string"
+      }
+    },
+    "required": ["name", "color"]
+  },
+  "update_group": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "color": {
+        "type": "string"
+      }
+    },
+    "required": ["name", "color"]
+  }
+}

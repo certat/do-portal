@@ -1,0 +1,84 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Edit {{ list.name }} list settings </h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" ng-model="list.name" class="form-control" id="name" placeholder="List name">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="description" class="col-sm-2 control-label">Description:</label>
+            <div class="col-sm-10">
+                <input type="text" ng-model="list.settings.description" class="form-control" id="description" placeholder="List description">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="description" class="col-sm-2 control-label">Subject prefix:</label>
+            <div class="col-sm-10">
+                <input type="text" ng-model="list.settings.subject_prefix" class="form-control" id="subject_prefix" placeholder="List subject prefix">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="description" class="col-sm-2 control-label">Reply-To address:</label>
+            <div class="col-sm-10">
+                <input type="text" ng-model="list.settings.reply_to_address" class="form-control" placeholder="Reply to address">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="description" class="col-sm-2 control-label"
+                   title="Hide the sender of a message, replacing it with the list address (Removes From, Sender and Reply-To fields)">Anonymous list:
+            </label>
+            <div class="col-sm-10">
+                <label>
+                    <input type="radio" ng-model="list.settings.anonymous_list" value=1>
+                    Yes
+                </label>
+                <label>
+                    <input type="radio" ng-model="list.settings.anonymous_list"value=0>
+                    No
+                </label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="description" class="col-sm-2 control-label">Convert HTML to text:
+            </label>
+            <div class="col-sm-10">
+                <label>
+                    <input type="radio" ng-model="list.settings.convert_html_to_plaintext" value=1>
+                    Yes
+                </label>
+                <label>
+                    <input type="radio" ng-model="list.settings.convert_html_to_plaintext"value=0>
+                    No
+                </label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="description" class="col-sm-2 control-label" title="Yes is highly recommended. RFC 2369 defines a set of List-* headers that are normally added to every message sent to the list membership. These greatly aid end-users who are using standards compliant mail readers. They should normally always be enabled. However, not all mail readers are standards compliant yet, and if you have a large number of members who are using non-compliant mail readers, they may be annoyed at these headers. You should first try to educate your members as to why these headers exist, and how to hide them in their mail clients. As a last resort you can disable these headers, but this is not recommended (and in fact, your ability to disable these headers may eventually go away).">RFC2369 headers:
+            </label>
+            <div class="col-sm-10">
+                <label>
+                    <input type="radio" ng-model="list.settings.include_rfc2369_headers" value=1>
+                    Yes
+                </label>
+                <label>
+                    <input type="radio" ng-model="list.settings.include_rfc2369_headers"value=0>
+                    No
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="form-group">
+            <button class="btn btn-default" ng-click="update(list)">
+                <span class="glyphicon glyphicon-floppy-disk"
+                                  aria-hidden="true"></span>
+                Save
+            </button>
+            <button class="btn btn-default" ui-sref="lists">Cancel</button>
+        </div>
+    </div>
+</div>

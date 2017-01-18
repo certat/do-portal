@@ -1,0 +1,40 @@
+<div id="deliverable-files">
+    <h3>Deliverable Files
+        <a ng-click="uploadFiles('lg')" class="btn btn-default">
+            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+            Upload
+        </a>
+    </h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th class="text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="f in files">
+                <td>{{ f.name }}</td>
+                <td>{{ f.type }}</td>
+                <td>{{ f.created  | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
+                <td class="text-right">
+                  <a class="btn btn-default" title="Download {{ f.name }}"
+                    href="{{webServiceUrl}}/files/{{f.id}}/contents">
+                    <span class="glyphicon glyphicon-download"
+                      aria-hidden="true"></span>
+                  </a>
+                    <button ng-click="deleteFile(f)" title="Remove this file"
+                            type="submit" class="btn btn-default btn-small">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="20"
+                    class="pagination-sm" boundary-links="true" rotate="false"
+                    ng-change="pageChanged()">
+    </uib-pagination>
+</div>

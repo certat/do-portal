@@ -1,0 +1,20 @@
+{
+  "add_bot": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      }
+    },
+    "required": ["name"]
+  },
+  "update_bot": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      }
+    },
+    "required": ["bot"]
+  }
+}

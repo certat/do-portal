@@ -1,0 +1,22 @@
+{
+  "add_email": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "string",
+        "format": "email"
+      }
+    },
+    "required": ["email"]
+  },
+  "update_email": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "string",
+        "format": "email"
+      }
+    },
+    "required": ["email"]
+  }
+}

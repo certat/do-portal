@@ -1,0 +1,57 @@
+{
+  "add_vulnerability": {
+    "type": "object",
+    "properties": {
+      "organization_id": {
+        "type": "integer"
+      }
+      ,"check_string": {
+        "type": "string"
+      },
+      "reporter_name": {
+        "type": "string"
+      },
+      "reporter_email": {
+        "type": "string",
+        "format": "email"
+      },
+      "url": {
+        "type": "string"
+      },
+      "request_method": {
+        "type": "string",
+        "enum": ["GET", "POST", "PUT"]
+      },
+      "request_data": {
+        "type": "string"
+      }
+    },
+    "required": ["url", "reporter_name", "reporter_email", "organization_id"]
+  },
+  "update_vulnerability": {
+    "type": "object",
+    "properties": {
+      "check_string": {
+        "type": "string"
+      },
+      "reporter_name": {
+        "type": "string"
+      },
+      "reporter_email": {
+        "type": "string",
+        "format": "email"
+      },
+      "url": {
+        "type": "string"
+      },
+      "request_method": {
+        "type": "string",
+        "enum": ["GET", "POST", "PUT"]
+      },
+      "request_data": {
+        "type": "string"
+      }
+    },
+    "required": ["url", "reporter_name", "reporter_email", "organization_id"]
+  }
+}

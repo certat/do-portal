@@ -1,0 +1,28 @@
+{
+  "add_vxstream_url_analysis": {
+    "type": "object",
+    "properties": {
+      "urls": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 5,
+        "items": {
+          "type": "string"
+        }
+      },
+      "dyn_analysis": {
+        "type": "object",
+        "properties": {
+          "vxstream": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "required": ["urls", "dyn_analysis"]
+  }
+}

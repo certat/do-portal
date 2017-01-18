@@ -1,0 +1,108 @@
+<nav class="navbar navbar-default" role="navigation" ng-cloak>
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div id="navbar" class="nav navbar-nav">
+            <ul class="nav navbar-nav">
+                <li><a ui-sref="account">My Account</a></li>
+                <li class="dropdown" uib-dropdown>
+                    <a role="button" class="dropdown-toggle" uib-dropdown-toggle aria-haspopup="true" aria-expanded="true">Collaborators
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a ui-sref="organizations">Organizations</a></li>
+                        <li><a ui-sref="organization_groups">Group types</a></li>
+                        <li><a ui-sref="vulnerabilities">Vulnerabitilies</a></li>
+                        <li><a ui-sref="bulk_ip_check">Constituent IPs bulk check</a></li>
+                        <!--<li><a ui-sref="exports">Exports</a></li>-->
+                    </ul>
+                </li>
+                <li class="dropdown" uib-dropdown>
+                    <a role="button" class="dropdown-toggle" uib-dropdown-toggle>Deliverables
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a ui-sref="deliverable-files">Files</a></li>
+                        <li class="divider"></li>
+                        <li><a ui-sref="deliverables">Types</a></li>
+                        <li class="divider"></li>
+                    </ul>
+                </li>
+                <li class="dropdown" uib-dropdown>
+                    <a role="button" class="dropdown-toggle" uib-dropdown-toggle>Distribution
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!--li><a ui-sref="compose">New message</a></li-->
+                        <li><a ui-sref="lists">List management</a></li>
+                        <!--li><a ui-sref="list-archive">Message archive</a></li-->
+                    </ul>
+                </li>
+
+                <li class="dropdown" uib-dropdown>
+                    <a role="button" class="dropdown-toggle" uib-dropdown-toggle>Investigations
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a ui-sref="investigation({room: 'investigation'})">
+                                Indicator search
+                            </a>
+                        </li>
+                        <!--<li>
+                            <a ui-sref="bots">
+                                AbuseHelper bots
+                            </a>
+                        </li>-->
+                        <!--<li><a ui-sref="investigation({room: 'investigation.private'})">AbuseHelper private search</a></li>-->
+                        <!--<li><a ui-sref="duty-officer-input">Input abuse info</a></li>-->
+                    </ul>
+                </li>
+                <li class="dropdown" uib-dropdown>
+                    <a role="button" class="dropdown-toggle" uib-dropdown-toggle>Malware analysis
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!--<li><a href="#">Sandbox</a></li>-->
+                        <!--li class="dropdown dropdown-submenu">
+                            <a role="button" class="dropdown-toggle">AV</a>
+                            <ul class="dropdown-menu">
+                                <li><a ui-sref="multiav-submit">Scan</a></li>
+                                <li><a ui-sref="multiav">History</a></li>
+                            </ul>
+                        </li-->
+                        <li class="dropdown dropdown-submenu">
+                            <a role="button" class="dropdown-toggle">Samples</a>
+                            <ul class="dropdown-menu">
+                                <li><a ui-sref="submit-sample">Submit</a></li>
+                                <li><a ui-sref="samples">Reports</a></li>
+                            </ul>
+                        </li>
+                        <li><a ui-sref="submit-url">URL scanner</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown" uib-dropdown>
+                    <a class="dropdown-toggle" uib-dropdown-toggle>Help
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li> <a href="/static/docs/index.html" target="_blank">Duty Officer Portal's documentation</a></li>
+                        <li> <a href="/static/docs-cp/index.html" target="_blank">CP documentation</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#" ng-click="logout()" ng-show="isLoggedIn" ng-cloak>Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

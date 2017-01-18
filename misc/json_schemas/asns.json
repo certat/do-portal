@@ -1,0 +1,20 @@
+{
+  "add_asn": {
+    "type": "object",
+    "properties": {
+      "asn": {
+        "type": "integer"
+      }
+    },
+    "required": ["asn"]
+  },
+  "update_asn": {
+    "type": "object",
+    "properties": {
+      "asn": {
+        "type": "integer"
+      }
+    },
+    "required": ["asn"]
+  }
+}

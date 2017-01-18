@@ -1,0 +1,15 @@
+--- flask_jsonschema.old.py	2015-05-13 10:34:47.000000000 +0200
++++ flask_jsonschema.py	2015-05-13 10:40:48.000000000 +0200
+@@ -76,7 +76,11 @@
+             if jschema is None:
+                 raise RuntimeError('Flask-JsonSchema was not properly initialized for the '
+                                    'current application: %s' % current_app)
+-            _validate(request.json, jschema.get_schema(path))
++            validate_kwargs = dict()
++            validate_kwargs['format_checker'] = current_app.config.get('JSONSCHEMA_FORMAT_CHECKER', None)
++            if 'format_checker' in kwargs:
++                validate_kwargs['format_checker'] = kwargs['format_checker']
++            _validate(request.json, jschema.get_schema(path), **validate_kwargs)
+             return fn(*args, **kwargs)
+         return decorated
+     return wrapper

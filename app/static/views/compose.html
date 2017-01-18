@@ -1,0 +1,105 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Compose message</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group row">
+            <label class="col-sm-1 control-label">List</label>
+            <div class="col-sm-11">
+                <ui-select ng-model="list.selected" theme="bootstrap" ng-disabled="disabled"
+                           on-select="onListSelect()"
+                >
+                <ui-select-match class="ui-select-match" placeholder="Select list...">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices class="ui-select-choices" repeat="list in lists | propsFilter: {fqdn_listname: $select.search}">
+                  <div ng-bind-html="list.name | highlight: $select.search"></div>
+                    <small>{{list.fqdn_listname}}</small>
+                </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="subject" class="col-sm-1 control-label">Subject</label>
+            <div class="col-sm-11">
+                <input type="text" ng-model="msg.subject" class="form-control" id="subject" placeholder="Email subject">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="content" class="col-sm-1 control-label">Content</label>
+            <div class="col-sm-11">
+                <textarea class="form-control" rows="10" ng-model="msg.content" id="content"
+                          placeholder="Please add the e-mail body here">
+                </textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-1 control-label">Encrypt</label>
+            <div class="col-sm-1">
+                <ui-switch ng-model="msg.encrypted"></ui-switch>
+            </div>
+            <div class="col-sm-10">
+                <span ng-show="msg.encrypted">
+                    This message will be sent in <a href="https://en.wikipedia.org/wiki/Ciphertext" target="_blank">ciphertext</a>. Message will not be delivered if encryption fails.</span>
+                <span ng-show="!msg.encrypted">This message will be sent in <a href="https://en.wikipedia.org/wiki/Plaintext" target="_blank">plaintext</a>.</span>
+            </div>
+        </div>
+        <div class="form-group row" ng-show="msg.encrypted">
+            <label for="encryption_check" class="col-sm-1 control-label">Check</label>
+            <div class="col-sm-10">
+                <button ng-show="msg.list_id" id="encryption_check" ng-click="checkGPG(msg.list_id)"
+                        title="Check encryption capabilities"
+                        type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                </button>
+                <span ng-show="msg.list_id">Click the lock icon to check the public keys of all members of this list.</span>
+                <span ng-show="!msg.list_id">Please select a list</span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-1 control-label">Files</label>
+            <div class="col-sm-11">
+                <form ng-controller="FileUploadController" name="form">
+                    <uib-progressbar ng-class="(upload_progress < 100) ? 'progress-striped active' : ''"
+                            value="upload_progress"
+                            ng-show="upload_progress">
+                        {{ upload_progress }}%
+                    </uib-progressbar>
+                    <button class="btn btn-default" ngf-select="uploadFiles($files)" multiple>Select files</button>
+                    <button class="btn btn-default" ng-click="discardFiles()">Discard files</button>
+                    <p></p>
+                    <div class="panel">
+                        <!--div class="panel-body">
+                            <div ngf-drop ng-model="files" class="drop-box">Drag & Drop files here</div>
+                        </div-->
+                        <table ng-show="files" class="table table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Filename</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="f in files">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{f.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </form>
+                <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+            </div>
+        </div>
+
+    </div>
+    <div class="panel-footer">
+        <div class="form-group">
+            <button class="btn btn-default" ng-click="send()">
+                <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+                Send
+            </button>
+            <button class="btn btn-default" do-confirm="Are you sure you want to cancel? This will cancel your email and discard all uploaded files." ui-sref="lists">Cancel</button>
+        </div>
+    </div>
+
+</div>

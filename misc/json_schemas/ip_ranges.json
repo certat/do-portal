@@ -1,0 +1,22 @@
+{
+  "add_ip_range": {
+    "type": "object",
+    "properties": {
+      "ip_range": {
+        "type": "string",
+        "format": "cidr"
+      }
+    },
+    "required": ["ip_range"]
+  },
+  "update_ip_range": {
+    "type": "object",
+    "properties": {
+      "ip_range": {
+        "type": "string",
+        "format": "cidr"
+      }
+    },
+    "required": ["ip_range"]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "submit_key": {
+    "type": "object",
+    "properties": {
+      "ascii_key": {
+        "type": "string",
+        "format": "gpg_pubkey"
+      }
+    },
+    "required": ["ascii_key"]
+  }
+}

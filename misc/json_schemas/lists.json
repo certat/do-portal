@@ -1,0 +1,41 @@
+{
+  "add_list": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      }
+    },
+    "required": ["name"]
+  },
+  "update_list": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      }
+    },
+    "required": ["name"]
+  },
+  "post": {
+    "type": "object",
+    "properties": {
+      "list_id": {
+        "type": "string"
+      },
+      "subject": {
+        "type": "string"
+      },
+      "content": {
+        "type": "string"
+      },
+      "files": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": ["list_id", "subject", "content"]
+  }
+}
