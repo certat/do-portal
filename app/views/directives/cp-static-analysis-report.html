@@ -1,0 +1,47 @@
+<h4>File identification (libmagic) ({{ static_report.created }})</h4>
+<hr>
+<table class="table table-condensed table-plain">
+  <tbody>
+  <tr ng-repeat="(key, value) in static_report.report_parsed.magic">
+    <td><strong>{{ key }}</strong></td>
+    <td> {{ value }}</td>
+  </tr>
+  </tbody>
+</table><h4>File identification (TrID)</h4>
+<hr>
+<table class="table table-condensed table-plain">
+  <tbody>
+  <tr ng-repeat="trid in static_report.report_parsed.trID">
+    <td><strong>{{ trid.extension }}</strong></td>
+    <td> {{ trid.description }} ({{ trid.probability}})</td>
+  </tr>
+  </tbody>
+</table><h4>Metadata</h4>
+<hr>
+<table class="table table-condensed table-plain">
+  <tbody>
+  <tr ng-repeat="(key, value) in static_report.report_parsed.exif[0]">
+    <td><strong>{{ key }}</strong></td>
+    <td> {{ value }}</td>
+  </tr>
+  </tbody>
+</table><h4>Hexdump (first 1024 bytes)</h4>
+<hr>
+<table class="table table-condensed table-plain">
+  <tbody>
+  <tr>
+    <td></td>
+    <td class="hexview">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span class="hexview" ng-repeat="b in bytes">{{ b }} </span>
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>
+      <span class="row linerow hexview" ng-repeat="line in hexdump_lines track by $index">
+        {{ line}}
+      </span>
+    </td>
+  </tr>
+  </tbody>
+</table>

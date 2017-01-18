@@ -1,0 +1,44 @@
+--- bower_components/ng-notifications-bar/src/ngNotificationsBar.dist.js	2016-08-17 12:08:34.000000000 +0200
++++ bower_components/ng-notifications-bar/src/ngNotificationsBar.js	2016-08-17 12:30:08.000000000 +0200
+@@ -147,23 +147,28 @@
+ 					var found = -1;
+ 
+ 					notifications.forEach(function (el, index) {
+-						if (el.id === id) {
+-							found = index;
++            if (el.id == id) {
++              found = index;
+ 
+-							el.animation = {};
+-							el.animation[autoHideAnimation] = true;
++              el.animation = {};
++              el.animation[autoHideAnimation] = true;
+ 
+-							scope.$apply();
+-						}
+-					});
+-
+-					if (found >= 0) {
+-						$timeout(function(){
+-							notifications.splice(found, 1);
+-						}, autoHideAnimationDelay);
+-					}
++              $timeout(function () {
++                removeNotification(el);
++              }, autoHideAnimationDelay);
++            }
++          });
+ 				};
+ 
++        var removeNotification = function (elementToRemove) {
++          notifications.forEach(function (el, index) {
++
++            if (el.id == elementToRemove.id) {
++              notifications.splice(index, 1);
++            }
++          });
++        };
++
+ 				var notificationHandler = function (event, data, type, animation) {
+ 					var message, hide = autoHide, hideDelay = autoHideDelay;
+ 

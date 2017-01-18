@@ -1,0 +1,69 @@
+<nav class="navbar navbar-default" role="navigation" ng-cloak>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+              aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <div id="navbar" class="nav navbar-nav">
+      <ul class="nav navbar-nav">
+        <li><a ui-sref="account">My Account</a></li>
+        <li class="dropdown" uib-dropdown>
+          <a role="button" class="dropdown-toggle" uib-dropdown-toggle>Organization
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a ui-sref="organizations">View/update details</a></li>
+            <li><a ui-sref="vulnerabilities">Vulnerabilities</a></li>
+            <!--li><a ui-sref="typosquats">Typosquats</a></li-->
+          </ul>
+        </li>
+        <li><a ui-sref="deliverables">Deliverables</a></li>
+        <li class="dropdown" uib-dropdown>
+          <a role="button" class="dropdown-toggle" uib-dropdown-toggle>Investigations
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a ui-sref="investigation({room: 'investigation'})">
+                Indicator search
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="dropdown" uib-dropdown>
+          <a role="button" class="dropdown-toggle" uib-dropdown-toggle>Dynamic analysis
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a ui-sref="samples">Reports</a></li>
+            <li class="dropdown dropdown-submenu">
+              <a role="button" class="dropdown-toggle">Submit</a>
+              <ul class="dropdown-menu">
+                <li><a ui-sref="sample-submit">Sample</a></li>
+                <li><a ui-sref="url-submit">URL</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li class="dropdown" uib-dropdown>
+          <a class="dropdown-toggle" uib-dropdown-toggle>Help
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/index.html" target="_blank">Documentation</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="#" ng-click="logout()">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

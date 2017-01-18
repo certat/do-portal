@@ -1,0 +1,22 @@
+<div id="responses">
+    <h3>Upload CSV file and process with AH</h3>
+
+    <div class="show-grid">
+        <div class="input-group">
+
+            <input type="file" id="fileinput" class="form-control" do-file-select style="display: none;">
+
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="onProcess()"
+                        title="Search">
+                    Process
+                </button>
+                <button class="btn btn-default" type="button"
+                        title="Select input file"
+                        onclick="$('input[id=fileinput]').click();"
+                        id="choose-file">Browse</button>
+            </span>
+        </div>
+    </div>
+
+</div>

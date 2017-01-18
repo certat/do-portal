@@ -1,0 +1,134 @@
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Upload files</h3>
+    </div>
+
+    <div class="panel-body">
+        <div class="form-group row">
+            <label class="col-sm-1 control-label">Files</label>
+            <div class="col-sm-11">
+                <form ng-controller="FileUploadCtrl" ng-init="uploadPath='/samples'" name="form">
+                    <uib-progressbar ng-class="(upload_progress < 100) ? 'progress-striped active' : ''"
+                            value="upload_progress"
+                            ng-show="upload_progress">
+                        {{ upload_progress }}%
+                    </uib-progressbar>
+                    <button class="btn btn-default" ngf-select="uploadFiles($files)" multiple>Select files</button>
+                    <p></p>
+                    <div class="panel">
+                        <table ng-show="files.length" class="table table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Filename</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="f in files">
+                                    <td>1</td>
+                                    <td>{{f.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </form>
+                <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+            </div>
+        </div>
+
+        <div class="row show-grid" ng-show="canSave">
+            <div class="col-md-12">
+                <h5>Dynamic analyses</h5>
+                <div class="col-xs-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">VxStream Hybrid Analysis</div>
+                        <div class="panel-body">
+                            <div ng-repeat="env in envs">
+                                <label class="col-sm-9">{{ env.name }}</label>
+                                <div class="col-sm-2">
+                                    <ui-switch ng-model="sampleActions.dynamic_analysis.vxstream[env.id]"></ui-switch>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">FireEye AX</div>
+                        <div class="panel-body">
+                            <div ng-repeat="feenv in feenvs">
+                                <label class="col-sm-9">{{ feenv.name | humanizeFilter}}</label>
+                                <div class="col-sm-2">
+                                    <ui-switch ng-model="sampleActions.dynamic_analysis.fireeye[feenv.id]"></ui-switch>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="panel panel-default panel-disabled">
+                        <div class="panel-heading">Cuckoo Sandbox (coming soon)</div>
+                        <div class="panel-body">
+                            <label class="col-sm-7">Windows 7 32-bit</label>
+                            <div class="col-sm-5">
+                                <ui-switch disabled ng-model="sampleActions.cuckoo"></ui-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row show-grid" ng-show="canSave">
+            <div class="col-md-12">
+                <h5>Static analyses</h5>
+                <p><small>Static analyses are automatically performed on all files.
+                    This section is displayed for information purposes.</small></p>
+                <div class="col-xs-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Static analysis</div>
+                        <div class="panel-body">
+                            <label class="col-sm-7">Identify file type</label>
+                            <div class="col-sm-5">
+                                <ui-switch disabled ng-model="sampleActions.static_analysis"></ui-switch>
+                            </div>
+                            <label class="col-sm-7">Calculate hashes</label>
+                            <div class="col-sm-5">
+                                <ui-switch disabled ng-model="sampleActions.static_analysis"></ui-switch>
+                            </div>
+                            <label class="col-sm-7">Extract metadata</label>
+                            <div class="col-sm-5">
+                                <ui-switch disabled ng-model="sampleActions.static_analysis"></ui-switch>
+                            </div>
+                            <!--p>MD5, SHA1, SHA256, SHA512</p-->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">AV scan</div>
+                        <div class="panel-body">
+                            <div ng-repeat="engine in engines.engines">
+                            <label class="col-sm-7">{{ engine }}</label>
+                            <div class="col-sm-5">
+                                <ui-switch disabled ng-model="sampleActions.av_scan"></ui-switch>
+                            </div>
+                            <!--p>AV engines: {{engines.engines.join(', ')}}</p-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-footer">
+        <button class="btn btn-default" ng-click="save()" ng-disabled="!canSave">
+            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+            Submit files for analysis
+        </button>
+        <button class="btn btn-default" ng-click="cancel()">Close</button>
+
+    </div>
+</div>
