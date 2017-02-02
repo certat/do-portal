@@ -5,7 +5,7 @@
       "urls": {
         "type": "array",
         "minItems": 1,
-        "maxItems": 5,
+        "maxItems": 50,
         "items": {
           "type": "string"
         }
