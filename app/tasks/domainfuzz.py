@@ -36,7 +36,7 @@ def fuzz_one(fqdn):
         'geoip': True,
         'whois': True,
         'ssdeep': True,
-        'mxcheck': True
+        'mxcheck': False
     }
 
     for domain in fuzzed.domains:
