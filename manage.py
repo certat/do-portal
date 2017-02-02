@@ -157,7 +157,7 @@ def add_sample_data():
     db.session.commit()
 
     user = User(name='testadmin', email='testadmin@domain.tld',
-                password='changeme', role=adm)
+                password='changeme', role=adm.id)
     db.session.add(user)
     db.session.commit()
 
