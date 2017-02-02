@@ -963,6 +963,14 @@ class ReportType(Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
 
+    @staticmethod
+    def __insert_defaults():
+        types = ['Static analysis', 'AntiVirus scan', 'Dynamic analysis']
+        for type_ in types:
+            r = ReportType(name=type_)
+            db.session.add(r)
+        db.session.commit()
+
 
 class Report(Model, SerializerMixin):
     __tablename__ = 'reports'
