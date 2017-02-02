@@ -13,6 +13,7 @@ Contents:
 .. toctree::
     :maxdepth: 2
 
+    faq
     changelog
     do_rest_api/rest_api.rst
     cp_rest_api
