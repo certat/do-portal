@@ -15,7 +15,7 @@ from app import db, models, mail
 from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, AHBot, Vulnerability, Tag
 from app.models import ContactEmail, emails_organizations, tags_vulnerabilities
-from app.models import Role, Permission
+from app.models import Role, ReportType, Permission
 from app.api.decorators import async
 
 app = create_app(os.getenv('DO_CONFIG') or 'default')
@@ -32,6 +32,16 @@ class CollabError(Exception):
 #: $ ./manage.py db migrate
 #: $ ./manage.py db upgrade
 manager.add_command('db', MigrateCommand)
+
+
+def _add_default_groups():
+    constituents = OrganizationGroup(name='Constituents', color='#0033cc')
+    db.session.add(constituents)
+    nat_certs = OrganizationGroup(name='National CERTs', color='#AF2018')
+    db.session.add(nat_certs)
+    partners = OrganizationGroup(name='Partners', color='#00FF00')
+    db.session.add(partners)
+    db.session.commit()
 
 
 @app.context_processor
@@ -59,13 +69,7 @@ def create_groups():
     groups_count = OrganizationGroup.query.count()
     if groups_count > 0:
         sys.exit("Groups table is not empty.")
-    constituents = OrganizationGroup(name='Constituents', color='#0033cc')
-    db.session.add(constituents)
-    nat_certs = OrganizationGroup(name='National CERTs', color='#AF2018')
-    db.session.add(nat_certs)
-    partners = OrganizationGroup(name='Partners', color='#00FF00')
-    db.session.add(partners)
-    db.session.commit()
+    _add_default_groups()
     print('Groups added')
 
 
@@ -130,6 +134,32 @@ def import_from_collab(collab_url, username):
             db.session.add(org)
         db.session.commit()
         print('Done')
+
+
+@manager.command
+def add_sample_data():
+    _add_default_groups()
+    ReportType._ReportType__insert_defaults()
+    Role._Role__insert_default_roles()
+    adm = Role.query.filter_by(name='Administrator').first()
+
+    o = Organization(
+        abbreviation="CERT-EU",
+        full_name="Computer Emergency Response Team for EU "
+                  "Institutions Agencies and Bodies",
+        ip_ranges=['212.8.189.16/28'],
+        abuse_emails=['cert-eu@ec.europa.eu'],
+        contact_emails=[ContactEmail(email='cert-eu@ec.europa.eu')],
+        asns=[5400],
+        fqdns=['cert.europa.eu']
+    )
+    db.session.add(o)
+    db.session.commit()
+
+    user = User(name='testadmin', email='testadmin@domain.tld',
+                password='changeme', role=adm)
+    db.session.add(user)
+    db.session.commit()
 
 
 @manager.option('-c', '-url', dest='collab_url',
