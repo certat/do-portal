@@ -27,7 +27,6 @@ Flask-Login==0.3.2
 Flask-Mail==0.9.1
 Flask-Migrate==2.0.0
 Flask-Principal==0.4.0
-Flask-Script==2.0.5
 Flask-SQLAlchemy==2.1
 -e git+https://github.com/certeu/Flask-Tinyclients#egg=Flask-Tinyclients
 Flask-WTF==0.12
