@@ -428,7 +428,7 @@ class Role(Model, SerializerMixin):
     users = db.relationship('User', backref=db.backref('role'), lazy='dynamic')
 
     @staticmethod
-    def __insert_default_roles():
+    def __insert_defaults():
         roles = {
             'Constituent': (Permission.ORGADMIN |
                             Permission.SUBMITSAMPLE |
@@ -480,7 +480,7 @@ class ContactEmail(Model, SerializerMixin):
     """
     __tablename__ = 'contactemails_organizations'
     __public__ = ('email', 'cp', 'fmb')
-    id = db.Column('id', db.Integer, primary_key=True)
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     email_id = db.Column(
         db.Integer,
         db.ForeignKey('emails.id'),
@@ -561,6 +561,17 @@ class OrganizationGroup(Model, SerializerMixin):
     __mapper_args__ = {
         'order_by': desc(id)
     }
+
+    @staticmethod
+    def __insert_defaults():
+        """Insert sample organization groups"""
+        groups = [{'name': 'Constituents', 'color': '#0033CC'},
+                  {'name': 'National CERTs', 'color': '#AF2018'},
+                  {'name': 'Partners', 'color': '#00FF00'}]
+        for group in groups:
+            g = OrganizationGroup(**group)
+            db.session.add(g)
+        db.session.commit()
 
 
 class Organization(Model, SerializerMixin):

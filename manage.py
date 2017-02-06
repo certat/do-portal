@@ -3,118 +3,77 @@ import os
 import sys
 import json
 from collections import namedtuple
-from getpass import getpass
 import requests
 import datetime
+import click
 
 from app import create_app
-from flask_migrate import MigrateCommand
-from flask_script import Manager, prompt_bool
+from flask import current_app
+from flask.cli import FlaskGroup
 from flask_gnupg import fetch_gpg_key
-from app import db, models, mail
+from app import db
 from app.models import User, Organization, IpRange, Fqdn, Asn, Email
-from app.models import OrganizationGroup, AHBot, Vulnerability, Tag
+from app.models import OrganizationGroup, Vulnerability, Tag
 from app.models import ContactEmail, emails_organizations, tags_vulnerabilities
-from app.models import Role, ReportType, Permission
-from app.api.decorators import async
+from app.models import Role, ReportType
 
-app = create_app(os.getenv('DO_CONFIG') or 'default')
-manager = Manager(app)
+
+def create_cli_app(info):
+    return create_app(os.getenv('DO_CONFIG') or 'default')
+
+
+def abort_if_false(ctx, param, value):
+    if not value:
+        ctx.abort()
+
+
+@click.group(cls=FlaskGroup, create_app=create_cli_app)
+def cli():
+    """DO portal management script"""
+
+
+@cli.command('shell', short_help='Start shell in app context')
+def shell_command():
+    ctx = current_app.make_shell_context()
+
+    try:
+        from IPython import start_ipython
+        start_ipython(argv=(), user_ns=ctx)
+    except ImportError:
+        from code import interact
+        interact(local=ctx)
+
 
 CollabCustomer = namedtuple('CollabCustomer', ['name', 'config'])
 
 
-class CollabError(Exception):
-    pass
-
-
-#: on every schema change migrate by running:
-#: $ ./manage.py db migrate
-#: $ ./manage.py db upgrade
-manager.add_command('db', MigrateCommand)
-
-
-def _add_default_groups():
-    constituents = OrganizationGroup(name='Constituents', color='#0033cc')
-    db.session.add(constituents)
-    nat_certs = OrganizationGroup(name='National CERTs', color='#AF2018')
-    db.session.add(nat_certs)
-    partners = OrganizationGroup(name='Partners', color='#00FF00')
-    db.session.add(partners)
-    db.session.commit()
-
-
-@app.context_processor
-def inject_permissions():
-    return dict(Permission=Permission)
-
-
-@async
-def send_async_mail(msg):
-    with app.app_context():
-        mail.send(msg)
-
-
-@manager.shell
-def make_shell_context():
-    return dict(app=app, db=db, models=models, Permission=Permission)
-
-
-@manager.command
-def create_groups():
-    """Create initial organization groups:Constituents, Partners and
-    National CERTs
-
-    """
-    groups_count = OrganizationGroup.query.count()
-    if groups_count > 0:
-        sys.exit("Groups table is not empty.")
-    _add_default_groups()
-    print('Groups added')
-
-
-@manager.command
-def insert_roles():
-    """Insert default user roles"""
-    if prompt_bool("Insert default roles? (roles table will be truncated)"):
-        Role.query.delete()
-        Role._Role__insert_default_roles()
-        print("Done")
-
-
-@manager.option('-c', '-url', dest='collab_url',
-                default='https://abusehelper.cert.europa.eu/collab/customers/'
-                        'FrontPage?action=getMetaJSON&args='
-                        'CategoryAbuseContact,%27%20%27%20||Full%20name||'
-                        'IP%20range||FQDN||ASN||Abuse%20email%27%20%27||'
-                        'Mail%20template||Mail%20times||ID||'
-                        '%27%20%27Point%20of%20Contact||')
-@manager.option('-u', '-user', dest='username', required=True)
-def import_from_collab(collab_url, username):
-    """Import customers from AbuseHelper collab wiki.
-
-    .. note:: Will not verify certificates
-
-    :param collab_url: URL of collab
-    :param username: Collab username
-    """
+@cli.command()
+@click.option('--collab-url', help='AbuseHelper collab URL',
+              default='https://abusehelper.cert.europa.eu/collab/customers/'
+                      'FrontPage?action=getMetaJSON&args='
+                      'CategoryAbuseContact,%27%20%27%20||Full%20name||'
+                      'IP%20range||FQDN||ASN||Abuse%20email%27%20%27||'
+                      'Mail%20template||Mail%20times||ID||'
+                      '%27%20%27Point%20of%20Contact||')
+@click.option('-u', '--username', help='Collab username')
+@click.option('-p', '--password', help='Collab password', prompt=True,
+              hide_input=True)
+def import_orgs(collab_url, username, password):
+    """Import customers from AbuseHelper collab wiki."""
     group_count = OrganizationGroup.query.count()
     if group_count < 1:
         sys.exit("No groups defined. "
                  "Run create_groups to create default groups.")
-    if prompt_bool("This command will drop all exiting organizations"
-                   " and all their details (IPs, Emails, ASNs, etc.). "
-                   "Are you sure you want to continue?"):
-        password = getpass(prompt='Enter collab password:')
-        if not password:
-            sys.exit("No anonymous access allowed")
+    if click.confirm("This command will drop all exiting organizations"
+                     " and all their details (IPs, Emails, ASNs, etc.). "
+                     "Are you sure you want to continue?", abort=True):
         ah_resp = requests.get(collab_url, auth=(username, password),
                                verify=False)
-        if ah_resp.status_code != 200:
-            app.log.error(ah_resp.reason)
-            sys.exit(1)
+        if ah_resp.status_code != 201:
+            current_app.log.error(ah_resp.reason)
+            raise click.Abort
 
-        print("Deleting old data...")
+        click.echo("Deleting old data...")
         db.session.execute(emails_organizations.delete())
         db.session.execute(tags_vulnerabilities.delete())
 
@@ -125,23 +84,67 @@ def import_from_collab(collab_url, username):
         Email.query.delete()
         Vulnerability.query.delete()
         Organization.query.filter(Organization.group_id == 1).delete()
-        print("Old data deleted!")
+        click.echo("Old data deleted!")
 
         data = json.loads(ah_resp.text)
         for name, config in data.items():
             org = Organization.from_collab(CollabCustomer(name, config))
-            print("Adding {}...".format(org.abbreviation))
+            click.echo("Adding {}...".format(org.abbreviation))
             db.session.add(org)
         db.session.commit()
-        print('Done')
+        click.echo('Done')
 
 
-@manager.command
-def add_sample_data():
-    _add_default_groups()
+@cli.command()
+@click.option('--collab-url', help='AH collab URL',
+              default='https://abusehelper.cert.europa.eu/collab/'
+                      'national_certs/FrontPage?action=getMetaJSON&args'
+                      '=CategoryNationalCert,%20||Rule||Description||'
+                      'Abuse%20email||Mail%20template||Mail%20times||'
+                      'Disabled||')
+@click.option('-u', '--username', help='Collab username')
+@click.option('-p', '--password', help='Collab password', prompt=True,
+              hide_input=True)
+def import_certs(collab_url, username, password):
+    """Import national CERTs information from AbuseHelper collab wiki."""
+    if click.confirm("This command should be run only once, on install",
+                     abort=True):
+        ah_resp = requests.get(collab_url, auth=(username, password),
+                               verify=False)
+        if ah_resp.status_code != 200:
+            current_app.log.error(ah_resp.reason)
+            raise click.Abort
+
+        data = json.loads(ah_resp.text)
+        for country, details in data.items():
+            org = Organization(
+                abbreviation=country,
+                group_id=2,
+                full_name='National CERT of ' + country
+            )
+
+            try:
+                org.mail_times = details['Mail times'][0]
+            except IndexError:
+                current_app.log.debug('Using default mail times...')
+            try:
+                org.mail_template = details['Mail template'][0]
+            except IndexError:
+                current_app.log.debug('Using default template...')
+            org.abuse_emails = details['Abuse email']
+            click.echo("Adding {}...".format(country))
+            db.session.add(org)
+        db.session.commit()
+        click.echo('Done')
+
+
+@cli.command()
+def addsampledata():
+    """Add sample data"""
+    OrganizationGroup._OrganizationGroup__insert_defaults()
     ReportType._ReportType__insert_defaults()
-    Role._Role__insert_default_roles()
-    adm = Role.query.filter_by(name='Administrator').first()
+    Role._Role__insert_defaults()
+    adm = Role.query.filter_by(permissions=0xff).first()
 
     o = Organization(
         abbreviation="CERT-EU",
@@ -160,65 +163,24 @@ def add_sample_data():
                 password='changeme', role=adm)
     db.session.add(user)
     db.session.commit()
+    click.echo('Done')
 
 
-@manager.option('-c', '-url', dest='collab_url',
-                default='https://abusehelper.cert.europa.eu/collab/'
-                        'national_certs/FrontPage?action=getMetaJSON&args'
-                        '=CategoryNationalCert,%20||Rule||Description||'
-                        'Abuse%20email||Mail%20template||Mail%20times||'
-                        'Disabled||')
-@manager.option('-u', '-user', dest='username', required=True)
-def import_national_certs(collab_url, username):
-    """Import national CERTs information from AbuseHelper collab wiki.
-
-    .. note:: Does not verify certificates
-
-    :param collab_url: URL of collab
-    :param username: Collab username
-    """
-    if prompt_bool("This command should be run only once, on install"):
-        password = getpass(prompt='Enter collab password:')
-        if not password:
-            sys.exit("No anonymous access allowed")
-        ah_resp = requests.get(collab_url, auth=(username, password),
-                               verify=False)
-        if ah_resp.status_code != 200:
-            app.log.error(ah_resp.reason)
-            sys.exit(1)
-        data = json.loads(ah_resp.text)
-        for country, details in data.items():
-            org = Organization(
-                abbreviation=country,
-                group_id=2,
-                full_name='National CERT of ' + country
-            )
-
-            try:
-                org.mail_times = details['Mail times'][0]
-            except IndexError:
-                app.log.debug('Using default mail times...')
-            try:
-                org.mail_template = details['Mail template'][0]
-            except IndexError:
-                app.log.debug('Using default template...')
-            org.abuse_emails = details['Abuse email']
-            print("Adding {}...".format(country))
-            db.session.add(org)
-        db.session.commit()
-        print('Done')
-
-
-@manager.command
-def delorg(org_id):
-    o = Organization.get(org_id)
+@cli.command()
+@click.argument('oid')
+@click.option('--yes', is_flag=True, callback=abort_if_false,
+              expose_value=False,
+              prompt='Are you sure you want to delete this organization?')
+def delorg(oid):
+    o = Organization.get(oid)
     o.fqdns = o.ip_ranges = o.asns = o.abuse_emails = o.contact_emails = []
-    Organization.query.filter_by(id=org_id).delete()
+    Organization.query.filter_by(id=oid).delete()
     db.session.commit()
 
 
-@manager.option('-f', '--file', dest='hof_dump', required=True)
-def import_hof(hof_dump):
+@cli.command()
+@click.argument('filename', required=True)
+def import_hof(filename):
     """Import Hall of Fame records from initial PoC"""
     dos = {}
     staff = User.query.filter_by(role_id=1).all()
@@ -233,7 +195,7 @@ def import_hof(hof_dump):
     for org in orgs:
         constituents[org.abbreviation] = org.id
 
-    with open(hof_dump) as f:
+    with open(filename) as f:
         hof = json.loads(f.read())
         for entry in hof:
             if entry['published'] == 'yes':
@@ -268,60 +230,28 @@ def import_hof(hof_dump):
             )
             db.session.add(vuln)
         db.session.commit()
-    print('Done')
+    click.echo('Done')
 
 
-@manager.option('-f', '--file', dest='botsdump', required=True)
-def import_bots(botsdump):
-    """
-    # >>> import startup
-    # >>> configs = list(startup.configs())
-    # >>> data = {}
-    # >>> for c in configs:
-    # >>>     data[c.name] = c.params
-    # >>> with open('bots.json') as f:
-    # >>>     f.write(json.dumps(data))
-    :param botsdump:
-    :return:
-    """
-    with open(botsdump) as f:
-        bots = json.loads(f.read())
-        for name, params in bots.items():
-            if '.sanitizer' in name:
-                continue
-            b = AHBot(name=name, params=json.dumps(params))
-            if 'url' in params:
-                b.url = params['url']
-            db.session.add(b)
-    db.session.commit()
-
-
-@manager.option('-e', '--emails', dest='emails')
-def download_keys(emails):
-    if not emails:
-        sys.exit("Error: Please provide emails")
+@cli.command()
+@click.argument('emails', required=True)
+def fetchkeys(emails):
+    """Download GPG keys from remote keyserver"""
     for e in emails:
-        fetch_gpg_key(e, app.config['GPG_KEYSERVERS'][0])
+        fetch_gpg_key(e, current_app.config['GPG_KEYSERVERS'][0])
 
 
-@manager.command
-def add_user(name, email, admin=False):
-    """Create new local account
-
-    :param name: Account name
-    :param email: E-mail
-    :param admin: Mark account as admin, default is False.
-    """
-    password = getpass()
-    password2 = getpass(prompt='Confirm: ')
-    if password != password2:
-        sys.exit('Error: passwords do not match.')
-    db.create_all()
-    user = User(name=name, email=email, password=password, is_admin=admin)
+@cli.command()
+@click.password_option()
+@click.argument('name', required=True)
+@click.argument('email', required=True)
+def adduser(password, name, email):
+    """Create new local account"""
+    user = User(name=name, email=email, password=password)
     db.session.add(user)
     db.session.commit()
-    print('User {0} was registered successfully.'.format(email))
+    click.echo('User {0} was registered successfully.'.format(email))
 
 
 if __name__ == '__main__':
-    manager.run()
+    cli()
