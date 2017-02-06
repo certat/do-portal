@@ -340,7 +340,7 @@ class User(UserMixin, Model, SerializerMixin):
             email = 'test-{}@{}.com'.format(
                 User.random_str(8), User.random_str(8))
             current_app.config['ADMINS'].append(email)
-            Role._Role__insert_default_roles()
+            Role._Role__insert_defaults()
             user = User(name=name, email=email, password='e9c9525ef737')
             user.api_key = user.generate_api_key()
             db.session.add(user)
