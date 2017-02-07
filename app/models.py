@@ -345,7 +345,8 @@ class User(UserMixin, Model, SerializerMixin):
                 User.random_str(8), User.random_str(8))
             current_app.config['ADMINS'].append(email)
             Role._Role__insert_defaults()
-            user = User(name=name, email=email, password='e9c9525ef737')
+            user = User(name=name, email=email, password='e9c9525ef737',
+                        otp_enabled=True)
             user.api_key = user.generate_api_key()
             db.session.add(user)
             db.session.commit()
