@@ -122,7 +122,11 @@ class Model(db.Model):
         return '{} #{}'.format(self.__class__.__name__, self.id)
 
     def __repr__(self):
-        return '{}.get({})'.format(self.__class__.__name__, self.id)
+        kws = {k: v for k, v in self.__dict__.items() if not k.startswith('_')}
+        args_ = []
+        for k, v in kws.items():
+            args_.append('{!s}={!r}'.format(k, str(v)))
+        return '{}({})'.format(self.__class__.__name__, ', '.join(args_))
 
 
 def get_mailman_client():
