@@ -126,7 +126,7 @@ def get_lists():
         lists.append({
             'id': l.list_id,
             'name': l.display_name,
-            'description': l.settings['description'],
+            'description': l.settings.get('description', 'N/A'),
             'fqdn_listname': l.fqdn_listname,
             'settings': dict(l.settings),
             'members': members
@@ -240,7 +240,7 @@ def get_list(list_id):
     return {
         'id': l.list_id,
         'name': l.display_name,
-        'description': l.settings['description'],
+        'description': l.settings.get('description', 'N/A'),
         'fqdn_listname': l.fqdn_listname,
         'settings': dict(l.settings),
         'members': members
@@ -365,20 +365,22 @@ def add_list():
     nlist = domain.create_list(secure_filename(req['name']))
     nlist.add_owner(current_app.config['MAILMAN_ADMIN'])
     list_settings = nlist.settings
-    list_settings["description"] = req['description']
-    list_settings["advertised"] = True
-    list_settings["send_welcome_message"] = False
-    list_settings['default_member_action'] = 'accept'
-    list_settings['default_nonmember_action'] = 'accept'
-    list_settings['include_rfc2369_headers'] = False
-    list_settings['header_uri'] = ''
-    list_settings['footer_uri'] = ''
+    list_settings.update({
+        'description': req['description'],
+        'advertised': True,
+        'send_welcome_message': False,
+        'default_member_action': 'accept',
+        'default_nonmember_action': 'accept',
+        'include_rfc2369_headers': False,
+        'header_uri': '',
+        'footer_uri': ''
+    })
     list_settings.save()
     return {
         'list': {
             'id': nlist.list_id,
             'name': nlist.display_name,
-            'description': nlist.settings['description'],
+            'description': nlist.settings.get('description', 'N/A'),
             'fqdn_listname': nlist.fqdn_listname,
             'settings': dict(nlist.settings)
         },
