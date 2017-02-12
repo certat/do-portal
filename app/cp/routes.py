@@ -186,8 +186,8 @@ def add_cp_sample():
     :statuscode 201: Files successfully saved
     """
     uploaded_samples = []
-    for idx, file in request.files.items():
-        buf = file.stream.read()
+    for idx, file_ in request.files.items():
+        buf = file_.stream.read()
         hashes = get_hashes(buf)
 
         hash_path = os.path.join(
@@ -196,12 +196,10 @@ def add_cp_sample():
         )
 
         if not os.path.isfile(hash_path):
-            file.stream.seek(0)
-            file.save(hash_path)
+            file_.stream.seek(0)
+            file_.save(hash_path)
 
-        file.stream.seek(0)
-        file.save(hash_path)
-        s = Sample(user_id=g.user.id, filename=file.filename, md5=hashes.md5,
+        s = Sample(user_id=g.user.id, filename=file_.filename, md5=hashes.md5,
                    sha1=hashes.sha1, sha256=hashes.sha256,
                    sha512=hashes.sha512, ctph=hashes.ctph)
         db.session.add(s)

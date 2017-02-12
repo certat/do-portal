@@ -110,19 +110,19 @@ def get_vxstream_analyses():
     return Report.query.filter_by(type_id=3)
 
 
-@api.route('/analysis/vxstream/report', defaults={'type': 'html'})
-@api.route('/analysis/vxstream/report/<string:sha256>/<envid>/<type>',
+@api.route('/analysis/vxstream/report', defaults={'type_': 'html'})
+@api.route('/analysis/vxstream/report/<string:sha256>/<envid>/<type_>',
            methods=['GET'])
-def get_vxstream_report(sha256, envid, type):
+def get_vxstream_report(sha256, envid, type_):
     # XML, HTML, BIN and PCAP are GZipped
     Sample.query.filter_by(sha256=sha256).first_or_404()
     headers = {
         'Accept': 'text/html',
         'User-Agent': 'VxStream Sandbox API Client'}
-    params = {'type': type, 'environmentId': envid}
+    params = {'type': type_, 'environmentId': envid}
     vx = vxstream.api.get('result/{}'.format(sha256),
                           params=params, headers=headers)
-    if type in ['xml', 'html', 'bin', 'pcap']:
+    if type_ in ['xml', 'html', 'bin', 'pcap']:
         return gzip.decompress(vx)
     return vx
 
