@@ -372,6 +372,7 @@ def add_list():
         'default_member_action': 'accept',
         'default_nonmember_action': 'accept',
         'include_rfc2369_headers': False,
+        'reply_goes_to_list': 'explicit_header',
         'header_uri': '',
         'footer_uri': ''
     })
