@@ -52,7 +52,7 @@ angular.module('cpApp')
         }
       }, function(error){
         notifications.showError(error.data);
-      })
+      });
     };
 
     GridData('analysis/vxstream/environments').get().$promise.then(
