@@ -8,35 +8,37 @@
  * Factory in the cpApp.
  */
 angular.module('cpApp')
-  .factory('Auth', function ($http, $cookies, $log, Session, config, notifications) {
+  .factory('Auth', function ($http, $cookies, $log, Session, config) {
     // Service logic
     // ...
 
-    var cacheSession = function() {
+    var cacheSession = function(response) {
       // this is never used, we pass the cookie with all requests
       // using the authInterceptor
       Session.set('auth', $cookies.get('rm'));
+      return response;
     };
-    var uncacheSession = function () {
+    var uncacheSession = function (response) {
       Session.unset('auth');
-    };
-
-    var loginError = function (response) {
-      notifications.showError(response);
+      return response;
     };
 
     // Public API here
     return {
       login: function (credentials) {
-        var login = $http.post(config.apiConfig.authUrl + '/login', credentials);
-        login.error(loginError);
-        login.success(cacheSession);
-        return login;
+        return $http.post(config.apiConfig.authUrl + '/login', credentials)
+          .then(cacheSession, function(err){
+            return err;
+          })
+          .catch(function(exc){
+            console.log(exc);
+          });
       },
       logout: function () {
-        var logout = $http.get(config.apiConfig.authUrl + '/logout');
-        logout.success(uncacheSession);
-        return logout;
+        return $http.get(config.apiConfig.authUrl + '/logout')
+          .then(uncacheSession, function(err){
+            return err;
+          });
       },
       isLoggedIn: function () {
         return Session.get('auth');

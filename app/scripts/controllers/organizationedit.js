@@ -9,7 +9,7 @@
  */
 angular.module('cpApp')
   .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, Auth, GridData, notifications) {
-    Organization.query(function(resp){
+    Organization.query().$promise.then(function(resp){
       $scope.org = resp;
       $scope.fuzzed = [];
       angular.forEach(resp.fqdns, function(val){
@@ -17,6 +17,8 @@ angular.module('cpApp')
           $scope.fuzzed[val] = resp.typosquats;
         });
       });
+    }, function(err){
+      notifications.showError(err.data.message);
     });
 
     $scope.toggleFuzzyList = function(list, parent){

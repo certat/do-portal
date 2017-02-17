@@ -12,7 +12,7 @@ angular.module('cpApp')
     $scope.isLoggedIn = Auth.isLoggedIn();
     $scope.logout = function () {
       BOSH.disconnect();
-      Auth.logout().success(function () {
+      Auth.logout().then(function () {
         $location.path('/login');
       });
     };
