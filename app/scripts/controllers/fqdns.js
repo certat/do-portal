@@ -8,7 +8,7 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('TyposquatsCtrl', function ($scope, GridData) {
+  .controller('TyposquatsCtrl', function ($scope, $uibModalInstance, GridData) {
     GridData('fqdns').query(function(resp){
       $scope.fqnds = resp.fqnds;
     });

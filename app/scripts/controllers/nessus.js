@@ -8,13 +8,14 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('NessusCtrl', function (GridData) {
+  .controller('NessusCtrl', function(GridData, $scope, notifications) {
     GridData('analysis/nessus/environments').get().$promise.then(
-      function(resp){
+      function(resp) {
         $scope.envs = resp.environments;
       },
-      function(err){
+      function(err) {
         notifications.showError(err.data);
       }
     );
   });
+
