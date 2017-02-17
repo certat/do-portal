@@ -12,7 +12,7 @@ angular.module('cpApp')
     Organization.query(function(resp){
       $scope.org = resp;
       $scope.fuzzed = [];
-      angular.forEach(resp.fqdns, function(val, key){
+      angular.forEach(resp.fqdns, function(val){
         GridData('fqdns').query({'id': val}, function(resp){
           $scope.fuzzed[val] = resp.typosquats;
         });
@@ -34,6 +34,7 @@ angular.module('cpApp')
         }
       });
       modalInstance.result.then(function (resp) {
+        console.log(resp);
         //success
       }, function () {
         // modal dismissed, do cleanup

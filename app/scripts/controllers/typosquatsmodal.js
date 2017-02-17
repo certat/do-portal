@@ -16,7 +16,7 @@ angular.module('cpApp')
       var header = ['fqdn', 'dns_a', 'dns_ns', 'dns_mx', 'updated'];
       var rv = [header];
       $scope.exportDate = new Date().getTime();
-      angular.forEach($scope.fqdns, function(fqdn, key){
+      angular.forEach($scope.fqdns, function(fqdn){
         var entry = [];
         angular.forEach(fqdn, function(v, k){
           var keyIndex = header.indexOf(k);

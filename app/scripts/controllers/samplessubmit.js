@@ -63,9 +63,9 @@ angular.module('cpApp')
         notifications.showError(error.data);
       });
       GridData('analysis/fireeye').save({}, function(resp){
-
+        console.log(resp);
       }, function(err){
-        notifications.showError(error.data);
+        notifications.showError(err.data);
       });
     };
 
@@ -87,6 +87,6 @@ angular.module('cpApp')
     GridData('analysis/fireeye/environments').get(function(resp){
       $scope.feenvs = resp.environments;
     }, function(err){
-      notifications.showError(er.data);
+      notifications.showError(err.data);
     });
   });

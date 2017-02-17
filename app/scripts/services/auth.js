@@ -12,7 +12,7 @@ angular.module('cpApp')
     // Service logic
     // ...
 
-    var cacheSession = function(data, status, headers) {
+    var cacheSession = function() {
       // this is never used, we pass the cookie with all requests
       // using the authInterceptor
       Session.set('auth', $cookies.get('rm'));

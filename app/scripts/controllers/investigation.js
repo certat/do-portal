@@ -219,7 +219,7 @@ angular.module('cpApp')
           sha1Regex.test(v.toLowerCase()) === true ||
           sha256Regex.test(v.toLowerCase()) === true ||
           sha512Regex.test(v.toLowerCase()) === true){
-          key = "hash";
+          key = 'hash';
         }else if(emailRegex.test(v.toLowerCase()) === true){
           key = 'email';
         }
