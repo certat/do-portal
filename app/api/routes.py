@@ -39,9 +39,7 @@ HTTP_METHODS = [
 def api_index():
     """List available endpoints
     """
-    url_rules = []
-    for rule in current_app.url_map.iter_rules():
-        url_rules.append(rule.rule)
+    url_rules = [r.rule for r in current_app.url_map.iter_rules()]
     return {
         'endpoints': list(set(url_rules))
     }
