@@ -222,7 +222,7 @@ class User(UserMixin, Model, SerializerMixin):
     is_admin = db.Column(db.Boolean(), default=False)
     deleted = db.Column(db.Integer, default=0)
     otp_secret = db.Column(db.String(16))
-    otp_enabled = db.Column(db.Boolean, default=0, nullable=False)
+    otp_enabled = db.Column(db.Boolean, default=False, nullable=False)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -491,9 +491,9 @@ class ContactEmail(Model, SerializerMixin):
         primary_key=True
     )
     #: Mark customer portal access for this email
-    cp = db.Column('cp_access', db.Boolean(), default=0, doc='CP access')
+    cp = db.Column('cp_access', db.Boolean(), default=False, doc='CP access')
     #: Functional mailbox marker
-    fmb = db.Column(db.Boolean(), default=0, doc='Functional mailbox')
+    fmb = db.Column(db.Boolean(), default=False, doc='Functional mailbox')
     organization = db.relationship(
         'Organization',
         backref=db.backref(
@@ -598,7 +598,7 @@ class Organization(Model, SerializerMixin):
         db.Integer,
         db.ForeignKey('organization_groups.id', name='fk_org_group_id')
     )
-    is_sla = db.Column(db.Integer, default=0)
+    is_sla = db.Column(db.Boolean, default=0)
     abbreviation = db.Column(db.String(255), index=True)
     # this is the ID field from AH wiki
     # ("{0:02d}".format(9)
@@ -795,7 +795,7 @@ class DeliverableFile(Model, SerializerMixin):
     deliverable_id = db.Column(db.Integer, db.ForeignKey('deliverables.id'))
     name = db.Column(db.String(255), nullable=False)
     #: File will be available to SLA constituents only
-    is_sla = db.Column(db.Integer, default=0)
+    is_sla = db.Column(db.Boolean, default=0)
     deleted = db.Column(db.Integer, default=0)
 
     deliverable_ = db.relationship(
