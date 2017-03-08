@@ -3,8 +3,9 @@ from datetime import timedelta
 # local configuration, overrides defaults from config.py
 # CAUTION! Changing the secret key will invalidate all encrypted data
 # E.i. user passwords, login tokens, session cookies
+TESTTING=True
 SECRET_KEY = "sB45#}\"So%TGY5jtq[^/uLq$}?4',`QdiKM_a3h*#/T9"
-SERVER_NAME = "doportal"
+# SERVER_NAME = "doportal"
 REMEMBER_COOKIE_SECURE = False
 REMEMBER_COOKIE_HTTPONLY = True
 SESSION_FS_STORAGE = "/tmp"
