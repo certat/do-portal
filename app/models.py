@@ -8,7 +8,7 @@ from mailmanclient import MailmanConnectionError, Client
 import onetimepass
 from app import db, login_manager, config
 from sqlalchemy import desc
-from sqlalchemy.dialects import mysql
+from sqlalchemy.dialects import postgres
 from flask_sqlalchemy import BaseQuery
 from flask import current_app, request
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -598,7 +598,7 @@ class Organization(Model, SerializerMixin):
         db.Integer,
         db.ForeignKey('organization_groups.id', name='fk_org_group_id')
     )
-    is_sla = db.Column(mysql.TINYINT(1), default=0)
+    is_sla = db.Column(db.Integer, default=0)
     abbreviation = db.Column(db.String(255), index=True)
     # this is the ID field from AH wiki
     # ("{0:02d}".format(9)
@@ -743,7 +743,7 @@ class Vulnerability(Model, SerializerMixin):
     reporter_email = db.Column(db.String(255))
     #: PoC
     url = db.Column(db.Text)
-    request_method = db.Column(db.Enum('GET', 'POST', 'PUT'), default='GET')
+    request_method = db.Column(db.Enum('GET', 'POST', 'PUT', name='httpverb'), default='GET')
     request_data = db.Column(db.Text)
     request_response_code = db.Column(db.Integer, nullable=True)
     tested = db.Column(db.DateTime, nullable=True)
@@ -795,7 +795,7 @@ class DeliverableFile(Model, SerializerMixin):
     deliverable_id = db.Column(db.Integer, db.ForeignKey('deliverables.id'))
     name = db.Column(db.String(255), nullable=False)
     #: File will be available to SLA constituents only
-    is_sla = db.Column(mysql.TINYINT(1), default=0)
+    is_sla = db.Column(db.Integer, default=0)
     deleted = db.Column(db.Integer, default=0)
 
     deliverable_ = db.relationship(
@@ -818,7 +818,7 @@ class Task(Model):
     id = db.Column(db.Integer, primary_key=True)
     task_id = db.Column(db.String(255), nullable=True, unique=True)
     status = db.Column(db.String(50), nullable=True)
-    result = db.Column(db.BLOB, nullable=True)
+    result = db.Column(db.LargeBinary, nullable=True)
     date_done = db.Column(db.DateTime, nullable=True)
     traceback = db.Column(db.Text, nullable=True)
 
@@ -827,7 +827,7 @@ class TaskGroup(Model):
     __tablename__ = 'tasks_groupmeta'
     id = db.Column(db.Integer, primary_key=True)
     taskset_id = db.Column(db.String(255), nullable=True, unique=True)
-    result = db.Column(db.BLOB, nullable=True)
+    result = db.Column(db.LargeBinary, nullable=True)
     date_done = db.Column(db.DateTime, nullable=True)
 
 
