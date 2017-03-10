@@ -171,7 +171,7 @@ class Config:
     #: GnuPG home directoy
     GPG_HOME = ""
     #: Full PATH of the gpg binary
-    GPG_BINARY = "/usr/local/bin/gpg"
+    GPG_BINARY = "/usr/bin/gpg"
     #: GnuPG keyservers to use.
     #: First keyserver is considered local, second one public.
     GPG_KEYSERVERS = []
