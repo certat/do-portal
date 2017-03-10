@@ -603,7 +603,7 @@ class Organization(Model, SerializerMixin):
         db.Integer,
         db.ForeignKey('organization_groups.id', name='fk_org_group_id')
     )
-    is_sla = db.Column(db.Boolean, default=0)
+    is_sla = db.Column(db.Boolean, default=True)
     abbreviation = db.Column(db.String(255), index=True)
     # this is the ID field from AH wiki
     # ("{0:02d}".format(9)
