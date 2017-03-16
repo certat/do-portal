@@ -202,7 +202,7 @@ def update_cp_organization():
         o.abuse_emails.append(ac)
 
     for e in contact_emails:
-        cp = e.get('cp', 0)
+        cp = e.get('cp', False)
         fmb = e.get('fmb', 0)
         o.contact_emails.append(
             ContactEmail(
