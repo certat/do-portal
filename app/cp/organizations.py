@@ -204,7 +204,7 @@ def update_cp_organization():
 
     for e in contact_emails:
         cp = e.get('cp', False)
-        fmb = e.get('fmb', 0)
+        fmb = e.get('fmb', False)
         o.contact_emails.append(
             ContactEmail(
                 email_=Email(email=e['email']),

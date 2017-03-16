@@ -1010,6 +1010,18 @@ class Contact(Model):
     email = db.Column(db.String(255), nullable=False)
     deleted = db.Column(db.Integer, default=0)
 
+class Address(Model, SerializerMixin):
+    __tablename__ = 'addresses'
+    __public__ = ('id', 'postal_address', 'zip', 'country', 'comment')
+    query_class = FilteredQuery
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    postal_address = db.Column(db.String(255))
+    zip = db.Column(db.String(25))
+    country = db.Column(db.String(50))  # should be a lookup table
+    comment = db.Column(db.String(250))
+    deleted = db.Column(db.Integer, default=0)
+
 
 @login_manager.user_loader
 def load_user(user_id):
