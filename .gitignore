@@ -11,3 +11,4 @@ logs/
 tmp/
 *.sw?
 __pycache__
+.cache/
