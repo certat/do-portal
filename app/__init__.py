@@ -2,7 +2,7 @@ import os
 import logging
 from celery import Celery
 from config import config, Config
-from flask import Flask, g
+from flask import g
 from flask_gnupg import GPG
 from flask_jsonschema import JsonSchema
 from flask_ldap3_login import LDAP3LoginManager
@@ -13,6 +13,7 @@ from flask_migrate import Migrate
 from flask_tinyclients.nessus import Nessus
 from flask_tinyclients.vxstream import VxStream
 from flask_tinyclients.fireeye import FireEye
+from app.core import FlaskApi, ApiException
 from .utils import DecimalJSONEncoder
 from .utils.mixins import Anonymous
 
@@ -35,7 +36,7 @@ fireeye = FireEye()
 
 
 def create_app(config_name):
-    app = Flask(__name__)
+    app = FlaskApi(__name__)
     app.config.from_object(config[config_name])
     if app.config['TESTING']:
         app.config.from_envvar('DO_TESTING_CONFIG', silent=True)
@@ -94,6 +95,10 @@ def create_app(config_name):
                 secure=secure)
             mail_handler.setLevel(logging.ERROR)
             app.logger.addHandler(mail_handler)
+
+    @app.errorhandler(ApiException)
+    def api_error_handler(err):
+        return err.to_response()
 
     init_extensions(app)
     init_routes(app)
