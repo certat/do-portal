@@ -14,7 +14,7 @@ from flask_tinyclients.nessus import Nessus
 from flask_tinyclients.vxstream import VxStream
 from flask_tinyclients.fireeye import FireEye
 from app.core import FlaskApi, ApiException
-from .utils import DecimalJSONEncoder
+from app.utils import JSONEncoder
 from .utils.mixins import Anonymous
 
 version_ = (1, 7, 1)
@@ -42,7 +42,7 @@ def create_app(config_name):
         app.config.from_envvar('DO_TESTING_CONFIG', silent=True)
     else:
         app.config.from_envvar('DO_LOCAL_CONFIG', silent=True)
-    app.json_encoder = DecimalJSONEncoder
+    app.json_encoder = JSONEncoder
     app.log = app.logger
 
     _audit_log = logging.getLogger('doaudit')
