@@ -1,6 +1,9 @@
 from flask_login import AnonymousUserMixin
 from datetime import datetime, date
 from decimal import Decimal
+import logging
+
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 
 class SerializerMixin(object):
@@ -35,7 +38,7 @@ class SerializerMixin(object):
             try:
                 data[e] = self._serialize(getattr(self, e))
             except AttributeError as ae:  # noqa
-                pass
+                logging.error(ae)
 
         return data
 
