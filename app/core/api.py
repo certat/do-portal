@@ -117,7 +117,7 @@ class ApiException(Exception):
         self.status = status
 
     def to_response(self):
-        return ApiResponse({'msg': self.msg}, status=self.status)
+        return ApiResponse({'message': self.msg}, status=self.status)
 
 
 class ApiValidationException(ApiException):
@@ -127,5 +127,5 @@ class ApiValidationException(ApiException):
         self.validator = None
 
     def to_response(self):
-        return ApiResponse({'msg': self.msg, 'validator': self.validator},
+        return ApiResponse({'message': self.msg, 'validator': self.validator},
                            status=self.status)
