@@ -48,7 +48,7 @@ class ApiPagedResponse(ApiResponse):
     :param exclude: list or tuple of fields to be excluded from
                     serialization
     """
-    def __init__(self, body, status=200, headers={}, max_per_page=50,
+    def __init__(self, body, status=200, headers={}, max_per_page=20,
                  filterfn=None, exclude=None):
         super().__init__(body, status, headers)
         self.maxperpage = max_per_page
