@@ -7,6 +7,7 @@ from app.models import Vulnerability, Tag
 from app.tasks.vulnerabilities import check_patched
 import datetime
 
+
 @api.route('/vulnerabilities', methods=['GET'])
 @json_response
 @paginate
@@ -357,6 +358,7 @@ def delete_vulnerability(vuln_id):
     db.session.commit()
     return {'message': 'Vulnerability deleted'}
 
+
 @api.route('/vulnerabilities/test/<int:vuln_id>', methods=['GET'])
 @json_response
 def test_vulnerability(vuln_id):
@@ -394,9 +396,12 @@ def test_vulnerability(vuln_id):
     """
     g = Vulnerability.query.get_or_404(vuln_id)
     g.tested = datetime.datetime.now()
-    check_result = check_patched(g.request_method,g.url,g.request_data,g.check_string)
+    check_result = check_patched(g.request_method,
+                                 g.url,
+                                 g.request_data,
+                                 g.check_string)
 
-    if  check_result[0] == 1:
+    if check_result[0] == 1:
         g.patched = datetime.datetime.now()
     elif check_result[0] == 0:
         g.patched = ''
@@ -412,13 +417,13 @@ def test_vulnerability(vuln_id):
 @api.route('/vulnerabilities/changestatus/<int:vuln_id>', methods=['GET'])
 @json_response
 def changestatus_vulnerability(vuln_id):
-    """Test vulnerability
+    """Change vulnerability status
 
     **Example request**:
 
     .. sourcecode:: http
 
-        PUT /api/1.0/vulnerabilities/test/1 HTTP/1.1
+        PUT /api/1.0/vulnerabilities/changestatus/1 HTTP/1.1
         Host: do.cert.europa.eu
         Accept: application/json
         Content-Type: application/json

@@ -737,7 +737,8 @@ class Vulnerability(Model, SerializerMixin):
                   'updated', 'url', 'reported', 'patched', 'request_method',
                   'tested', 'request_data', 'request_response_code',
                   'incident_id', 'reporter_name', 'reporter_email',
-                  'organization_id', 'notes', 'published', 'scanable', 'test_type')
+                  'organization_id', 'notes', 'published', 'scanable',
+                  'test_type')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))

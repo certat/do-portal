@@ -195,10 +195,12 @@ def import_hof(filename):
     for org in orgs:
         constituents[org.abbreviation] = org.id
 
-    with open(hof_dump) as f:
+    with open(filename) as f:
         hof = json.loads(f.read())
         for entry in hof:
-            vuln_exist = Vulnerability.query.filter_by(url=entry['url']).count()
+            vuln_exist = Vulnerability.query.\
+                filter_by(url=entry['url']).\
+                count()
             if vuln_exist != 0:
                 print('Entry already exist')
             else:
