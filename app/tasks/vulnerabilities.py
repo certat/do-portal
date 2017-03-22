@@ -4,6 +4,7 @@ from app import celery, db
 from app.models import Vulnerability
 
 
+
 @celery.task
 def checkall(checked_patched=False):
     if checked_patched:
@@ -12,14 +13,30 @@ def checkall(checked_patched=False):
         vulns = Vulnerability.query.filter_by(patched=None).all()
 
     for vuln in vulns:
-        resp = requests.request(vuln.request_method, vuln.url,
-                                data=vuln.request_data,
-                                allow_redirects=False)
-        if vuln.check_string not in resp.text:
-            vuln.patched = datetime.datetime.now()
-        else:
-            vuln.patched = None
+        if vuln.scanable:
+            vuln.tested = datetime.datetime.now()
+            check_result = check_patched(vuln.request_method,vuln.url,vuln.request_data,vuln.check_string)
 
-        vuln.updated = datetime.datetime.now()
-        db.session.add(vuln)
+            if  check_result[0] == 1:
+                vuln.patched = datetime.datetime.now()
+            elif check_result[0] == 0:
+                vuln.patched = ''
+
+            vuln.request_response_code = check_result[1]
+            vuln.updated = datetime.datetime.now()
+
+            db.session.add(vuln)
     db.session.commit()
+
+
+def check_patched(method,url,data,check_string):
+    page = requests.request(method, url, data=data, stream=False, verify=False)
+    #print page.text
+    if page.status_code != 403:
+        if check_string in page.text:
+            return [0,page.status_code]
+        else:
+            return [1,page.status_code]
+    else:
+        #print ('status_code = ' + str(page.status_code))
+        return [2,page.status_code]

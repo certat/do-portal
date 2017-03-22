@@ -737,19 +737,20 @@ class Vulnerability(Model, SerializerMixin):
                   'updated', 'url', 'reported', 'patched', 'request_method',
                   'tested', 'request_data', 'request_response_code',
                   'incident_id', 'reporter_name', 'reporter_email',
-                  'organization_id', 'notes', 'published', 'scanable')
+                  'organization_id', 'notes', 'published', 'scanable', 'test_type')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     incident_id = db.Column(db.Integer, nullable=True)
-    check_string = db.Column(db.Text)
     reporter_name = db.Column(db.String(255))
     reporter_email = db.Column(db.String(255))
     #: PoC
     url = db.Column(db.Text)
     request_method = db.Column(db.Enum('GET', 'POST', 'PUT'), default='GET')
     request_data = db.Column(db.Text)
+    check_string = db.Column(db.Text)
+    test_type = db.Column(db.Enum('request'), default='request')
     request_response_code = db.Column(db.Integer, nullable=True)
     tested = db.Column(db.DateTime, nullable=True)
     reported = db.Column(db.DateTime, default=datetime.datetime.utcnow)
