@@ -593,24 +593,23 @@ def delete_organization(org_id):
     o.deleted = 1
     db.session.add(o)
     db.session.commit()
-    return {'message': 'Organization deleted'}
+    return ApiResponse({'message': 'Organization deleted'})
 
 
 @api.route('/organizations/query/', methods=['POST'])
-@json_response
 def query():
     """
 
     :status 501: NotImplemented
     :return:
     """
-    return {}, 501
+    raise ApiException('Not Implemented', status=501)
     # conditions = request.json['conditions']
     # c = Organization.query.find(**conditions)
 
 
 @api.route('/organizations/check', methods=['PUT'])
-@json_response
+@validate('organizations', 'check')
 def check_constituents():
     """Search to which organization does a specific IP address belongs
 
@@ -662,6 +661,8 @@ def check_constituents():
     """
     rv = {}
     orgs = Organization.query.all()
+    if not orgs:
+        return ApiResponse({}, 204)
     for o in orgs:
         for cidr in o.ip_ranges:
             cidr_range = ipaddress.ip_network(cidr, strict=False)
@@ -669,5 +670,7 @@ def check_constituents():
                 ipa = ipaddress.ip_address(ip.strip())
                 if ipa in cidr_range:
                     rv[ip] = o.abbreviation
-
-    return {'response': rv}
+    if rv:
+        return ApiResponse({'response': rv})
+    else:
+        return ApiResponse({}, 204)
