@@ -107,6 +107,34 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           });
         };
       },
+      $scope.testVulnerability = function (vuln) {
+          GridData('vulnerabilities/test').get(vuln, function (resp) {
+            $scope.vulnerabilities = $filter('filter')(
+                $scope.vulnerabilities,
+                function () {
+                  $scope.loadPage($scope.currentPage);
+                }
+            );
+            notifications.showSuccess(resp);
+          }, function (error) {
+            notifications.showError(error.data);
+          });
+        };
+        $scope.changestatusVulnerability = function (vuln) {
+          GridData('vulnerabilities/changestatus').get(vuln, function (resp) {
+            $scope.vulnerabilities = $filter('filter')(
+                $scope.vulnerabilities,
+                function () {
+                  $scope.loadPage($scope.currentPage);
+                }
+            );
+            notifications.showSuccess(resp);
+          }, function (error) {
+            notifications.showError(error.data);
+          }
+        );
+        };
+      },
       link: function (scope, elem, attrs) {
         scope.pageChanged = function () {
           scope.loadPage(scope.currentPage);
