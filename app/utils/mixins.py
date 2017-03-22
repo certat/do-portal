@@ -24,7 +24,7 @@ class SerializerMixin(object):
         for k, field in keys:
             if public and k not in public:
                 continue
-            if k in exclude:
+            if exclude and k in exclude:
                 continue
             value = self._serialize(field.value)
             if value:
