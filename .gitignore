@@ -12,3 +12,4 @@ tmp/
 *.sw?
 __pycache__
 .cache/
+src/
