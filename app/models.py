@@ -592,7 +592,7 @@ class Organization(Model, SerializerMixin):
     using-an-and-or-or-and-i-am-getting-an-error-message-about-foreign-keys
     """
     __tablename__ = 'organizations'
-    __public__ = ('id', 'abbreviation', 'full_name', 'abuse_emails', 'groups',
+    __public__ = ('id', 'abbreviation', 'full_name', 'abuse_emails',
                   'ip_ranges', 'fqdns', 'asns', 'old_ID', 'is_sla',
                   'mail_template', 'mail_times', 'group_id',
                   'group', 'contact_emails')
@@ -733,7 +733,7 @@ class Tag(Model, SerializerMixin):
 
 class Vulnerability(Model, SerializerMixin):
     __tablename__ = 'vulnerabilities'
-    __public__ = ('id', 'type', 'constituent', 'do', 'check_string', 'types',
+    __public__ = ('id', 'constituent', 'do', 'check_string', 'types',
                   'updated', 'url', 'reported', 'patched', 'request_method',
                   'tested', 'request_data', 'request_response_code',
                   'incident_id', 'reporter_name', 'reporter_email',
