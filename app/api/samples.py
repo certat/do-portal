@@ -6,17 +6,15 @@
 from sqlalchemy import or_
 import os
 from flask import request, current_app, g
-from .. import db
-from ..models import Sample
+from app.core import ApiResponse, ApiPagedResponse
+from app import db
+from app.models import Sample
 from app.tasks import analysis
 from app.utils import get_hashes
-from .decorators import json_response, paginate
 from . import api
 
 
 @api.route('/samples', methods=['GET'])
-@json_response
-@paginate
 def get_samples():
     """Return a paginated list of samples
 
@@ -83,11 +81,10 @@ def get_samples():
     :status 200: Files found
     :status 404: Resource not found
     """
-    return Sample.query
+    return ApiPagedResponse(Sample.query)
 
 
 @api.route('/samples/<string:digest>', methods=['GET'])
-@json_response
 def get_sample(digest):
     """Return samples identified by its digest.
     The digest can be: `md5`, `sha1`, `sha256`.
@@ -135,11 +132,10 @@ def get_sample(digest):
                 Sample.sha1 == digest,
                 Sample.sha256 == digest)
     i = Sample.query.filter(_cond).first_or_404()
-    return i.serialize()
+    return ApiResponse(i.serialize())
 
 
 @api.route('/samples', methods=['POST', 'PUT'])
-@json_response
 def add_sample():
     """Upload untrusted files, E.i. malware samples, files for analysis.
 
@@ -222,7 +218,7 @@ def add_sample():
             db.session.flush()
             current_app.log.error(e.args[0])
         uploaded_samples.append(s.serialize())
-    return {
+    return ApiResponse({
         'message': 'Files uploaded',
         'files': uploaded_samples
-    }, 201
+    }, 201)
