@@ -25,10 +25,10 @@ app.utils.mixins module
     :undoc-members:
     :show-inheritance:
 
-app.utils.multiav module
+app.utils.avscanlib module
 ------------------------
 
-.. automodule:: app.utils.multiav
+.. automodule:: app.utils.avscanlib
     :members:
     :undoc-members:
     :show-inheritance:
