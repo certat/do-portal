@@ -99,9 +99,8 @@ def login():
             raise ApiException('Invalid username or password', 401)
 
         if current_app.config['LDAP_AUTH_ENABLED']:
-            resp, status = do_ldap_authentication(email, password)
-            if status == 200:
-                return resp, status
+            return do_ldap_authentication(email, password)
+
         user, authenticated = User.authenticate(email, password)
         if user and authenticated:
             if login_user(user, remember=True):
