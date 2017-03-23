@@ -2,15 +2,14 @@
 
 angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.utils'])
   .directive('doAppVersion', ['version', function(version) {
-    return function(scope, elem, attrs) {
+    return function(scope, elem, attrs) { // jshint ignore:line
       elem.text(version);
     };
   }])
-  .directive('doAddItem', ['$compile', '$templateCache', function($compile, $templateCache) {
+  .directive('doAddItem', [function() {
     return {
       restrict: 'A',
-      link: function(scope, elem, attrs) {
-
+      link: function(scope, elem, attrs) { // jshint ignore:line
         scope.addItem = function() {
           var newInput = '<input ng-model=a.asn ng-show="a.active" ' +
             'ui-keypress="{ 13: \'updateItem(a, \\\'asns\\\', $event)\'}" ' +
@@ -18,7 +17,7 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           $(newInput).insertBefore(elem);
         };
       }
-    }
+    };
   }])
   .directive('doConfirm', [function() {
     return {
@@ -33,7 +32,7 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           }
         });
       }
-    }
+    };
   }])
   .directive('doMyAccount', ['Auth', 'notifications', function(Auth, notifications) {
     return {
@@ -70,7 +69,7 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           GridData('organization_groups').delete(group, function(resp) {
             $scope.groups = $filter('filter')(
               $scope.groups,
-              function(v, idx) {
+              function(v, idx) { // jshint ignore:line
                 return v.id !== group.id;
               }
             );
@@ -80,12 +79,12 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           });
         };
       },
-      link: function(scope, elem, attrs) {
+      link: function(scope, elem, attrs) { // jshint ignore:line
         GridData('organization_groups').query(function(resp) {
           scope.groups = resp.organization_groups;
         });
       }
-    }
+    };
   }])
   .directive('doVulnerabilities', ['$filter', 'GridData', 'notifications', function($filter, GridData, notifications) {
     return {
@@ -97,7 +96,7 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           GridData('vulnerabilities').delete(vuln, function(resp) {
             $scope.vulnerabilities = $filter('filter')(
               $scope.vulnerabilities,
-              function(v, idx) {
+              function(v, idx) { // jshint ignore:line
                 return v.id !== vuln.id;
               }
             );
@@ -144,7 +143,7 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
         };
         scope.loadPage();
       }
-    }
+    };
   }])
   .directive('doOrganizations', ['$filter', 'Organization', 'GridData', 'notifications', function($filter, Organization, GridData, notifications) {
     return {
@@ -157,7 +156,7 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
             //$scope.organizations = $filter('filter')($scope.organizations, {id: !org.id});
             $scope.organizations = $filter('filter')(
               $scope.organizations,
-              function(v, idx) {
+              function(v, idx) { // jshint ignore:line
                 return v.id !== org.id;
               }
             );
@@ -168,12 +167,12 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
         };
 
       },
-      link: function(scope, elem, attrs) {
+      link: function(scope, elem, attrs) { // jshint ignore:line
         Organization.query(function(resp) {
           scope.organizations = resp.organizations;
         });
       }
-    }
+    };
   }])
   .directive('doCrudGrid', ['$filter', 'GridData', 'notifications', function($filter, GridData, notifications) {
     return {
@@ -207,20 +206,20 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
         var errorCallback = function(e) {
           notifications.showError(e.data);
         };
-        scope.updateItem = function(o, evt) {
+        scope.updateItem = function(o) {
           GridData(attrs.endpoint).update({
             id: o.id
-          }, o, function(resp) {
+          }, o, function(resp) { // jshint ignore:line
             o.active = false;
           }, errorCallback);
         };
         scope.deleteItem = function(o) {
           GridData(attrs.endpoint).delete({
             id: o.id
-          }, function(resp) {
+          }, function(resp) { // jshint ignore:line
             scope.objects = $filter('filter')(
               scope.objects,
-              function(v, idx) {
+              function(v) {
                 return v.id !== o.id;
               }
             );
@@ -238,7 +237,7 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           scope.properties = properties;
         });
       }
-    }
+    };
   }])
   .directive('doSampleDetails', ['GridData', 'notifications', function(GridData, notifications) {
     return {
@@ -256,7 +255,7 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           }
         );
       }
-    }
+    };
   }])
   .directive('doStaticAnalysisReport', ['GridData', 'notifications', function(GridData, notifications) {
     return {
@@ -280,7 +279,7 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           }
         );
       }
-    }
+    };
   }])
   .directive('doAvReport', ['GridData', 'notifications', function(GridData, notifications) {
     return {
@@ -298,7 +297,7 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           }
         );
       }
-    }
+    };
   }])
   .directive('doDynamicAnalysisReport', ['VxStream', 'notifications', 'apiConfig', '$location', '$q', '$filter', '$sce', function(VxStream, notifications, apiConfig, $location, $q, $filter, $sce) {
     return {
@@ -351,34 +350,16 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
           notifications.showError(error.data);
         });
       }
-    }
+    };
   }])
   .directive('doFileSelect', [function() {
     return {
-      link: function(scope, elem, attrs) {
+      link: function(scope, elem) {
         elem.bind('change', function(e) {
           scope.getFile(e.target.files[0]);
         });
       }
-    }
-  }])
-  .directive('doChatRoom', ['$http', function($http) {
-    return {
-      restrict: 'E',
-      link: function(scope, elem, attrs) {
-        console.log(attrs);
-      }
     };
-
-  }])
-  .directive('doInvestigationRoom', [function() {
-    return {
-      restrict: 'E',
-      templateUrl: '/static/views/investigation_room.html',
-      link: function(scope, elem, attrs) {
-
-      }
-    }
   }])
   .directive('doScrollIf', ['$timeout', function($timeout) {
     return {
@@ -386,10 +367,10 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
       scope: {
         scrollIf: '='
       },
-      link: function(scope, elem, attrs) {
+      link: function(scope, elem) {
         $timeout(function() {
           if (!scope.scrollIf) {
-            window.scrollTo(0, elem[0].offsetTop - 100)
+            window.scrollTo(0, elem[0].offsetTop - 100);
           }
         });
       }
