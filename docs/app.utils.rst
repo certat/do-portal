@@ -17,14 +17,6 @@ app.utils.bosh_client module
     :undoc-members:
     :show-inheritance:
 
-app.utils.jinja2htmlcompress module
------------------------------------
-
-.. automodule:: app.utils.jinja2htmlcompress
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 app.utils.mixins module
 -----------------------
 
