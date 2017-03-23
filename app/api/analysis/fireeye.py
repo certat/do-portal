@@ -229,7 +229,7 @@ def get_fireeye_analysis(sha256, envid):
       determine if action was successful.
     :status 404: Resource not found
     """
-    return {}, 501
+    raise ApiException({}, 501)
     sample = Sample.query.filter_by(sha256=sha256).first_or_404()
     state = fireeye.api.get(
         'state/{}'.format(sha256),
@@ -485,7 +485,7 @@ def get_fireeye_environments():
     for profile in e.xpath('//sensors/sensor/profiles/profile'):
         envs.append({'id': profile.get('id'), 'name': profile.get('name')})
 
-    return ApiException({'environments': sorted(envs, key=lambda i: i['id'])})
+    return ApiResponse({'environments': sorted(envs, key=lambda i: i['id'])})
 
 
 def _submit_to_fireeye(sha256, env, token, with_children=False):
