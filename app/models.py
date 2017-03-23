@@ -273,7 +273,7 @@ class User(UserMixin, Model, SerializerMixin):
     def get_auth_token(self, last_totp=None):
         """Think of :class:`URLSafeTimedSerializer` `salt` parameter as
         namespace instead of salt. `The salt explained:
-         <https://pythonhosted.org/itsdangerous/#the-salt>`_.
+        <https://pythonhosted.org/itsdangerous/#the-salt>`_.
         """
         data = [self.email, self._password, str(self.id)]
         if last_totp:
