@@ -1,16 +1,14 @@
+import datetime
 from flask import request, redirect, url_for, g
 from flask_jsonschema import validate
-from . import api
-from .decorators import json_response, paginate
-from ..import db
+from app.core import ApiResponse, ApiPagedResponse
+from app import db
 from app.models import Vulnerability, Tag
 from app.tasks.vulnerabilities import check_patched
-import datetime
+from . import api
 
 
 @api.route('/vulnerabilities', methods=['GET'])
-@json_response
-@paginate
 def get_vulnerabilities():
     """Return a paginated list of available vulnerabilities
 
@@ -70,11 +68,10 @@ def get_vulnerabilities():
     :status 200: Vulnerabilities list
     :status 404: Not found
     """
-    return Vulnerability.query
+    return ApiPagedResponse(Vulnerability.query)
 
 
 @api.route('/vulnerabilities/<int:vuln_id>', methods=['GET'])
-@json_response
 def get_vulnerability(vuln_id):
     """Return vulnerability identified by `vuln_id`
 
@@ -128,12 +125,12 @@ def get_vulnerability(vuln_id):
     :status 200: Returns vulnerability details object
     :status 404: Resource not found
     """
-    return Vulnerability.query.get_or_404(vuln_id)
+    vuln = Vulnerability.query.get_or_404(vuln_id)
+    return ApiResponse(vuln)
 
 
 @api.route('/vulnerabilities', methods=['POST', 'PUT'])
 @validate('vulnerabilities', 'add_vulnerability')
-@json_response
 def add_vulnerability():
     """Add new vulnerability
 
@@ -230,13 +227,14 @@ def add_vulnerability():
     v.user_id = g.user.id
     db.session.add(v)
     db.session.commit()
-    return {'vulnerability': v.serialize(), 'message': 'Vulnerability added'},\
-        201, {'Location': url_for('api.get_vulnerability', vuln_id=v.id)}
+    return ApiResponse(
+        {'vulnerability': v.serialize(), 'message': 'Vulnerability added'},
+        201,
+        {'Location': url_for('api.get_vulnerability', vuln_id=v.id)})
 
 
 @api.route('/vulnerabilities/<int:vuln_id>', methods=['PUT'])
 @validate('vulnerabilities', 'update_vulnerability')
-@json_response
 def update_vulnerability(vuln_id):
     """Update vulnerability details
 
@@ -313,11 +311,10 @@ def update_vulnerability(vuln_id):
     vuln.labels_ = list_types
     db.session.add(vuln)
     db.session.commit()
-    return {'message': 'Vulnerability saved'}
+    return ApiResponse({'message': 'Vulnerability saved'})
 
 
 @api.route('/vulnerabilities/<int:vuln_id>', methods=['DELETE'])
-@json_response
 def delete_vulnerability(vuln_id):
     """Delete vulnerability
 
@@ -356,11 +353,10 @@ def delete_vulnerability(vuln_id):
     g.deleted = 1
     db.session.add(g)
     db.session.commit()
-    return {'message': 'Vulnerability deleted'}
+    return ApiResponse({'message': 'Vulnerability deleted'})
 
 
 @api.route('/vulnerabilities/test/<int:vuln_id>', methods=['GET'])
-@json_response
 def test_vulnerability(vuln_id):
     """Test vulnerability
 
@@ -396,26 +392,25 @@ def test_vulnerability(vuln_id):
     """
     g = Vulnerability.query.get_or_404(vuln_id)
     g.tested = datetime.datetime.now()
-    check_result = check_patched(g.request_method,
-                                 g.url,
-                                 g.request_data,
-                                 g.check_string)
+    rc, status_code = check_patched(g.request_method,
+                                    g.url,
+                                    g.request_data,
+                                    g.check_string)
 
-    if check_result[0] == 1:
+    if rc == 1:
         g.patched = datetime.datetime.now()
-    elif check_result[0] == 0:
+    elif rc == 0:
         g.patched = ''
 
-    g.request_response_code = check_result[1]
+    g.request_response_code = status_code
 
     db.session.add(g)
     db.session.commit()
 
-    return {'message': 'Vulnerability Tested'}
+    return ApiResponse({'message': 'Vulnerability Tested'})
 
 
 @api.route('/vulnerabilities/changestatus/<int:vuln_id>', methods=['GET'])
-@json_response
 def changestatus_vulnerability(vuln_id):
     """Change vulnerability status
 
@@ -459,4 +454,4 @@ def changestatus_vulnerability(vuln_id):
     db.session.add(g)
     db.session.commit()
 
-    return {'message': 'Vulnerability patch status changed'}
+    return ApiResponse({'message': 'Vulnerability patch status changed'})

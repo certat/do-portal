@@ -14,17 +14,17 @@ def checkall(checked_patched=False):
     for vuln in vulns:
         if vuln.scanable:
             vuln.tested = datetime.datetime.now()
-            check_result = check_patched(vuln.request_method,
-                                         vuln.url,
-                                         vuln.request_data,
-                                         vuln.check_string)
+            rc, status_code = check_patched(vuln.request_method,
+                                            vuln.url,
+                                            vuln.request_data,
+                                            vuln.check_string)
 
-            if check_result[0] == 1:
+            if rc == 1:
                 vuln.patched = datetime.datetime.now()
-            elif check_result[0] == 0:
+            elif rc == 0:
                 vuln.patched = ''
 
-            vuln.request_response_code = check_result[1]
+            vuln.request_response_code = status_code
             vuln.updated = datetime.datetime.now()
 
             db.session.add(vuln)
@@ -35,8 +35,8 @@ def check_patched(method, url, data, check_string):
     page = requests.request(method, url, data=data, stream=False, verify=False)
     if page.status_code != 403:
         if check_string in page.text:
-            return [0, page.status_code]
+            return 0, page.status_code
         else:
-            return [1, page.status_code]
+            return 1, page.status_code
     else:
-        return [2, page.status_code]
+        return 2, page.status_code
