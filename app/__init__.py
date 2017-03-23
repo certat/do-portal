@@ -17,7 +17,7 @@ from app.core import FlaskApi, ApiException
 from app.utils import JSONEncoder
 from .utils.mixins import Anonymous
 
-version_ = (1, 7, 1)
+version_ = (1, 8, 0)
 __version__ = '.'.join(map(str, version_[0:2]))
 __release__ = '.'.join(map(str, version_))
 
