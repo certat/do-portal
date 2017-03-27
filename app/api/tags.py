@@ -1,6 +1,6 @@
 from flask import request, redirect, url_for, g
 from flask_jsonschema import validate
-from app.core import ApiResponse, ApiPagedResponse
+from app.core import ApiResponse
 from app import db
 from app.models import Tag
 from . import api
@@ -8,7 +8,7 @@ from . import api
 
 @api.route('/tags', methods=['GET'])
 def get_tags():
-    """Return a paginated list of available tags
+    """Return available tags
 
     For tag details see :http:get:`/api/1.0/tags/(int:tag_id)`
 
@@ -44,9 +44,13 @@ def get_tags():
     :>jsonarr string name: Tag name
 
     :status 200: Tag list
+    :status 204: No tags available
     :status 404: Not found
     """
-    return ApiPagedResponse(Tag.query.distinct(Tag.name))
+    tags = Tag.query.distinct(Tag.name).all()
+    if not tags:
+        return ApiResponse({}, 204)
+    return ApiResponse({'tags': tags})
 
 
 @api.route('/tags/<int:tag_id>', methods=['GET'])

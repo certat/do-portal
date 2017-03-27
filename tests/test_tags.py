@@ -21,7 +21,7 @@ def test_update_tag(client):
 
 def test_read_tag(client):
     rv = client.get(url_for('api.get_tags'))
-    assert_msg(rv, key='items')
+    assert_msg(rv, key='tags')
 
     rv = client.get(url_for('api.get_tag', tag_id=1))
     assert_msg(rv, key='name')
