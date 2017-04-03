@@ -228,6 +228,11 @@ class User(UserMixin, Model, SerializerMixin):
     otp_secret = db.Column(db.String(16))
     otp_enabled = db.Column(db.Boolean, default=False, nullable=False)
 
+    user_organizations = db.relationship(
+        'OrganizationUser',
+        backref='users_for_org',
+    ) 
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.email in current_app.config['ADMINS']:
@@ -614,6 +619,18 @@ class Organization(Model, SerializerMixin):
     # send emails this many seconds apart
     mail_times = db.Column(db.Integer, default=3600)
     deleted = db.Column(db.Integer, default=0)
+    
+    parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
+    
+    child_orgs =  db.relationship(
+        'Organization',
+        backref='parent_org',
+    )    
+
+    organization_users = db.relationship(
+        'OrganizationUser',
+        backref='orgs_for_user'
+    )
 
     group = db.relationship(
         'OrganizationGroup',
@@ -1015,17 +1032,34 @@ class Contact(Model):
     email = db.Column(db.String(255), nullable=False)
     deleted = db.Column(db.Integer, default=0)
 
-class Address(Model, SerializerMixin):
-    __tablename__ = 'addresses'
-    __public__ = ('id', 'postal_address', 'zip', 'country', 'comment')
+class OrganizationUserRole(Model):
+    __tablename__ = 'organization_user_roles'
+    __public__ = 'name'
+    query_class = FilteredQuery
+    name = db.Column(db.String(255), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    users_for_role = db.relationship(
+        'OrganizationUser',
+        backref='roles_for_user'
+    )
+
+class OrganizationUser(Model, SerializerMixin):
+    __tablename__ = 'organizations_users'
+    __public__ = ('id', 'street', 'zip', 'country', 'comment', \
+                  'email', 'phone' )
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    postal_address = db.Column(db.String(255))
+    organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
+    org_user_role_id = db.Column(db.Integer, db.ForeignKey('organization_user_roles.id'))
+    street = db.Column(db.String(255))
     zip = db.Column(db.String(25))
     country = db.Column(db.String(50))  # should be a lookup table
-    comment = db.Column(db.String(250))
-    deleted = db.Column(db.Integer, default=0)
+    comment = db.Column(db.String(255))
+    email = db.Column(db.String(255))
+    phone = db.Column(db.String(255))
+    deleted = db.Column(db.Boolean, default=False)
+    ts_deleted = db.Column(db.DateTime)
 
 
 @login_manager.user_loader
