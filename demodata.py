@@ -42,7 +42,6 @@ def add():
     )
     db.session.add(cert)
 
-
     cert_user = User(
         name = "cert master user",
     )
@@ -68,18 +67,35 @@ def add():
         parent_org = cert
     )
     db.session.add(evn)
-    db.session.commit()    
-
+    evn_strom = Organization(
+        abbreviation="EVN Strom",
+        full_name="EVN Strom",
+        parent_org = evn
+    )
+    db.session.add(evn_strom)
+    evn_strom_user = User(
+        name = "evn strom user",
+    )
+    evn_strom_user.password = 'bla'
+    db.session.add(evn_strom_user)
     
-
+    evnstrom_orguser = OrganizationUser(
+        email = 'strom@evn.at',
+        zip = '5678',
+        organization = evn,        
+        user = evn_strom_user
+    )
+    db.session.commit()    
     
 
 @cli.command()
 def delete():
     """delete sample data"""
     OrganizationUser.query.delete()
+    Organization.query.filter_by(abbreviation="EVN Strom").delete()
     Organization.query.filter_by(abbreviation="EVN").delete()
     Organization.query.filter_by(abbreviation="CERT").delete()
+    User.query.filter_by(name="evn strom user").delete()
     User.query.filter_by(name="cert master user").delete()
     db.session.commit()
 
