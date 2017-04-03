@@ -600,7 +600,7 @@ class Organization(Model, SerializerMixin):
     __public__ = ('id', 'abbreviation', 'full_name', 'abuse_emails', 'groups',
                   'ip_ranges', 'fqdns', 'asns', 'old_ID', 'is_sla',
                   'mail_template', 'mail_times', 'group_id',
-                  'group', 'contact_emails')
+                  'group', 'contact_emails', 'display_name')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(
@@ -615,17 +615,14 @@ class Organization(Model, SerializerMixin):
     # we are keeping it for compatibility with the Excel sheets
     old_ID = db.Column(db.String(5))
     full_name = db.Column(db.String(255))
+    display_name = db.Column(db.String(255))
     mail_template = db.Column(db.String(50), default='EnglishReport')
     # send emails this many seconds apart
     mail_times = db.Column(db.Integer, default=3600)
     deleted = db.Column(db.Integer, default=0)
     
     parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
-    
-    child_orgs =  db.relationship(
-        'Organization',
-        backref='parent_org',
-    )    
+    child_org = db.relationship('Organization')    
 
     organization_users = db.relationship(
         'OrganizationUser',
@@ -1045,12 +1042,14 @@ class OrganizationUserRole(Model):
 
 class OrganizationUser(Model, SerializerMixin):
     __tablename__ = 'organizations_users'
-    __public__ = ('id', 'street', 'zip', 'country', 'comment', \
+    __public__ = ('id', 'street', 'zip', 'country', 'comment',
                   'email', 'phone' )
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship("User", backref=db.backref('organization_user'))
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
+    organization = db.relationship("Organization", backref=db.backref('organization_user'))
     org_user_role_id = db.Column(db.Integer, db.ForeignKey('organization_user_roles.id'))
     street = db.Column(db.String(255))
     zip = db.Column(db.String(25))
