@@ -622,7 +622,8 @@ class Organization(Model, SerializerMixin):
     deleted = db.Column(db.Integer, default=0)
     
     parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
-    child_org = db.relationship('Organization')    
+    child_organizations = db.relationship('Organization')    
+    parent_org = db.relationship('Organization', remote_side=[id]) 
 
     organization_users = db.relationship(
         'OrganizationUser',

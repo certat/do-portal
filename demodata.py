@@ -60,12 +60,25 @@ def add():
     
     click.echo('Done Org id: ' + str(cert.id)) 
     click.echo('Done User id: ' + str(cert_user.id)) 
+    click.echo('adding sub org') 
+
+    evn = Organization(
+        abbreviation="EVN",
+        full_name="EVN Dach",
+        parent_org = cert
+    )
+    db.session.add(evn)
+    db.session.commit()    
+
+    
+
     
 
 @cli.command()
 def delete():
     """delete sample data"""
     OrganizationUser.query.delete()
+    Organization.query.filter_by(abbreviation="EVN").delete()
     Organization.query.filter_by(abbreviation="CERT").delete()
     User.query.filter_by(name="cert master user").delete()
     db.session.commit()
@@ -78,8 +91,8 @@ def print():
    for uo in u.user_organizations:
        click.echo(uo.email)
        click.echo(uo.organization.full_name)
-
-
+       for co in uo.organization.child_organizations:
+          click.echo(co.full_name)
 
 if __name__ == '__main__':
     cli()
