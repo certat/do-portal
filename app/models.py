@@ -1030,7 +1030,7 @@ class Contact(Model):
     email = db.Column(db.String(255), nullable=False)
     deleted = db.Column(db.Integer, default=0)
 
-class OrganizationUserRole(Model):
+class OrganizationUserRole(Model, SerializerMixin):
     __tablename__ = 'organization_user_roles'
     __public__ = ['name', 'display_name']
     query_class = FilteredQuery
