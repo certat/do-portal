@@ -1122,6 +1122,7 @@ class OrganizationUser(Model, SerializerMixin):
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     organization = db.relationship("Organization", backref=db.backref('organization_user'))
     org_user_role_id = db.Column(db.Integer, db.ForeignKey('organization_user_roles.id'))
+    org_user_role = db.relationship("OrganizationUserRole", backref=db.backref('organization_user'))
     street = db.Column(db.String(255))
     zip = db.Column(db.String(25))
     country = db.Column(db.String(50))  # should be a lookup table

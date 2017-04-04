@@ -16,7 +16,7 @@ from app import db
 from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, Vulnerability, Tag
 from app.models import ContactEmail, emails_organizations, tags_vulnerabilities
-from app.models import Role, ReportType, OrganizationUser
+from app.models import Role, ReportType, OrganizationUser, OrganizationUserRole
 
 
 def create_cli_app(info):
@@ -47,10 +47,29 @@ def addyaml():
          abbreviation=org['name'],
          full_name=org['name'],
       )
+      if ('parent_org' in org):
+         po = Organization.query.filter_by(full_name=org['parent_org']).first() 
+         o.parent_org = po
       db.session.add(o)
-       
-   db.session.commit()    
+      db.session.commit()    
 
+   for user in data_loaded['user']:
+      click.echo(user['name'])
+      u = User(
+         name = user['name']
+      )
+      u.password = 'bla'
+      db.session.add(u)
+      
+      role = OrganizationUserRole.query.filter_by(name=user['role']).first()
+      org = Organization.query.filter_by(full_name=user['org']).first()
+      oxu = OrganizationUser(
+         email =  user['name'] + '@' + org.full_name,
+         organization = org, 
+         user = u,
+         org_user_role = role,
+      )
+      db.session.commit()    
 
 @cli.command()
 def add():
