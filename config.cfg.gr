@@ -12,9 +12,9 @@ SESSION_PROTECTION = "strong"
 # Audit log
 SYSLOG_HOST = None
 SYSLOG_PORT = None
-LOG_DIR = '/Users/marcel/htdocs/do-portal/logs'
-PG_KEYCHAIN_PATH = "/Users/marcel/htdocs/do-portal/.gnupg"
-GPG_HOME = "/Users/marcel/htdocs/do-portal/.gnupg"
+LOG_DIR = '/Users/marcel/Documents/code/cert/do-portal/logs'
+PG_KEYCHAIN_PATH = "/Users/marcel/Documents/code/cert/do-portal/.gnupg"
+GPG_HOME = "/Users/marcel/Documents/code/cert/do-portal/.gnupg"
 GPG_BINARY = "/usr/local/bin/gpg"
 GPG_KEYSERVERS = ['pgp.mit.edu']
 # local mailserver will relay everything to 10.1.1.101
@@ -57,7 +57,7 @@ JPASS = ""
 ROOMS = ["investigation@conference.doportal","investigation.private@conference.doportal"]
 CP_ROOMS = ["investigation@conference.doportal"]
 # AV engines
-AVSCAN_CONFIG = "/Users/marcel/htdocs/do-portal/config.av.cfg"
+AVSCAN_CONFIG = "/Users/marcel/Documents/code/cert/do-portal/config.av.cfg"
 # VxStream sandbox configuration
 REST_CLIENT_VX_BASE_URL = 'http://doportal'
 REST_CLIENT_VX_API_KEY = ''
