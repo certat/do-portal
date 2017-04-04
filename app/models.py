@@ -1032,7 +1032,7 @@ class Contact(Model):
 
 class OrganizationUserRole(Model, SerializerMixin):
     __tablename__ = 'organization_user_roles'
-    __public__ = ['name', 'display_name']
+    __public__ = ('id', 'name', 'display_name')
     query_class = FilteredQuery
     name = db.Column(db.String(255), nullable=False)
     display_name = db.Column(db.String(255), nullable=False)
@@ -1042,6 +1042,11 @@ class OrganizationUserRole(Model, SerializerMixin):
         'OrganizationUser',
         backref='roles_for_user'
     )
+   
+    __mapper_args__ = {
+        'order_by': name
+    }
+
     @staticmethod
     def __insert_defaults():
         roles = [
@@ -1069,6 +1074,8 @@ class OrganizationUserRole(Model, SerializerMixin):
                 db.session.add(role)
         db.session.commit()
 
+        def __repr__(self):
+            return '{} #{}'.format(self.__class__.__name__, self.name)
 
 
 class OrganizationUser(Model, SerializerMixin):
