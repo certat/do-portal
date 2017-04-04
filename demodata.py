@@ -33,6 +33,11 @@ def cli():
 
 
 @cli.command()
+@click.option('--file', help='-f yaml data file')
+def addyaml(file):
+   print(file)
+
+@cli.command()
 def add():
     """Add sample data"""
 
