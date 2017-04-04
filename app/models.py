@@ -1032,10 +1032,10 @@ class Contact(Model):
 
 class OrganizationUserRole(Model):
     __tablename__ = 'organization_user_roles'
-    __public__ = ['name', 'name_german']
+    __public__ = ['name', 'display_name']
     query_class = FilteredQuery
     name = db.Column(db.String(255), nullable=False)
-    name_display = db.Column(db.String(255), nullable=False)
+    display_name = db.Column(db.String(255), nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     deleted = db.Column(db.Integer, default=0)
     users_for_role = db.relationship(
@@ -1065,7 +1065,7 @@ class OrganizationUserRole(Model):
         for r in roles:
             role = OrganizationUserRole.query.filter_by(name=r[0]).first()
             if role is None:
-                role = OrganizationUserRole(name=r[0], name_display=r[1] )
+                role = OrganizationUserRole(name=r[0], display_name=r[1] )
                 db.session.add(role)
         db.session.commit()
 

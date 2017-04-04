@@ -19,7 +19,7 @@ __release__ = '.'.join(map(str, version_))
 cp = Blueprint('cp', __name__)
 from . import routes  # noqa
 from . import organizations, vulnerabilities, deliverable_files, fqdns  # noqa
-from . import organization_user_roles, organization_roles  # noqa
+# from . import organization_user_roles, organization_roles  # noqa
 from .analysis import av, static, vxstream, fireeye  # noqa
 from . import errors  # noqa
 
