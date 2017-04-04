@@ -447,3 +447,46 @@ def update_cp_organization():
     db.session.add(o)
     db.session.commit()
     return {'message': 'Organization saved'}
+
+
+@cp.route('/organizations/<int:org_id>', methods=['DELETE'])
+@json_response
+def delete_cp_organization(org_id):
+    """Delete organization
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+        DELETE /api/1.0/organizatoins/2 HTTP/1.1
+        Host: cp.cert.europa.eu
+        Accept: application/json
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+
+        {
+          "message": "Organization deleted"
+        }
+
+    :param org_id: Unique ID of the organization
+
+    :reqheader Accept: Content type(s) accepted by the client
+    :resheader Content-Type: this depends on `Accept` header or request
+
+    :>json string message: Action status status
+
+    :status 200: Organization was deleted
+    :status 404: Organization was not found
+    """
+    o = Organization.query.filter(
+        Organization.id == org_id
+    ).first_or_404()
+    o.mark_as_deleted()
+    db.session.add(o)
+    db.session.commit()
+    return {'message': 'Organization deleted'}

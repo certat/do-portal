@@ -1,7 +1,7 @@
 from flask import g, request
 from flask_jsonschema import validate
 from app import db
-from app.models import OrganizationsUsers, Organization, User
+from app.models import OrganizationUser, Organization, User
 from app.api.decorators import json_response
 from . import cp
 
@@ -77,7 +77,7 @@ def get_cp_organization_users():
 
 @cp.route('/organization_users/<int:org_user_id>', methods=['GET'])
 @json_response
-def get_cp_organization():
+def get_cp_organization_user():
     """Return organization membership identified by ``org_user_id``
 
     **Example request**:
@@ -135,14 +135,14 @@ def get_cp_organization():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    org_user = OrganizationsUsers.query.get_or_404(org_user_id)
+    org_user = OrganizationUser.query.get_or_404(org_user_id)
     check_org_user_permissions(org_user)
     return org_user.serialize()
 
 @cp.route('/organization_users', methods=['POST'])
 @validate('organization_users', 'add_cp_organization_user')
 @json_response
-def add_cp_organization():
+def add_cp_organization_user():
     """Add new organization membership
 
     **Example request**:
@@ -216,7 +216,7 @@ def add_cp_organization():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    org_user = OrganizationsUsers.fromdict(request.json)
+    org_user = OrganizationUser.fromdict(request.json)
     check_org_user_permissions(org_user)
     db.session.add(o)
     db.session.commit()
@@ -294,8 +294,8 @@ def update_cp_organization_user():
     :status 400: Bad request
     :status 422: Validation error
     """
-    org_user = OrganizationsUsers.query.filter(
-        OrganizationsUsers.id == org_user_id
+    org_user = OrganizationUser.query.filter(
+        OrganizationUser.id == org_user_id
     ).first()
     if not o:
         return redirect(url_for('cp.add_cp_organization'))
@@ -304,6 +304,50 @@ def update_cp_organization_user():
     db.session.add(o)
     db.session.commit()
     return {'message': 'Organization user membership saved'}
+
+
+@cp.route('/organization_users/<int:org_user_id>', methods=['DELETE'])
+@json_response
+def delete_cp_organization_user(org_user_id):
+    """Delete organization user membership
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+        DELETE /api/1.0/organizatoin_users/2 HTTP/1.1
+        Host: cp.cert.europa.eu
+        Accept: application/json
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+
+        {
+          "message": "Organization user membership deleted"
+        }
+
+    :param org_id: Unique ID of the organization
+
+    :reqheader Accept: Content type(s) accepted by the client
+    :resheader Content-Type: this depends on `Accept` header or request
+
+    :>json string message: Action status status
+
+    :status 200: Organization user membership was deleted
+    :status 404: Organization user membership was not found
+    """
+    org_user = OrganizationUser.query.filter(
+        OrganizationUser.id == org_user_id
+    ).first_or_404()
+    org_user.mark_as_deleted()
+    db.session.add(org_user)
+    db.session.commit()
+    return {'message': 'Organization user membership deleted'}
+
 
 def check_org_user_permissions(org_user):
     """ The current user must be able to admin both the membership's
