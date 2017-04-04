@@ -5,7 +5,12 @@ from .conftest import assert_msg
 def test_return_organization_user_roles(client):
     rv = client.get(url_for('cp.get_cp_organization_user_roles'))
     assert_msg(rv, key='organization_user_roles')
-#    print(rv)
+    got = list(rv.json.values())
+    some_entry = got[0][0]
 
-    rv = client.get(url_for('cp.get_cp_organization_user_role', role_id=1))
+    rv = client.get(url_for('cp.get_cp_organization_user_role',
+                    role_id=some_entry['id']))
     assert_msg(rv, key='display_name')
+    got = list(rv.json.values())
+    single_entry = rv.json
+    assert some_entry['name'] == single_entry['name']

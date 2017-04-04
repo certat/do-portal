@@ -75,7 +75,7 @@ def get_cp_organization_user_roles():
 
 @cp.route('/organization_user_roles/<int:role_id>', methods=['GET'])
 @json_response
-def get_cp_organization_user_role():
+def get_cp_organization_user_role(role_id):
     """Return organization user role identified by ``org_id``
 
     **Example request**:
@@ -119,5 +119,5 @@ def get_cp_organization_user_role():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    o = OrganizationUserRole.query.get_or_404(role_id)
-    return o.serialize()
+    r = OrganizationUserRole.query.get_or_404(role_id)
+    return r.serialize()
