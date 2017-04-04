@@ -57,7 +57,7 @@ def get_cp_organizations():
               "mail_template": "EnglishReport",
               "mail_times": 3600,
               "old_ID": "00",
-              "parent_organization": 95
+              "parent_org": 95
             }
           ]
         }
@@ -146,7 +146,7 @@ def get_cp_organization():
           "mail_template": "EnglishReport",
           "mail_times": 3600,
           "old_ID": "00",
-          "parent_organization": 95
+          "parent_org": 95
         }
 
     :param org_id: organization unique ID
@@ -173,7 +173,7 @@ def get_cp_organization():
     :>json array fqdns: List of FQDNs
     :>json array ip_ranges: List of IP ranges used by this organization
     :>json integer is_sla: Service-level agreement marker
-    :>json integer parent_organization: Parent organization ID
+    :>json integer parent_org: Parent organization ID
 
     :status 200: Returns organization details object
     :status 404: Resource not found
@@ -235,7 +235,7 @@ def add_cp_organization():
           "mail_template": "EnglishReport",
           "mail_times": 3600,
           "old_ID": "64"
-          "parent_organization": 95
+          "parent_org": 95
         }
 
     **Example response**:
@@ -283,7 +283,7 @@ def add_cp_organization():
     :<json array asns: AS numbers
     :<json array fqdns: List of FQDNs
     :<json array ip_ranges: List of IP ranges used by this organization
-    :<json integer parent_organization: Parent organization ID
+    :<json integer parent_org: Parent organization ID
     :>json string message: Status message
     :>json integer id: organization ID
 
@@ -299,7 +299,7 @@ def add_cp_organization():
     contact_emails = request.json.pop('contact_emails')
     o = Organization.fromdict(request.json)
 
-    parent_org = Organization.query.get_or_404(o.parent_organization)
+    parent_org = Organization.query.get_or_404(o.parent_org)
     if not parent_org.is_user_allowed(g.user):
         abort(403)
 
@@ -360,7 +360,7 @@ def update_cp_organization():
           "mail_template": "EnglishReport",
           "mail_times": 3600,
           "old_ID": "00",
-          "parent_organization": 95
+          "parent_org": 95
         }
 
     **Example response**:
@@ -405,7 +405,7 @@ def update_cp_organization():
     :<json array asns: AS numbers
     :<json array fqdns: List of FQDNs
     :<json array ip_ranges: List of IP ranges used by this organization
-    :<json integer parent_organization: Parent organization ID
+    :<json integer parent_org: Parent organization ID
     :>json string message: Status message
 
     :status 200: Organization details were successfully updated

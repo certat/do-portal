@@ -231,7 +231,7 @@ class User(UserMixin, Model, SerializerMixin):
     user_organizations = db.relationship(
         'OrganizationUser',
         backref='users_for_org',
-    ) 
+    )
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -371,6 +371,20 @@ class User(UserMixin, Model, SerializerMixin):
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
+
+    # STUB
+    def is_user_allowed(self, user):
+        return True
+
+    # STUB
+    def organization_memberships(self):
+        # returns a list of OrganizationUser records
+        return []
+
+    # STUB
+    def organizations(self):
+        # returns a list of Organization records
+        return []
 
 
 class Permission:
@@ -620,10 +634,10 @@ class Organization(Model, SerializerMixin):
     # send emails this many seconds apart
     mail_times = db.Column(db.Integer, default=3600)
     deleted = db.Column(db.Integer, default=0)
-    
+
     parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
-    child_organizations = db.relationship('Organization')    
-    parent_org = db.relationship('Organization', remote_side=[id]) 
+    child_organizations = db.relationship('Organization')
+    parent_org = db.relationship('Organization', remote_side=[id])
 
     organization_users = db.relationship(
         'OrganizationUser',
@@ -734,6 +748,25 @@ class Organization(Model, SerializerMixin):
 
         org.group_id = 1
         return org
+
+    # STUB
+    def mark_as_deleted(self):
+        self.deleted = 1
+        # set ts_deleted
+
+    # STUB
+    def is_user_allowed(self, user):
+        return True
+
+    # STUB
+    def has_child_organizations(self):
+        return True
+
+    # STUB
+    def can_be_deleted(self):
+        # not has_child_organizations and not has associated OrganizationUser
+        # records
+        return True
 
     def __repr__(self):
         return '{} #{}'.format(self.__class__.__name__, self.abbreviation)
@@ -1042,7 +1075,7 @@ class OrganizationUserRole(Model, SerializerMixin):
         'OrganizationUser',
         backref='roles_for_user'
     )
-   
+
     __mapper_args__ = {
         'order_by': name
     }
@@ -1097,6 +1130,10 @@ class OrganizationUser(Model, SerializerMixin):
     phone = db.Column(db.String(255))
     deleted = db.Column(db.Boolean, default=False)
     ts_deleted = db.Column(db.DateTime)
+
+    def mark_as_deleted(self):
+        self.deleted = 1
+        # set ts_deleted
 
 
 @login_manager.user_loader

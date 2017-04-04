@@ -12,7 +12,8 @@ def test_create_org(client):
                   abuse_emails=["cert-eu@ec.europa.eu"],
                   contact_emails=[{"email": "cert-eu@ec.europa.eu"}],
                   asns=[5400],
-                  fqdns=["cert.europa.eu"])
+                  fqdns=["cert.europa.eu"],
+                  parent_org=0)
     )
     assert_msg(rv, value='Organization added', response_code=201)
 
@@ -27,7 +28,8 @@ def test_update_org(client):
                   abuse_emails=["cert-eu@ec.europa.eu"],
                   contact_emails=[{"email": "cert-eu-new@ec.europa.eu"}],
                   asns=[5400],
-                  fqdns=["cert.europa.eu"])
+                  fqdns=["cert.europa.eu"],
+                  parent_org=0)
     )
     assert rv.status_code == 200
 
