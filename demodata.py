@@ -66,13 +66,27 @@ def add():
         full_name="EVN Dach",
         parent_org = cert
     )
-    db.session.add(evn)
+    # db.session.add(evn)
+
+    evn_user = User(
+        name = "evn master user"
+    )
+    evn_user.password = 'bla'
+    
+    OrganizationUser(
+        email = 'master@evn.at',
+        zip = '5678',
+        organization = evn,        
+        user = evn_user
+    )
+
     evn_strom = Organization(
         abbreviation="EVN Strom",
         full_name="EVN Strom",
         parent_org = evn
     )
     db.session.add(evn_strom)
+
     evn_strom_user = User(
         name = "evn strom user",
     )
@@ -82,7 +96,7 @@ def add():
     evnstrom_orguser = OrganizationUser(
         email = 'strom@evn.at',
         zip = '5678',
-        organization = evn,        
+        organization = evn_strom,        
         user = evn_strom_user
     )
     db.session.commit()    
@@ -96,6 +110,7 @@ def delete():
     Organization.query.filter_by(abbreviation="EVN").delete()
     Organization.query.filter_by(abbreviation="CERT").delete()
     User.query.filter_by(name="evn strom user").delete()
+    User.query.filter_by(name="evn user").delete()
     User.query.filter_by(name="cert master user").delete()
     db.session.commit()
 

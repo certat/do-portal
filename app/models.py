@@ -1032,14 +1032,44 @@ class Contact(Model):
 
 class OrganizationUserRole(Model):
     __tablename__ = 'organization_user_roles'
-    __public__ = 'name'
+    __public__ = ['name', 'name_german']
     query_class = FilteredQuery
     name = db.Column(db.String(255), nullable=False)
+    name_display = db.Column(db.String(255), nullable=False)
     id = db.Column(db.Integer, primary_key=True)
+    deleted = db.Column(db.Integer, default=0)
     users_for_role = db.relationship(
         'OrganizationUser',
         backref='roles_for_user'
     )
+    @staticmethod
+    def __insert_defaults():
+        roles = [
+          ['Primary contact',               'Ansprechpartner Primaer'],
+          ['OrgAdmin',                      'Administrator Organisation'],
+          ['Proxy contact',                 'Ansprechpartner Stellvertreter'],
+          ['SinglePointOfContact',          'Single Point of Contact (SPoC)'],
+          ['24/7',                          '24/7'],
+          ['Crisis squad',                  'Krisenstab'],
+          ['ContactICSSecurityTechnical',   'ICS Security Technik'],
+          ['ContactICSSecurityOrganisation','ICS Security Organisation'],
+          ['ContactITSecurityTechnical',    'IT Security Technik'],
+          ['ContactITSecurityOrganisation', 'IT Security Organisation'],
+          ['tech-c',                        'Domain Technical Contact (tech-c)'],
+          ['abuse-c',                       'Domain Abuse Contact (abuse-c)'],
+          ['billing-c',                     'Domain Billing Kontakt (billing-c)'],
+          ['admin-c',                       'Domain Administativer Kontakt (admin-c)'],
+          ['CISO',                          'CISO'],
+          ['private',                       'Privat'],
+        ]
+        for r in roles:
+            role = OrganizationUserRole.query.filter_by(name=r[0]).first()
+            if role is None:
+                role = OrganizationUserRole(name=r[0], name_display=r[1] )
+                db.session.add(role)
+        db.session.commit()
+
+
 
 class OrganizationUser(Model, SerializerMixin):
     __tablename__ = 'organizations_users'
