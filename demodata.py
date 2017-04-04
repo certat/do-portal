@@ -6,6 +6,7 @@ from collections import namedtuple
 import requests
 import datetime
 import click
+import yaml
 
 from app import create_app
 from flask import current_app
@@ -33,9 +34,23 @@ def cli():
 
 
 @cli.command()
-@click.option('--file', help='-f yaml data file')
-def addyaml(file):
-   print(file)
+def addyaml():
+   """Add sample data from yaml file""" 
+   with open("install/testdata.yaml", 'r') as stream:
+        data_loaded = yaml.load(stream)
+
+   click.echo(yaml.dump(data_loaded, default_flow_style=False))
+
+   for org in data_loaded['org']:
+      click.echo(org['name'])
+      o = Organization(
+         abbreviation=org['name'],
+         full_name=org['name'],
+      )
+      db.session.add(o)
+       
+   db.session.commit()    
+
 
 @cli.command()
 def add():
@@ -111,12 +126,8 @@ def add():
 def delete():
     """delete sample data"""
     OrganizationUser.query.delete()
-    Organization.query.filter_by(abbreviation="EVN Strom").delete()
-    Organization.query.filter_by(abbreviation="EVN").delete()
-    Organization.query.filter_by(abbreviation="CERT").delete()
-    User.query.filter_by(name="evn strom user").delete()
-    User.query.filter_by(name="evn user").delete()
-    User.query.filter_by(name="cert master user").delete()
+    Organization.query.delete()
+    User.query.delete()
     db.session.commit()
 
 @cli.command()

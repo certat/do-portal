@@ -1,0 +1,38 @@
+org: 
+  - name: cert
+  - name: evn
+    parent_org: cert
+  - name: evn-strom
+    parent_org: evn
+  - name: evn-gas
+    parent_org: evn
+  - name: verbund
+    parent_org: cert
+  - name: verbund-strom
+    parent_org: verbund
+  - name: verbund-strom
+    parent_org: verbund
+  - name: verbund-strom-leitung
+    parent_org: verbund-strom
+user:
+  - name: certmaster
+    org: cert
+    role: OrgAdmin
+  - name: evnmaster
+    org: evn
+    role: OrgAdmin
+  - name: "EVN Gas User"
+    org: evn-gas
+    role: CISO
+  - name: "EVN Gas Admin"
+    org: evn-gas
+    role: OrgAdmin
+  - name: "Verbund Admin"
+    org: verbund
+    role: OrgAdmin
+  - name: "Verbund CISO"
+    org: verbund
+    role: CISO
+  - name: "Verbund Strom Leitung Admin"
+    org: verbund-strom-leitung
+    role: OrgAdmin
