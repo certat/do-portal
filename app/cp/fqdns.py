@@ -221,7 +221,7 @@ def add_fqdn():
     db.session.add(f)
     db.session.commit()
     return {'fqdn': f.serialize(), 'message': 'Fqdn added'}, 201, \
-           {'Location': url_for('api.get_fqdn_by_name', fqdn=f.fqdn)}
+           {'Location': url_for('cp.get_fqdn_by_name', fqdn=f.fqdn)}
 
 
 @cp.route('/fqdns/<int:fqdn_id>', methods=['PUT'])
@@ -276,7 +276,7 @@ def update_fqdn(fqdn_id):
         Fqdn.organization_id == g.user.organization_id
     ).first()
     if not f:
-        return redirect(url_for('api.add_fqdn'))
+        return redirect(url_for('cp.add_fqdn'))
     f.from_json(request.json)
     db.session.add(f)
     db.session.commit()

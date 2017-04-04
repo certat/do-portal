@@ -1,0 +1,78 @@
+{
+  "add_cp_organization_user": {
+    "type": "object",
+    "properties": {
+      "role_id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "organization_id": {
+        "type": "integer"
+      },
+      "country": {
+        "type": "string"
+      },
+      "street": {
+        "type": "string"
+      },
+      "zip": {
+        "type": "string"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "comment": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "role_id",
+      "user_id",
+      "organization_id",
+      "email"
+    ]
+  },
+  "update_cp_organization_user": {
+    "type": "object",
+    "properties": {
+      "role_id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "organization_id": {
+        "type": "integer"
+      },
+      "country": {
+        "type": "string"
+      },
+      "street": {
+        "type": "string"
+      },
+      "zip": {
+        "type": "string"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "comment": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "role_id",
+      "user_id",
+      "organization_id",
+      "email"
+    ]
+  }
+}
