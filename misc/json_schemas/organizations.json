@@ -35,14 +35,14 @@
           "format": "cidr"
         }
       },
-      "parent_org": {
+      "parent_org_id": {
         "type": "integer"
       }
     },
     "required": [
       "abbreviation",
       "full_name",
-      "parent_org"
+      "parent_org_id"
     ]
   },
   "update_cp_organization": {
@@ -84,14 +84,14 @@
           "format": "cidr"
         }
       },
-      "parent_org": {
+      "parent_org_id": {
         "type": "integer"
       }
     },
     "required": [
       "abbreviation",
       "full_name",
-      "parent_org"
+      "parent_org_id"
     ]
   }
 }

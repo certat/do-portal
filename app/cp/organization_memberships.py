@@ -1,4 +1,4 @@
-from flask import g, request
+from flask import g, request, abort, url_for
 from flask_jsonschema import validate
 from app import db
 from app.models import OrganizationMembership, Organization, User
@@ -77,7 +77,7 @@ def get_cp_organization_memberships():
 
 @cp.route('/organization_memberships/<int:membership_id>', methods=['GET'])
 @json_response
-def get_cp_organization_membership():
+def get_cp_organization_membership(membership_id):
     """Return organization membership identified by ``membership_id``
 
     **Example request**:
@@ -228,7 +228,7 @@ def add_cp_organization_membership():
 @cp.route('/organization_memberships/<int:membership_id>', methods=['PUT'])
 @validate('organization_memberships', 'update_cp_organization_membership')
 @json_response
-def update_cp_organization_membership():
+def update_cp_organization_membership(membership_id):
     """Update organization membership details
 
     **Example request**:
