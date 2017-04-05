@@ -1,7 +1,7 @@
 from flask import g, request
 from flask_jsonschema import validate
 from app import db
-from app.models import OrganizationUser, Organization, User
+from app.models import OrganizationMembership, Organization, User
 from app.api.decorators import json_response
 from . import cp
 
@@ -135,7 +135,7 @@ def get_cp_organization_user():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    org_user = OrganizationUser.query.get_or_404(org_user_id)
+    org_user = OrganizationMembership.query.get_or_404(org_user_id)
     check_org_user_permissions(org_user)
     return org_user.serialize()
 
@@ -216,7 +216,7 @@ def add_cp_organization_user():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    org_user = OrganizationUser.fromdict(request.json)
+    org_user = OrganizationMembership.fromdict(request.json)
     check_org_user_permissions(org_user)
     db.session.add(o)
     db.session.commit()
@@ -294,8 +294,8 @@ def update_cp_organization_user():
     :status 400: Bad request
     :status 422: Validation error
     """
-    org_user = OrganizationUser.query.filter(
-        OrganizationUser.id == org_user_id
+    org_user = OrganizationMembership.query.filter(
+        OrganizationMembership.id == org_user_id
     ).first()
     if not o:
         return redirect(url_for('cp.add_cp_organization'))
@@ -340,8 +340,8 @@ def delete_cp_organization_user(org_user_id):
     :status 200: Organization user membership was deleted
     :status 404: Organization user membership was not found
     """
-    org_user = OrganizationUser.query.filter(
-        OrganizationUser.id == org_user_id
+    org_user = OrganizationMembership.query.filter(
+        OrganizationMembership.id == org_user_id
     ).first_or_404()
     org_user.mark_as_deleted()
     db.session.add(org_user)

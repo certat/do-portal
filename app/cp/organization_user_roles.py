@@ -1,7 +1,7 @@
 from flask import g, request
 from flask_jsonschema import validate
 from app import db
-from app.models import OrganizationUserRole
+from app.models import MembershipRole
 from app.api.decorators import json_response
 from . import cp
 
@@ -69,7 +69,7 @@ def get_cp_organization_user_roles():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    roles = OrganizationUserRole.query.all()
+    roles = MembershipRole.query.all()
     return {'organization_user_roles': [r.serialize() for r in roles]}
 
 
@@ -119,5 +119,5 @@ def get_cp_organization_user_role(role_id):
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    r = OrganizationUserRole.query.get_or_404(role_id)
+    r = MembershipRole.query.get_or_404(role_id)
     return r.serialize()

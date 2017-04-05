@@ -15,7 +15,7 @@ from app import db
 from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, Vulnerability, Tag
 from app.models import ContactEmail, emails_organizations, tags_vulnerabilities
-from app.models import Role, ReportType, OrganizationUserRole
+from app.models import Role, ReportType, MembershipRole
 
 
 def create_cli_app(info):
@@ -144,7 +144,7 @@ def addsampledata():
     OrganizationGroup._OrganizationGroup__insert_defaults()
     ReportType._ReportType__insert_defaults()
     Role._Role__insert_defaults()
-    OrganizationUserRole._OrganizationUserRole__insert_defaults()
+    MembershipRole._MembershipRole__insert_defaults()
     adm = Role.query.filter_by(permissions=0xff).first()
 
     o = Organization(

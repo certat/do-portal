@@ -229,7 +229,7 @@ class User(UserMixin, Model, SerializerMixin):
     otp_enabled = db.Column(db.Boolean, default=False, nullable=False)
 
     user_organizations = db.relationship(
-        'OrganizationUser',
+        'OrganizationMembership',
         backref='users_for_org',
     )
 
@@ -376,13 +376,13 @@ class User(UserMixin, Model, SerializerMixin):
     def is_user_allowed(self, user):
         return True
 
-    # STUB
-    def organization_memberships(self):
-        # returns a list of OrganizationUser records
-        return []
+    def get_organization_memberships(self):
+        """ returns a list of OrganizationMembership records """
+        ou = OrganizationMembership.query.filter_by() 
+        return ou
 
     # STUB
-    def organizations(self):
+    def get_organizations(self):
         # returns a list of Organization records
         return []
 
@@ -640,7 +640,7 @@ class Organization(Model, SerializerMixin):
     parent_org = db.relationship('Organization', remote_side=[id])
 
     organization_users = db.relationship(
-        'OrganizationUser',
+        'OrganizationMembership',
         backref='orgs_for_user'
     )
 
@@ -764,7 +764,7 @@ class Organization(Model, SerializerMixin):
 
     # STUB
     def can_be_deleted(self):
-        # not has_child_organizations and not has associated OrganizationUser
+        # not has_child_organizations and not has associated OrganizationMembership
         # records
         return True
 
@@ -1063,8 +1063,8 @@ class Contact(Model):
     email = db.Column(db.String(255), nullable=False)
     deleted = db.Column(db.Integer, default=0)
 
-class OrganizationUserRole(Model, SerializerMixin):
-    __tablename__ = 'organization_user_roles'
+class MembershipRole(Model, SerializerMixin):
+    __tablename__ = 'membership_roles'
     __public__ = ('id', 'name', 'display_name')
     query_class = FilteredQuery
     name = db.Column(db.String(255), nullable=False)
@@ -1072,7 +1072,7 @@ class OrganizationUserRole(Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     deleted = db.Column(db.Integer, default=0)
     users_for_role = db.relationship(
-        'OrganizationUser',
+        'OrganizationMembership',
         backref='roles_for_user'
     )
 
@@ -1101,9 +1101,9 @@ class OrganizationUserRole(Model, SerializerMixin):
           ['private',                       'Privat'],
         ]
         for r in roles:
-            role = OrganizationUserRole.query.filter_by(name=r[0]).first()
+            role = MembershipRole.query.filter_by(name=r[0]).first()
             if role is None:
-                role = OrganizationUserRole(name=r[0], display_name=r[1] )
+                role = MembershipRole(name=r[0], display_name=r[1] )
                 db.session.add(role)
         db.session.commit()
 
@@ -1111,8 +1111,8 @@ class OrganizationUserRole(Model, SerializerMixin):
             return '{} #{}'.format(self.__class__.__name__, self.name)
 
 
-class OrganizationUser(Model, SerializerMixin):
-    __tablename__ = 'organizations_users'
+class OrganizationMembership(Model, SerializerMixin):
+    __tablename__ = 'organization_memberships'
     __public__ = ('id', 'street', 'zip', 'country', 'comment',
                   'email', 'phone' )
     query_class = FilteredQuery
@@ -1121,15 +1121,15 @@ class OrganizationUser(Model, SerializerMixin):
     user = db.relationship("User", backref=db.backref('organization_user'))
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     organization = db.relationship("Organization", backref=db.backref('organization_user'))
-    org_user_role_id = db.Column(db.Integer, db.ForeignKey('organization_user_roles.id'))
-    org_user_role = db.relationship("OrganizationUserRole", backref=db.backref('organization_user'))
+    org_user_role_id = db.Column(db.Integer, db.ForeignKey('membership_roles.id'))
+    org_user_role = db.relationship("MembershipRole", backref=db.backref('organization_user'))
     street = db.Column(db.String(255))
     zip = db.Column(db.String(25))
     country = db.Column(db.String(50))  # should be a lookup table
     comment = db.Column(db.String(255))
     email = db.Column(db.String(255))
     phone = db.Column(db.String(255))
-    deleted = db.Column(db.Boolean, default=False)
+    deleted = db.Column(db.Integer, default=0)
     ts_deleted = db.Column(db.DateTime)
 
     def mark_as_deleted(self):

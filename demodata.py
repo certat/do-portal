@@ -16,7 +16,7 @@ from app import db
 from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, Vulnerability, Tag
 from app.models import ContactEmail, emails_organizations, tags_vulnerabilities
-from app.models import Role, ReportType, OrganizationUser, OrganizationUserRole
+from app.models import Role, ReportType, OrganizationMembership, MembershipRole
 
 
 def create_cli_app(info):
@@ -61,9 +61,9 @@ def addyaml():
       u.password = 'bla'
       db.session.add(u)
       
-      role = OrganizationUserRole.query.filter_by(name=user['role']).first()
+      role = MembershipRole.query.filter_by(name=user['role']).first()
       org = Organization.query.filter_by(full_name=user['org']).first()
-      oxu = OrganizationUser(
+      oxu = OrganizationMembership(
          email =  user['name'] + '@' + org.full_name,
          organization = org, 
          user = u,
@@ -87,7 +87,7 @@ def add():
     cert_user.password = 'bla'
     db.session.add(cert_user)
     
-    cert_user4cert = OrganizationUser(
+    cert_user4cert = OrganizationMembership(
         email = 'certifant@cert.at',
         zip = '1234',
         organization = cert,        
@@ -112,7 +112,7 @@ def add():
     )
     evn_user.password = 'bla'
     
-    OrganizationUser(
+    OrganizationMembership(
         email = 'master@evn.at',
         zip = '5678',
         organization = evn,        
@@ -132,7 +132,7 @@ def add():
     evn_strom_user.password = 'bla'
     db.session.add(evn_strom_user)
     
-    evnstrom_orguser = OrganizationUser(
+    evnstrom_orguser = OrganizationMembership(
         email = 'strom@evn.at',
         zip = '5678',
         organization = evn_strom,        
@@ -144,7 +144,7 @@ def add():
 @cli.command()
 def delete():
     """delete sample data"""
-    OrganizationUser.query.delete()
+    OrganizationMembership.query.delete()
     Organization.query.delete()
     User.query.delete()
     db.session.commit()
@@ -160,8 +160,9 @@ def print():
        for co in uo.organization.child_organizations:
           click.echo(co.full_name)
 
-   for user in u.get_user_organizations():
-       click.echo('%s %s' % (user.name, user.role))
+   click.echo('organization_memberships')
+   for oxu in u.organization_memberships():
+       click.echo('%s' % (oxu.email))
       
 
 
