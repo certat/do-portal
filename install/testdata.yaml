@@ -10,7 +10,7 @@ org:
     parent_org: cert
   - name: verbund-strom
     parent_org: verbund
-  - name: verbund-strom
+  - name: verbund-gas
     parent_org: verbund
   - name: verbund-strom-leitung
     parent_org: verbund-strom

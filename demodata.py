@@ -152,13 +152,18 @@ def delete():
 @cli.command()
 def print():
    """output sample data"""
-   u = User.query.filter_by(name="cert master user").first()
+   u = User.query.filter_by(name="certmaster").first()
    click.echo(u.name)
    for uo in u.user_organizations:
        click.echo(uo.email)
        click.echo(uo.organization.full_name)
        for co in uo.organization.child_organizations:
           click.echo(co.full_name)
+
+   for user in u.get_user_organizations():
+       click.echo('%s %s' % (user.name, user.role))
+      
+
 
 if __name__ == '__main__':
     cli()
