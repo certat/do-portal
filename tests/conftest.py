@@ -10,7 +10,7 @@ from flask.testing import FlaskClient
 from app import create_app
 from app import db as _db
 from app.models import User, OrganizationGroup, ReportType, Role
-from app.models import Organization, ContactEmail, OrganizationUserRole
+from app.models import Organization, ContactEmail, MembershipRole
 from app.utils import bosh_client
 
 
@@ -82,7 +82,7 @@ def addsampledata(client):
     OrganizationGroup._OrganizationGroup__insert_defaults()
     ReportType._ReportType__insert_defaults()
     Role._Role__insert_defaults()
-    OrganizationUserRole._OrganizationUserRole__insert_defaults()
+    MembershipRole._MembershipRole__insert_defaults()
     o = Organization(
         abbreviation="CERT-EU",
         full_name="Computer Emergency Response Team for EU "
