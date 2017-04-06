@@ -42,32 +42,60 @@ def addyaml():
    click.echo(yaml.dump(data_loaded, default_flow_style=False))
 
    for org in data_loaded['org']:
-      click.echo(org['name'])
+      click.echo(org['abbreviation'])
+      if 'full_name' not in org:
+         org['full_name'] = org['abbreviation']
+      if 'display_name' not in org:
+         org['display_name'] = org['abbreviation']
       o = Organization(
-         abbreviation=org['name'],
-         full_name=org['name'],
+         abbreviation=org['abbreviation'],
+         full_name=org['full_name'],
+         display_name=org['display_name'],
       )
       if ('parent_org' in org):
-         po = Organization.query.filter_by(full_name=org['parent_org']).first() 
+         po = Organization.query.filter_by(abbreviation=org['parent_org']).first() 
          o.parent_org = po
       db.session.add(o)
       db.session.commit()    
 
    for user in data_loaded['user']:
       click.echo(user['name'])
-      u = User(
-         name = user['name']
-      )
-      u.password = 'bla'
-      db.session.add(u)
+      u = User.query.filter_by(name = user['name']).first()
+      if (not u):
+         u = User(
+            name = user['name']
+         )
+         u.password = 'bla'
+         db.session.add(u)
       
       role = MembershipRole.query.filter_by(name=user['role']).first()
-      org = Organization.query.filter_by(full_name=user['org']).first()
+      org = Organization.query.filter_by(abbreviation=user['org']).first()
+      if 'email' not in user:
+          user['email'] = 'na@email.at'
+      if 'street' not in user:
+          user['street'] = 'no street'
+      if 'zip' not in user:
+          user['zip'] = '1234'
+      if 'city' not in user:
+          user['city'] = 'n/a'
+      if 'country' not in user:
+          user['country'] = 'no country for old men'
+      if 'comment' not in user:
+          user['comment'] = 'no comment'
+      if 'phone' not in user:
+          user['phone'] = '12345678'
+      
       oxu = OrganizationMembership(
-         email =  user['name'] + '@' + org.full_name,
+         email =  user['email'],
+         street = user['street'],
+         city = user['city'],
+         zip  = user['zip'],
+         country = user['country'],
+         comment = user['comment'],
+         phone =user['phone'],
          organization = org, 
          user = u,
-         org_user_role = role,
+         membership_role = role,
       )
       db.session.commit()    
 
@@ -145,7 +173,7 @@ def add():
 def delete():
     """delete sample data"""
     OrganizationMembership.query.delete()
-    Organization.query.delete()
+    Organization.query.filter(Organization.abbreviation != "CERT-EU").delete()
     User.query.delete()
     db.session.commit()
 
@@ -153,17 +181,28 @@ def delete():
 def print():
    """output sample data"""
    u = User.query.filter_by(name="certmaster").first()
-   click.echo(u.name)
-   for uo in u.user_organizations:
+   click.echo(u.name + str(u.id))
+   for uo in u.user_memberships:
        click.echo(uo.email)
+       click.echo(uo)
        click.echo(uo.organization.full_name)
        for co in uo.organization.child_organizations:
           click.echo(co.full_name)
 
-   click.echo('organization_memberships')
-   for oxu in u.organization_memberships():
-       click.echo('%s' % (oxu.email))
-      
+   click.echo('**** organization_memberships ******')
+   for oxu in u.get_organization_memberships():
+   
+       click.echo('%s %s %s' % 
+           (oxu.email, oxu.membership_role.name,  oxu.organization.full_name))
+
+   #click.echo(u.org_ids)
+
+   click.echo('**** organization_memberships ******')
+   oms = User.query.filter_by(name = 'EVN User').first().get_organization_memberships()  
+   if (oms):
+     for oxu in oms: 
+       click.echo('%s %s %s' % 
+          (oxu.email, oxu.membership_role.name,  oxu.organization.full_name))
 
 
 if __name__ == '__main__':

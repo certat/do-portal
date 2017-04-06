@@ -1,28 +1,40 @@
 org: 
-  - name: cert
-  - name: evn
+  - abbreviation: cert
+    full_name: "Energy CERT Austria" 
+    display_name: "Energy CERT"
+  - abbreviation: evn
     parent_org: cert
-  - name: evn-strom
+  - abbreviation: evn-strom
     parent_org: evn
-  - name: evn-gas
+  - abbreviation: evn-gas
     parent_org: evn
-  - name: verbund
+  - abbreviation: verbund
     parent_org: cert
-  - name: verbund-strom
+  - abbreviation: verbund-strom
     parent_org: verbund
-  - name: verbund-gas
+  - abbreviation: verbund-gas
     parent_org: verbund
-  - name: verbund-strom-leitung
+  - abbreviation: verbund-strom-leitung
     parent_org: verbund-strom
 user:
   - name: certmaster
     org: cert
     role: OrgAdmin
+    street: "Karlsplatz 1"
+    city: "Wien"
+    zip: "1010"
+    country: Austria
+    comment: "Master User"
+    email: "master@ecert.at"
+    phone: "+43 1 123456"       
   - name: evnmaster
     org: evn
     role: OrgAdmin
-  - name: "EVN Gas User"
+  - name: "EVN User"
     org: evn-gas
+    role: CISO
+  - name: "EVN User"
+    org: evn-strom
     role: CISO
   - name: "EVN Gas Admin"
     org: evn-gas

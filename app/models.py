@@ -228,9 +228,13 @@ class User(UserMixin, Model, SerializerMixin):
     otp_secret = db.Column(db.String(16))
     otp_enabled = db.Column(db.Boolean, default=False, nullable=False)
 
-    user_organizations = db.relationship(
+    _orgs = []
+    _org_ids = []
+
+    user_memberships = db.relationship(
         'OrganizationMembership',
-        backref='users_for_org',
+        # backref='user_memberships',
+        back_populates="user",
     )
 
     def __init__(self, **kwargs):
@@ -363,6 +367,8 @@ class User(UserMixin, Model, SerializerMixin):
 
     @staticmethod
     def random_str(length=64):
+
+
         return binascii.hexlify(os.urandom(length)).decode()
 
     def can(self, permissions):
@@ -376,14 +382,40 @@ class User(UserMixin, Model, SerializerMixin):
     def is_user_allowed(self, user):
         return True
 
-    def get_organization_memberships(self):
-        """ returns a list of OrganizationMembership records """
-        ou = OrganizationMembership.query.filter_by() 
-        return ou
+    def _org_tree_iterator(self, org_id):
+        sub_orgs = Organization.query.filter_by(parent_org_id = org_id)
+        for sub_org in sub_orgs:
+           # print(sub_org.full_name + str(sub_org.id))
+           self._orgs.append(sub_org.organization_memberships)
+           self._org_ids.append(sub_org.id)
+           self._org_tree_iterator(sub_org.id)
 
-    # STUB
+    def get_organization_memberships(self):
+        """ returns a list of OrganizationMembership records""" 
+        """ self MUST be a logged in admin, we find all nodes (and subnodes)
+            where the user is admin an return ALL memeberships of those nodes 
+            in the org tree """
+        # Or = self.user_memberships.membership_role.filter(MembershipRole.name == 'OrgAdmin' ) 
+        # there must be a better way to write this
+        admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
+        orgs_admin = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).first() #.filter(MembershipRole.name == 'OrgAdmin' )
+#        orgs_admin = OrganizationMembership.query.filter(OrganizationMembership.use = self, membership_role_id = admin_role.id).first()
+
+        
+        if (not orgs_admin):
+           return None
+
+        self._orgs = [orgs_admin]
+        self._org_ids = [orgs_admin.organization.id]
+
+        # find all orgs where the org.id is the parent_org_id recursivly
+        #  for org in orgs_admin:
+        self._org_tree_iterator(orgs_admin.organization_id)
+        return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids))
+        return self._orgs
+    
     def get_organizations(self):
-        # returns a list of Organization records
+        """returns a list of Organization records"""
         return []
 
 
@@ -639,7 +671,7 @@ class Organization(Model, SerializerMixin):
     child_organizations = db.relationship('Organization')
     parent_org = db.relationship('Organization', remote_side=[id])
 
-    organization_users = db.relationship(
+    organization_memberships = db.relationship(
         'OrganizationMembership',
         backref='orgs_for_user'
     )
@@ -1073,7 +1105,7 @@ class MembershipRole(Model, SerializerMixin):
     deleted = db.Column(db.Integer, default=0)
     users_for_role = db.relationship(
         'OrganizationMembership',
-        backref='roles_for_user'
+        back_populates='membership_role'
     )
 
     __mapper_args__ = {
@@ -1102,6 +1134,7 @@ class MembershipRole(Model, SerializerMixin):
         ]
         for r in roles:
             role = MembershipRole.query.filter_by(name=r[0]).first()
+
             if role is None:
                 role = MembershipRole(name=r[0], display_name=r[1] )
                 db.session.add(role)
@@ -1111,20 +1144,22 @@ class MembershipRole(Model, SerializerMixin):
             return '{} #{}'.format(self.__class__.__name__, self.name)
 
 
+
 class OrganizationMembership(Model, SerializerMixin):
     __tablename__ = 'organization_memberships'
-    __public__ = ('id', 'street', 'zip', 'country', 'comment',
-                  'email', 'phone' )
+    __public__ = ('id', 'street', 'zip', 'city', 'country', 'comment',
+                  'email', 'phone', 'membership_role_id' )
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = db.relationship("User", backref=db.backref('organization_user'))
+    user = db.relationship("User", back_populates="user_memberships")
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
-    organization = db.relationship("Organization", backref=db.backref('organization_user'))
-    org_user_role_id = db.Column(db.Integer, db.ForeignKey('membership_roles.id'))
-    org_user_role = db.relationship("MembershipRole", backref=db.backref('organization_user'))
+    organization = db.relationship("Organization", back_populates="organization_memberships")
+    membership_role_id = db.Column(db.Integer, db.ForeignKey('membership_roles.id'))
+    membership_role = db.relationship("MembershipRole")
     street = db.Column(db.String(255))
     zip = db.Column(db.String(25))
+    city = db.Column(db.String(255))
     country = db.Column(db.String(50))  # should be a lookup table
     comment = db.Column(db.String(255))
     email = db.Column(db.String(255))

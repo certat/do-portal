@@ -1,0 +1,2 @@
+select u.id, u.name, o.full_name, o.id, o.parent_org_id from users u join organization_memberships om
+on u.id = om.user_id join  organizations o on om. organization_id = o.id;
