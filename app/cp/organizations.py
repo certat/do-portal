@@ -90,7 +90,7 @@ def get_cp_organizations():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    orgs = g.user.organizations
+    orgs = g.user.get_organizations()
     return {'organizations': [o.serialize() for o in orgs]}
 
 
