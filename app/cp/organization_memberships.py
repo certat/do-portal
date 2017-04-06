@@ -71,8 +71,8 @@ def get_cp_organization_memberships():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    orgs = g.user.organization_memberships
-    return {'organization_memberships': [o.serialize() for o in orgs]}
+    memberships = g.user.get_organization_memberships()
+    return {'organization_memberships': [m.serialize() for m in memberships]}
 
 
 @cp.route('/organization_memberships/<int:membership_id>', methods=['GET'])
