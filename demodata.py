@@ -198,12 +198,13 @@ def print():
    #click.echo(u.org_ids)
 
    click.echo('**** organization_memberships ******')
-   oms = User.query.filter_by(name = 'EVN User').first().get_organization_memberships()  
+   oms = User.query.filter_by(name = 'EVN Gas Admin').first().get_organization_memberships()  
    if (oms):
      for oxu in oms: 
        click.echo('%s %s %s' % 
           (oxu.email, oxu.membership_role.name,  oxu.organization.full_name))
 
+   click.echo(u.organisations)
 
 if __name__ == '__main__':
     cli()
