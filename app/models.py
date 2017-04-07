@@ -365,6 +365,8 @@ class User(UserMixin, Model, SerializerMixin):
         rand = self.random_str()
         return hashlib.sha256(rand.encode()).hexdigest()
 
+
+
     @staticmethod
     def random_str(length=64):
 
@@ -378,9 +380,17 @@ class User(UserMixin, Model, SerializerMixin):
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
 
-    # STUB
     def is_user_allowed(self, user):
-        return True
+        """may be called ON any user object 
+           the user of the parameter list is the logged in g.user
+           wich MUST be an OrgAdmin for the user """
+        oms = user.get_organization_memberships() 
+        if not oms:
+           return False
+        for om in oms:
+           if om.user.id == self.id:
+              return True
+        return False
 
     def _org_tree_iterator(self, org_id):
         sub_orgs = Organization.query.filter_by(parent_org_id = org_id)
@@ -401,7 +411,6 @@ class User(UserMixin, Model, SerializerMixin):
         orgs_admin = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).first() #.filter(MembershipRole.name == 'OrgAdmin' )
 #        orgs_admin = OrganizationMembership.query.filter(OrganizationMembership.use = self, membership_role_id = admin_role.id).first()
 
-        
         if (not orgs_admin):
            return None
 
@@ -411,12 +420,13 @@ class User(UserMixin, Model, SerializerMixin):
         # find all orgs where the org.id is the parent_org_id recursivly
         #  for org in orgs_admin:
         self._org_tree_iterator(orgs_admin.organization_id)
-        return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids))
-        return self._orgs
+        return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids))       
     
     def get_organizations(self):
         """returns a list of Organization records"""
-        return []
+        self.get_organization_memberships()
+        return Organization.query.filter(Organization.id.in_(self._org_ids))
+         
 
 
 class Permission:

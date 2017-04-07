@@ -198,13 +198,28 @@ def print():
    #click.echo(u.org_ids)
 
    click.echo('**** organization_memberships ******')
-   oms = User.query.filter_by(name = 'EVN Gas Admin').first().get_organization_memberships()  
+   oms = User.query.filter_by(name = 'Verbund Admin').first().get_organization_memberships()  
    if (oms):
      for oxu in oms: 
        click.echo('%s %s %s' % 
           (oxu.email, oxu.membership_role.name,  oxu.organization.full_name))
 
-   click.echo(u.organisations)
+   click.echo('**** organizations ******')
+   orgs = u.get_organizations()
+   i = 0
+   for org in orgs:
+       click.echo('%d %s %s' % 
+           (i, org.full_name, org.abbreviation))
+       i += 1
+
+   click.echo('**** permission checks ******')
+   evn_user = User.query.filter_by(name = 'EVN User').first()
+   evn_user = User.query.filter_by(name = 'EVN User').first()
+   evnmaster = User.query.filter_by(name = 'evnmaster').first()
+   click.echo("evnmaster for EVN %s \nEVN for evnmaster %s" %
+        (evn_user.is_user_allowed(evnmaster), evnmaster.is_user_allowed(evn_user)))
+   click.echo("cert for EVN %s \nEVN for cert %s" %
+        (evn_user.is_user_allowed(u), u.is_user_allowed(evn_user)))
 
 if __name__ == '__main__':
     cli()
