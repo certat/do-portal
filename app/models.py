@@ -373,6 +373,7 @@ class User(UserMixin, Model, SerializerMixin):
 
         return binascii.hexlify(os.urandom(length)).decode()
 
+
     def can(self, permissions):
         return self.role is not None and \
             (self.role.permissions & permissions) == permissions
@@ -380,15 +381,14 @@ class User(UserMixin, Model, SerializerMixin):
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
 
-    def is_user_allowed(self, user):
-        """may be called ON any user object 
-           the user of the parameter list is the logged in g.user
-           wich MUST be an OrgAdmin for the user """
-        oms = user.get_organization_memberships() 
-        if not oms:
-           return False
-        for om in oms:
-           if om.user.id == self.id:
+    def may_handle_user(self, user):
+        """checks wether the user object it is called on 
+           (which MUST be an OrgAdmin)
+            may manipulate the user of the parameter list
+           """
+        oms = self.get_organization_memberships() 
+        for um in user.user_memberships:
+           if um.organization_id in self._org_ids:
               return True
         return False
 
@@ -412,7 +412,7 @@ class User(UserMixin, Model, SerializerMixin):
 #        orgs_admin = OrganizationMembership.query.filter(OrganizationMembership.use = self, membership_role_id = admin_role.id).first()
 
         if (not orgs_admin):
-           return None
+           return []
 
         self._orgs = [orgs_admin]
         self._org_ids = [orgs_admin.organization.id]

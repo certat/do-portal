@@ -214,12 +214,13 @@ def print():
 
    click.echo('**** permission checks ******')
    evn_user = User.query.filter_by(name = 'EVN User').first()
-   evn_user = User.query.filter_by(name = 'EVN User').first()
    evnmaster = User.query.filter_by(name = 'evnmaster').first()
    click.echo("evnmaster for EVN %s \nEVN for evnmaster %s" %
-        (evn_user.is_user_allowed(evnmaster), evnmaster.is_user_allowed(evn_user)))
+        (evnmaster.may_handle_user(evn_user), evn_user.may_handle_user(evnmaster)))
    click.echo("cert for EVN %s \nEVN for cert %s" %
-        (evn_user.is_user_allowed(u), u.is_user_allowed(evn_user)))
+        (u.may_handle_user(evn_user), evn_user.may_handle_user(u)))
+   click.echo("cert for evnmaster %s \nevnmaster for cert %s" %
+        (u.may_handle_user(evnmaster), evnmaster.may_handle_user(u)))
 
 if __name__ == '__main__':
     cli()
