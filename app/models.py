@@ -382,15 +382,19 @@ class User(UserMixin, Model, SerializerMixin):
         return self.can(Permission.ADMINISTER)
 
     def may_handle_user(self, user):
-        """checks wether the user object it is called on 
+        """checks wether the user object it is called on
            (which MUST be an OrgAdmin)
             may manipulate the user of the parameter list
            """
-        oms = self.get_organization_memberships() 
+        oms = self.get_organization_memberships()
         for um in user.user_memberships:
            if um.organization_id in self._org_ids:
               return True
         return False
+
+    # STUB
+    def may_handle_organization(self, org):
+        return True
 
     def _org_tree_iterator(self, org_id):
         sub_orgs = Organization.query.filter_by(parent_org_id = org_id)
@@ -401,11 +405,11 @@ class User(UserMixin, Model, SerializerMixin):
            self._org_tree_iterator(sub_org.id)
 
     def get_organization_memberships(self):
-        """ returns a list of OrganizationMembership records""" 
+        """ returns a list of OrganizationMembership records"""
         """ self MUST be a logged in admin, we find all nodes (and subnodes)
-            where the user is admin an return ALL memeberships of those nodes 
+            where the user is admin an return ALL memeberships of those nodes
             in the org tree """
-        # Or = self.user_memberships.membership_role.filter(MembershipRole.name == 'OrgAdmin' ) 
+        # Or = self.user_memberships.membership_role.filter(MembershipRole.name == 'OrgAdmin' )
         # there must be a better way to write this
         admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
         orgs_admin = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).first() #.filter(MembershipRole.name == 'OrgAdmin' )
@@ -420,8 +424,8 @@ class User(UserMixin, Model, SerializerMixin):
         # find all orgs where the org.id is the parent_org_id recursivly
         #  for org in orgs_admin:
         self._org_tree_iterator(orgs_admin.organization_id)
-        return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids))       
-    
+        return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids))
+
     def get_organizations(self):
         """returns a list of Organization records"""
         self.get_organization_memberships()
@@ -803,10 +807,6 @@ class Organization(Model, SerializerMixin):
     def mark_as_deleted(self):
         self.deleted = 1
         # set ts_deleted
-
-    # STUB
-    def is_user_allowed(self, user):
-        return True
 
     # STUB
     def has_child_organizations(self):

@@ -355,8 +355,8 @@ def check_membership_permissions(membership):
     """
     org = Organization.query.get_or_404(membership.org_id)
     user = Organization.query.get_or_404(membership.user_id)
-    if not org.is_user_allowed(g.user):
+    if not g.user.may_handle_organization(org):
         abort(403)
-    if not user.is_user_allowed(g.user):
+    if not g.user.may_handle_user(user):
         abort(403)
 

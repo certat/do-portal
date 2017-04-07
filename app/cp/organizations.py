@@ -185,7 +185,7 @@ def get_cp_organization(org_id):
         SHOULD NOT be repeated.
     """
     o = Organization.query.get_or_404(org_id)
-    if not o.is_user_allowed(g.user):
+    if not g.user.may_handle_organization(o):
         abort(403)
     return o.serialize()
 
@@ -300,7 +300,7 @@ def add_cp_organization():
     o = Organization.fromdict(request.json)
 
     parent_org = Organization.query.get(o.parent_org_id)
-    if not parent_org or not parent_org.is_user_allowed(g.user):
+    if not parent_org or not g.user.may_handle_organization(parent_org):
         abort(403)
 
     try:
@@ -418,7 +418,7 @@ def update_cp_organization(org_id):
     if not o:
         return redirect(url_for('cp.add_cp_organization'))
 
-    if not o.is_user_allowed(g.user):
+    if not g.user.may_handle_organization(o):
         abort(403)
 
     untouchables_ = ['is_sla', 'mail_template', 'group_id', 'old_ID', 'group',
