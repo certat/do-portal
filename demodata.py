@@ -222,5 +222,17 @@ def print():
    click.echo("cert for evnmaster %s \nevnmaster for cert %s" %
         (u.may_handle_user(evnmaster), evnmaster.may_handle_user(u)))
 
+
+   click.echo('**** user.get_userss ******')
+   users = u.get_users()
+   for user in users:
+      click.echo("%s" % (user.name))
+   
+   click.echo('**** user.get_userss(evnmaster) ******')
+   users = evnmaster.get_users()
+   for user in users:
+      click.echo("%s" % (user.name))
+  
+
 if __name__ == '__main__':
     cli()

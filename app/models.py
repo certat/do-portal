@@ -426,7 +426,15 @@ class User(UserMixin, Model, SerializerMixin):
         """returns a list of Organization records"""
         self.get_organization_memberships()
         return Organization.query.filter(Organization.id.in_(self._org_ids))
-         
+
+    def get_users(self):
+        """returns a list of User records"""
+        oms = self.get_organization_memberships()
+       # for om in oms:
+        users = []
+        for om in oms:
+           users.append(om.user)
+        return users
 
 
 class Permission:
