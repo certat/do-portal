@@ -1,5 +1,5 @@
 {
-  "add_cp_organization_user": {
+  "add_cp_organization_membership": {
     "type": "object",
     "properties": {
       "role_id": {
@@ -37,7 +37,7 @@
       "email"
     ]
   },
-  "update_cp_organization_user": {
+  "update_cp_organization_membership": {
     "type": "object",
     "properties": {
       "role_id": {

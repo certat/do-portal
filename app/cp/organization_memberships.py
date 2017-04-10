@@ -60,7 +60,8 @@ def get_cp_organization_memberships():
 
     :>json array organizations: List of available organization membership objects
 
-    For organization details: :http:get:`/api/1.0/organization_memberships/(int:org_id)`
+    For organization membership details:
+    :http:get:`/api/1.0/organization_memberships/(int:membership_id)`
 
     :status 200: Organization memberships endpoint found, response may be empty
     :status 404: Not found
@@ -84,7 +85,7 @@ def get_cp_organization_membership(membership_id):
 
     .. sourcecode:: http
 
-        GET /api/1.0/organization/44 HTTP/1.1
+        GET /api/1.0/organization_memberships/44 HTTP/1.1
         Host: do.cert.europa.eu
         Accept: application/json
 
@@ -108,7 +109,7 @@ def get_cp_organization_membership(membership_id):
           "comment": "foo"
         }
 
-    :param org_id: Organization membership unique ID
+    :param membership_id: Organization membership unique ID
 
     :reqheader Accept: Content type(s) accepted by the client
     :reqheader API-Authorization: API key. If present authentication and
@@ -149,7 +150,7 @@ def add_cp_organization_membership():
 
     .. sourcecode:: http
 
-        POST /api/1.0/organizations HTTP/1.1
+        POST /api/1.0/organization_memberships HTTP/1.1
         Host: do.cert.europa.eu
         Accept: application/json
         Content-Type: application/json
@@ -185,7 +186,7 @@ def add_cp_organization_membership():
         Content-Type: application/json
 
         {
-          "message": "'abbreviation' is a required property",
+          "message": "'role_id' is a required property",
           "validator": "required"
         }
 
@@ -207,7 +208,7 @@ def add_cp_organization_membership():
     :>json string message: Status message
     :>json integer id: Organization membership ID
 
-    :status 200: Organization details were successfully updated
+    :status 200: Organization membership details were successfully saved
     :status 400: Bad request
     :status 401: Authorization failure. The client MAY repeat the request with
         a suitable API-Authorization header field. If the request already
@@ -218,11 +219,12 @@ def add_cp_organization_membership():
     """
     membership = OrganizationMembership.fromdict(request.json)
     check_membership_permissions(membership)
-    db.session.add(o)
+    db.session.add(membership)
     db.session.commit()
     return {'organization_membership': membership.serialize(),
             'message': 'Organization membership added'}, 201, \
-           {'Location': url_for('cp.get_cp_organization', membership_id=membership.id)}
+           {'Location': url_for('cp.get_cp_organization_membership',
+                                membership_id=membership.id)}
 
 
 @cp.route('/organization_memberships/<int:membership_id>', methods=['PUT'])
@@ -235,7 +237,7 @@ def update_cp_organization_membership(membership_id):
 
     .. sourcecode:: http
 
-        PUT /api/1.0/organizations HTTP/1.1
+        PUT /api/1.0/organization_memberships HTTP/1.1
         Host: cp.cert.europa.eu
         Accept: application/json
         Content-Type: application/json
@@ -271,7 +273,7 @@ def update_cp_organization_membership(membership_id):
         Content-Type: application/json
 
         {
-          "message": "'abbreviation' is a required property",
+          "message": "'user_id' is a required property",
           "validator": "required"
         }
 
@@ -290,18 +292,18 @@ def update_cp_organization_membership(membership_id):
 
     :>json string message: Status message
 
-    :status 200: Organization details were successfully updated
+    :status 200: Organization membership details were successfully updated
     :status 400: Bad request
     :status 422: Validation error
     """
     membership = OrganizationMembership.query.filter(
         OrganizationMembership.id == membership_id
     ).first()
-    if not o:
-        return redirect(url_for('cp.add_cp_organization'))
+    if not membership:
+        return redirect(url_for('cp.add_cp_organization_membership'))
     check_membership_permissions(membership)
     membership.from_json(request.json)
-    db.session.add(o)
+    db.session.add(membership)
     db.session.commit()
     return {'message': 'Organization membership saved'}
 
@@ -315,7 +317,7 @@ def delete_cp_organization_membership(membership_id):
 
     .. sourcecode:: http
 
-        DELETE /api/1.0/organizatoin_users/2 HTTP/1.1
+        DELETE /api/1.0/organization_memberships/2 HTTP/1.1
         Host: cp.cert.europa.eu
         Accept: application/json
 
@@ -330,7 +332,7 @@ def delete_cp_organization_membership(membership_id):
           "message": "Organization membership deleted"
         }
 
-    :param org_id: Unique ID of the organization
+    :param membership_id: Unique ID of the organization membership
 
     :reqheader Accept: Content type(s) accepted by the client
     :resheader Content-Type: this depends on `Accept` header or request
