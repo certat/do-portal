@@ -1,0 +1,40 @@
+{
+  "add_cp_user": {
+    "type": "object",
+    "properties": {
+      "login": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      },
+      "role_id": {
+        "type": "integer"
+      },
+      "organization_id": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "login",
+      "password",
+      "role_id",
+      "organization_id"
+    ]
+  },
+  "update_cp_user": {
+    "type": "object",
+    "properties": {
+      "login": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "login",
+      "password"
+    ]
+  }
+}
