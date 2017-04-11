@@ -4,8 +4,14 @@
   </div>
   <div class="panel-body">
     <div ng-repeat="org in orgs">
-      <span>{{org.abbreviation}}</span>
-      <a ui-sref="organizations({id: org.id})">edit</a>
+      <div class="row show-grid">
+        <div class="col-xs-4"><label>{{org.abbreviation}}</label></div>
+        <div class="col-xs-8">
+          <a ui-sref="organizations({id: org.id})">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
