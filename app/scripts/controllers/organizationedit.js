@@ -8,8 +8,8 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, Auth, GridData, notifications) {
-    Organization.query().$promise.then(function(resp){
+  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, Auth, GridData, notifications, $stateParams) {
+    Organization.query({'id': $stateParams.id}).$promise.then(function(resp){
       $scope.org = resp;
       $scope.fuzzed = [];
       angular.forEach(resp.fqdns, function(val){
@@ -91,7 +91,7 @@ angular.module('cpApp')
     };
 
     $scope.save = function(o){
-      Organization.update(o, function(resp){
+      Organization.update({'id':o.id}, o, function(resp){
         notifications.showSuccess(resp);
       }, function(error){
         notifications.showError(error.data);

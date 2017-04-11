@@ -5,6 +5,7 @@
   <div class="panel-body">
     <div ng-repeat="org in orgs">
       <span>{{org.abbreviation}}</span>
+      <a ui-sref="organizations({id: org.id})">edit</a>
     </div>
   </div>
 </div>

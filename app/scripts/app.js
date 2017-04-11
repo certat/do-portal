@@ -47,7 +47,7 @@ angular
         }
       })
       .state('organizations', {
-        url: '/organizations',
+        url: '/organizations/:id',
         views: {
           header: {
             templateUrl: 'views/header.html',
@@ -203,7 +203,7 @@ angular
           }
         }
       });
-    $urlRouterProvider.otherwise('/organizations');
+    $urlRouterProvider.otherwise('/organization_list');
   })
   .config(['notificationsConfigProvider', function(notificationsConfigProvider) {
     // auto hide
