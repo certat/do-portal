@@ -71,10 +71,6 @@ def create_app(config_name):
     app.audit_log = _audit_log
 
     if not app.config['DEBUG'] and not app.config['TESTING']:
-        # SelectiveHTMLCompress {% strip %} ... {% endstrip %}
-        app.jinja_env.add_extension(
-            'app.utils.jinja2htmlcompress.HTMLCompress'
-        )
         # configure logging for production
         # email errors to the administrators
         if app.config.get('MAIL_ERROR_RECIPIENT') is not None:
