@@ -72,6 +72,19 @@ angular
           }
         }
       })
+      .state('users', {
+        url: '/users/:id',
+        views: {
+          header: {
+            templateUrl: 'views/header.html',
+            controller: 'HeaderCtrl'
+          },
+          content: {
+            templateUrl: 'views/user-edit.html',
+            controller: 'UsereditCtrl'
+          }
+        }
+      })
       .state('vulnerabilities', {
         url: '/vulnerabilities',
         views: {
