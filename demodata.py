@@ -228,7 +228,7 @@ def print():
    for user in users:
       click.echo("%s" % (user.name))
    
-   click.echo('**** user.get_userss(evnmaster) ******')
+   click.echo('**** user.get_users(evnmaster) ******')
    users = evnmaster.get_users()
    for user in users:
       click.echo("%s" % (user.name))

@@ -12,7 +12,7 @@ from app import db as _db
 from app.models import User, OrganizationGroup, ReportType, Role
 from app.models import Organization, ContactEmail, MembershipRole
 from app.utils import bosh_client
-
+from app.fixtures import testfixture
 
 class TestResponse(Response):
 
@@ -54,9 +54,10 @@ def db(request, app):
     _db.drop_all()
     # Create the tables based on the current model
     _db.create_all()
-
+    testfixture.testdata.addyaml()
     user = User.create_test_user()
     TestClient.test_user = user
+   
     app.test_client_class = TestClient
     app.response_class = TestResponse
 
