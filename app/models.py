@@ -215,7 +215,7 @@ class MailmanMember(MailmanModel):
 class User(UserMixin, Model, SerializerMixin):
     """User model"""
     __tablename__ = 'users'
-    __public__ = ('name', 'email', 'api_key', 'otp_enabled')
+    __public__ = ('id', 'name', 'email', 'api_key', 'otp_enabled')
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
@@ -1273,6 +1273,7 @@ def load_user_from_request(request):
 
     # next, try to login using an API key
     api_key = request.headers.get('API-Authorization')
+    print('*** ' + api_key)
     if api_key:
         user = User.query.filter_by(api_key=api_key).first()
         if user:

@@ -132,8 +132,8 @@ def print():
    click.echo('**** organization_memberships ******')
    for oxu in u.get_organization_memberships():
    
-       click.echo('%s %s %s' % 
-           (oxu.email, oxu.membership_role.name,  oxu.organization.full_name))
+       click.echo('%s %s' % 
+           (oxu.email, oxu.organization.full_name))
 
    #click.echo(u.org_ids)
 

@@ -25,26 +25,33 @@ user:
     zip: "1010"
     country: Austria
     comment: "Master User"
-    email: "master@ecert.at"
+    email: "cert@master.at"
     phone: "+43 1 123456"       
   - name: evnmaster
     org: evn
     role: OrgAdmin
+    email: "admin@evn.at"
   - name: "EVN User"
     org: evn-gas
-    role: CISO
+    role: CISOmaster
+    email: "gasuser@evn.at"
   - name: "EVN User"
     org: evn-strom
     role: CISO
+    email: "cisouser@evn.at"
   - name: "EVN Gas Admin"
     org: evn-gas
     role: OrgAdmin
+    email: "gasuser@evn.at"
   - name: "Verbund Admin"
     org: verbund
     role: OrgAdmin
+    email: "admin@verbund.at"
   - name: "Verbund CISO"
     org: verbund
     role: CISO
+    email: "cisouser@verbund.at"
   - name: "Verbund Strom Leitung Admin"
     org: verbund-strom-leitung
     role: OrgAdmin
+    email: "admin-strom-leitung@verbund.at"

@@ -45,7 +45,7 @@ class testdata:
             u = User(
                name = user['name']
             )
-            u.api_key = '61938c95b8dd503e2b8126ee51b5a2644d121694170af29cac6304ee9f376e71'
+            u.api_key = u.generate_api_key()
             u.password = 'bla'
             db.session.add(u)
          
