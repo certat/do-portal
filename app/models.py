@@ -693,7 +693,7 @@ class Organization(Model, SerializerMixin):
     child_organizations = db.relationship('Organization')
     parent_org = db.relationship('Organization', remote_side=[id])
 
-    organization_membership = db.relationship(
+    organization_memberships = db.relationship(
         'OrganizationMembership',
         backref='orgs_for_user'
     )
