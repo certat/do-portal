@@ -148,6 +148,7 @@ def print():
    orgs = u.get_organizations()
    i = 0
    for org in orgs:
+       click.echo(u.id)
        click.echo('%d %s %s' % 
            (i, org.full_name, org.abbreviation))
        i += 1
