@@ -1,0 +1,17 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Users</h3>
+  </div>
+  <div class="panel-body">
+    <div ng-repeat="user in users">
+      <div class="row show-grid">
+        <div class="col-xs-4"><label>{{user.name}}</label></div>
+        <div class="col-xs-8">
+          <a class="btn btn-small btn-default" ui-sref="users({id: user.id})">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
