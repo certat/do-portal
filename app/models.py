@@ -693,7 +693,7 @@ class Organization(Model, SerializerMixin):
     child_organizations = db.relationship('Organization')
     parent_org = db.relationship('Organization', remote_side=[id])
 
-    organization_memberships = db.relationship(
+    organization_membership = db.relationship(
         'OrganizationMembership',
         backref='orgs_for_user'
     )
@@ -1172,7 +1172,8 @@ class OrganizationMembership(Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship("User", back_populates="user_memberships")
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
-    organization = db.relationship("Organization", back_populates="organization_memberships")
+    # organization = db.relationship("Organization", back_populates="organization_membership")
+    organization = db.relationship("Organization")
     membership_role_id = db.Column(db.Integer, db.ForeignKey('membership_roles.id'))
     membership_role = db.relationship("MembershipRole")
     street = db.Column(db.String(255))

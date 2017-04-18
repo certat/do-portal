@@ -54,7 +54,6 @@ def db(request, app):
     _db.drop_all()
     # Create the tables based on the current model
     _db.create_all()
-    testfixture.testdata.addyaml()
     user = User.create_test_user()
     TestClient.test_user = user
    
@@ -95,6 +94,7 @@ def addsampledata(client):
         fqdns=['cert.europa.eu']
     )
     _db.session.add(o)
+    testfixture.testdata.addyaml()
     _db.session.commit()
     client.test_user.organization_id = o.id
 
