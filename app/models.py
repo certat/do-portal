@@ -1165,8 +1165,8 @@ class MembershipRole(Model, SerializerMixin):
 
 class OrganizationMembership(Model, SerializerMixin):
     __tablename__ = 'organization_memberships'
-    __public__ = ('id', 'street', 'zip', 'city', 'country', 'comment',
-                  'email', 'phone', 'membership_role_id' )
+    __public__ = ('id', 'user_id', 'organization_id', 'street', 'zip', 'city',
+                  'country', 'comment', 'email', 'phone', 'membership_role_id')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
