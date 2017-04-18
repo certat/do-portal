@@ -17,7 +17,7 @@ from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, Vulnerability, Tag
 from app.models import ContactEmail, emails_organizations, tags_vulnerabilities
 from app.models import Role, ReportType, OrganizationMembership, MembershipRole
-
+from app.fixtures import testfixture
 
 def create_cli_app(info):
     return create_app(os.getenv('DO_CONFIG') or 'default')
@@ -36,68 +36,8 @@ def cli():
 @cli.command()
 def addyaml():
    """Add sample data from yaml file""" 
-   with open("install/testdata.yaml", 'r') as stream:
-        data_loaded = yaml.load(stream)
-
-   click.echo(yaml.dump(data_loaded, default_flow_style=False))
-
-   for org in data_loaded['org']:
-      click.echo(org['abbreviation'])
-      if 'full_name' not in org:
-         org['full_name'] = org['abbreviation']
-      if 'display_name' not in org:
-         org['display_name'] = org['abbreviation']
-      o = Organization(
-         abbreviation=org['abbreviation'],
-         full_name=org['full_name'],
-         display_name=org['display_name'],
-      )
-      if ('parent_org' in org):
-         po = Organization.query.filter_by(abbreviation=org['parent_org']).first() 
-         o.parent_org = po
-      db.session.add(o)
-      db.session.commit()    
-
-   for user in data_loaded['user']:
-      click.echo(user['name'])
-      u = User.query.filter_by(name = user['name']).first()
-      if (not u):
-         u = User(
-            name = user['name']
-         )
-         u.password = 'bla'
-         db.session.add(u)
-      
-      role = MembershipRole.query.filter_by(name=user['role']).first()
-      org = Organization.query.filter_by(abbreviation=user['org']).first()
-      if 'email' not in user:
-          user['email'] = 'na@email.at'
-      if 'street' not in user:
-          user['street'] = 'no street'
-      if 'zip' not in user:
-          user['zip'] = '1234'
-      if 'city' not in user:
-          user['city'] = 'n/a'
-      if 'country' not in user:
-          user['country'] = 'no country for old men'
-      if 'comment' not in user:
-          user['comment'] = 'no comment'
-      if 'phone' not in user:
-          user['phone'] = '12345678'
-      
-      oxu = OrganizationMembership(
-         email =  user['email'],
-         street = user['street'],
-         city = user['city'],
-         zip  = user['zip'],
-         country = user['country'],
-         comment = user['comment'],
-         phone =user['phone'],
-         organization = org, 
-         user = u,
-         membership_role = role,
-      )
-      db.session.commit()    
+   testfixture.testdata.addyaml()
+   db.session.commit()    
 
 @cli.command()
 def add():
@@ -173,8 +113,8 @@ def add():
 def delete():
     """delete sample data"""
     OrganizationMembership.query.delete()
+    User.query.filter(User.name != 'testadmin').delete()
     Organization.query.filter(Organization.abbreviation != "CERT-EU").delete()
-    User.query.delete()
     db.session.commit()
 
 @cli.command()
