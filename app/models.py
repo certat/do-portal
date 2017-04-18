@@ -1273,7 +1273,6 @@ def load_user_from_request(request):
 
     # next, try to login using an API key
     api_key = request.headers.get('API-Authorization')
-    print('*** ' + api_key)
     if api_key:
         user = User.query.filter_by(api_key=api_key).first()
         if user:
