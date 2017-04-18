@@ -22,13 +22,23 @@ class TestResponse(Response):
 
 
 class TestClient(FlaskClient):
+
+    @property
+    def api_user(self):
+        return self._api_user
+
+    @api_user.setter
+    def api_user(self, value):
+        self._api_user = value
+
     def open(self, *args, **kwargs):
         if 'headers' not in kwargs:
             kwargs['headers'] = {}
         if 'json' in kwargs:
             kwargs['data'] = json.dumps(kwargs.pop('json'))
 
-        kwargs['headers'].update({'API-Authorization': self.test_user.api_key,
+        api_user = self.api_user or self.test_user
+        kwargs['headers'].update({'API-Authorization': api_user.api_key,
                                   'Accept': 'application/json'})
         if 'content_type' not in kwargs:
             kwargs['content_type'] = 'application/json'
@@ -56,7 +66,8 @@ def db(request, app):
     _db.create_all()
     user = User.create_test_user()
     TestClient.test_user = user
-   
+    TestClient._api_user = user
+
     app.test_client_class = TestClient
     app.response_class = TestResponse
 
