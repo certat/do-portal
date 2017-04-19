@@ -71,10 +71,12 @@ angular.module('cpApp')
                       return 1;
                   }
               });
-            });
+            }
+        );
     };
 
-    loadParallel();
+    loadParallel()
+          .catch( function(err) { notifications.showError(err) });
 
     $scope.save = function(u){
       User.update({'id':u.id}, u, function(resp){
