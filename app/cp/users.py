@@ -214,6 +214,7 @@ def add_cp_user():
     db.session.add(membership)
     db.session.commit()
     return {'user': user.serialize(),
+            'membership': membership.serialize(),
             'message': 'User added'}, 201, \
            {'Location': url_for('cp.get_cp_user', user_id=user.id)}
 
