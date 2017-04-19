@@ -25,7 +25,16 @@
   <div class="panel-body">
 
     <div class="row show-grid">
-      <div class="col-xs-2">Username</div>
+      <div class="col-xs-2">Name</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="Name" required
+               ng-model="user.name">
+      </div>
+    </div>
+
+    <div class="row show-grid">
+      <div class="col-xs-2">Login</div>
       <div class="col-xs-10">
         <input type="text" class="form-control input-sm"
                placeholder="Login" required
@@ -43,6 +52,10 @@
     </div>
 
     <div class="row show-grid">
+      <div class="col-xs-12"><strong>Membership Details</strong></div>
+    </div>
+
+    <div class="row show-grid">
       <div class="col-xs-2">Role ID</div>
       <div class="col-xs-10">
         <input type="number" class="form-control input-sm"
@@ -57,6 +70,69 @@
         <input type="number" class="form-control input-sm"
                placeholder="Organization ID" required
                ng-model="user.organization_id">
+      </div>
+    </div>
+
+    <div class="row show-grid">
+      <div class="col-xs-2">Street</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="Street" required
+               ng-model="membership.street">
+      </div>
+    </div>
+
+    <div class="row show-grid">
+      <div class="col-xs-2">ZIP</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="ZIP" required
+               ng-model="membership.zip">
+      </div>
+    </div>
+
+    <div class="row show-grid">
+      <div class="col-xs-2">City</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="City" required
+               ng-model="membership.city">
+      </div>
+    </div>
+
+    <div class="row show-grid">
+      <div class="col-xs-2">Country</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="Country" required
+               ng-model="membership.country">
+      </div>
+    </div>
+
+    <div class="row show-grid">
+      <div class="col-xs-2">Comment</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="Comment" required
+               ng-model="membership.comment">
+      </div>
+    </div>
+
+    <div class="row show-grid">
+      <div class="col-xs-2">Email</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="Email" required
+               ng-model="membership.email">
+      </div>
+    </div>
+
+    <div class="row show-grid">
+      <div class="col-xs-2">Phone</div>
+      <div class="col-xs-10">
+        <input type="text" class="form-control input-sm"
+               placeholder="Phone" required
+               ng-model="membership.phone">
       </div>
     </div>
 
