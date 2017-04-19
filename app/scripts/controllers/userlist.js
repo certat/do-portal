@@ -29,7 +29,9 @@ angular.module('cpApp')
         var m = angular.merge({}, resp.membership, $scope.membership);
 
         Membership.update({'id':m.id}, m, function(resp) {
-          $scope.show_form = false;
+          $scope.show_form  = false;
+          $scope.user       = {};
+          $scope.membership = {};
           _update_users();
           notifications.showSuccess(resp);
         }, function(error){
