@@ -31,3 +31,26 @@ def test_return_verbund_ciso_orgs(client):
     rv = client.get(url_for('cp.get_cp_organizations'))
     assert rv.status_code == 200
     assert len(rv.json['organizations']) == 0, 'no organizations'
+
+
+def test_delete_self_fails(client):
+    client.api_user = User.query.filter_by(name='Verbund CISO').first()
+    rv = client.delete(
+        url_for('cp.delete_cp_user', user_id=client.api_user.id))
+    assert rv.status_code == 403
+
+
+def test_higher_up_fails(client):
+    client.api_user = User.query.filter_by(name='Verbund CISO').first()
+    certmaster_user = User.query.filter_by(name='certmaster').first()
+    rv = client.delete(
+        url_for('cp.delete_cp_user', user_id=certmaster_user.id))
+    assert rv.status_code == 403
+
+
+def test_managed_user_works(client):
+    client.api_user = User.query.filter_by(name='certmaster').first()
+    verbund_ciso_user = User.query.filter_by(name='Verbund CISO').first()
+    rv = client.delete(
+        url_for('cp.delete_cp_user', user_id=verbund_ciso_user.id))
+    assert rv.status_code == 200

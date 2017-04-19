@@ -366,11 +366,8 @@ class User(UserMixin, Model, SerializerMixin):
         return hashlib.sha256(rand.encode()).hexdigest()
 
 
-
     @staticmethod
     def random_str(length=64):
-
-
         return binascii.hexlify(os.urandom(length)).decode()
 
 
@@ -442,6 +439,12 @@ class User(UserMixin, Model, SerializerMixin):
                 users.append(om.user)
                 ud[om.user.id] = 1
         return users
+
+
+    # STUB
+    def mark_as_deleted(self):
+        self.deleted = 1
+        # set ts_deleted
 
 
 class Permission:

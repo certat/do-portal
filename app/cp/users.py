@@ -115,6 +115,8 @@ def get_cp_user(user_id):
         SHOULD NOT be repeated.
     """
     user = User.query.get_or_404(user_id)
+    if not g.user.may_handle_user(user):
+        abort(403)
     return user.serialize()
 
 @cp.route('/users', methods=['POST'])
@@ -270,6 +272,8 @@ def update_cp_user(user_id):
     ).first()
     if not user:
         return redirect(url_for('cp.add_cp_user'))
+    if not g.user.may_handle_user(user):
+        abort(403)
     user.from_json(request.json)
     db.session.add(user)
     db.session.commit()
@@ -310,9 +314,14 @@ def delete_cp_user(user_id):
     :status 200: User was deleted
     :status 404: User was not found
     """
+    # The user can't delete himself
+    if user_id == g.user.id:
+        abort(403)
     user = User.query.filter(
         User.id == user_id
     ).first_or_404()
+    if not g.user.may_handle_user(user):
+        abort(403)
     user.mark_as_deleted()
     db.session.add(user)
     db.session.commit()
