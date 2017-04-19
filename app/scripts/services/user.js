@@ -27,5 +27,15 @@ angular.module('cpApp')
         method: 'PUT',
         withCredentials: true
       },
+      memberships: {
+        url: config.apiConfig.webServiceUrl+'/organization_memberships',
+        method: 'GET',
+        isArray: false
+      },
+      roles: {
+        url: config.apiConfig.webServiceUrl+'/membership_roles',
+        method: 'GET',
+        isArray: false
+      }
     });
   });

@@ -21,3 +21,15 @@
     </button>
   </div>
 </div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Organization Memberships</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row show-grid" ng-repeat="m in memberships">
+      <div class="col-xs-2">{{m.org.name}}</div>
+      <div class="col-xs-10">{{m.role.name}}</div>
+    </div>
+  </div>
+</div>
