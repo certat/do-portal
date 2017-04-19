@@ -90,5 +90,13 @@ angular.module('cpApp')
         notifications.showError(error.data);
       });
     };
-
+    $scope.delete_membership = function(m_id, index){
+      Membership.delete({'id':m_id}).$promise
+            .then(function(resp){
+                notifications.showSuccess(resp);
+                $scope.memberships.splice(index, 1);
+            }, function(error){
+                notifications.showError(error.data);
+            });
+        };
   });

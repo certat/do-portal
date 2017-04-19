@@ -29,7 +29,13 @@
   <div class="panel-body">
     <div class="row show-grid" ng-repeat="m in memberships">
       <div class="col-xs-2">{{m.org.name}}</div>
-      <div class="col-xs-10">{{m.role.name}}</div>
+      <div class="col-xs-9">{{m.role.name}}</div>
+      <div class="col-xs-1">
+        <button ng-click="delete_membership(m.id, $index)" title="Remove this Membership"
+                type="submit" class="btn btn-default btn-small">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
