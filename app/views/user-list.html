@@ -58,18 +58,20 @@
     <div class="row show-grid">
       <div class="col-xs-2">Role ID</div>
       <div class="col-xs-10">
-        <input type="number" class="form-control input-sm"
-               placeholder="Role ID" required
-               ng-model="user.role_id">
+        <select class="form-control input-sm" placeholder="Role ID" required ng-model="user.role_id">
+          <option value="">---Please select---</option>
+          <option ng-repeat="role in roles" value="{{role.id}}">{{role.display_name}}</option>
+        </select>
       </div>
     </div>
 
     <div class="row show-grid">
       <div class="col-xs-2">Organization ID</div>
       <div class="col-xs-10">
-        <input type="number" class="form-control input-sm"
-               placeholder="Organization ID" required
-               ng-model="user.organization_id">
+        <select class="form-control input-sm" placeholder="Organization ID" required ng-model="user.organization_id">
+          <option value="">---Please select---</option>
+          <option ng-repeat="organization in organizations" value="{{organization.id}}">{{organization.display_name}}</option>
+        </select>
       </div>
     </div>
 

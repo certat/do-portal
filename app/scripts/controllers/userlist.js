@@ -9,7 +9,7 @@
  */
 
 angular.module('cpApp')
-  .controller('UserListCtrl', function ($scope, $filter, $uibModal, User, Membership, Auth, GridData, notifications) {
+  .controller('UserListCtrl', function ($scope, $filter, $uibModal, User, Membership, Organization, Auth, GridData, notifications) {
 
     function _update_users() {
       User.query_list().$promise.then(function(resp){
@@ -22,6 +22,20 @@ angular.module('cpApp')
     _update_users();
 
     $scope.show_form = false;
+
+    Membership.roles().$promise
+                .then(function(resp){
+                    $scope.roles = resp.membership_roles;
+                  }, function(err){
+                    notifications.showError(err.data.message);
+                  });
+
+    Organization.query_list().$promise
+                .then(function(resp){
+                    $scope.organizations = resp.organizations;
+                  }, function(err){
+                    notifications.showError(err.data.message);
+                  });
 
     $scope.create_user = function(u){
       User.create({}, u, function(resp){
