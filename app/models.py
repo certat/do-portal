@@ -432,12 +432,15 @@ class User(UserMixin, Model, SerializerMixin):
         return Organization.query.filter(Organization.id.in_(self._org_ids))
 
     def get_users(self):
-        """returns a list of User records"""
+        """returns a list of unique User records"""
         oms = self.get_organization_memberships()
        # for om in oms:
         users = []
+        ud = {}
         for om in oms:
-           users.append(om.user)
+            if om.user.id not in ud:
+                users.append(om.user)
+                ud[om.user.id] = 1
         return users
 
 

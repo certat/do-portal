@@ -3,7 +3,7 @@ from app.models import User
 # from app.fixtures import testfixture
 
 
-def test_model():
+def test_user_memberships():
     u = User.query.filter_by(name="certmaster").first()
 
     for uo in u.user_memberships:
@@ -14,3 +14,13 @@ def test_model():
             cc += 1
         assert cc == 2, 'two child orgs'
     assert u.email == 'cert@master.at'
+
+
+def test_get_users():
+    u = User.query.filter_by(name="certmaster").first()
+    c = 0
+    for user in u.get_users():
+        c += 1
+
+    assert c == 7, 'find all subordinate users - once'
+
