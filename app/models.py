@@ -366,11 +366,8 @@ class User(UserMixin, Model, SerializerMixin):
         return hashlib.sha256(rand.encode()).hexdigest()
 
 
-
     @staticmethod
     def random_str(length=64):
-
-
         return binascii.hexlify(os.urandom(length)).decode()
 
 
@@ -393,6 +390,12 @@ class User(UserMixin, Model, SerializerMixin):
         return False
 
     # STUB
+    def mark_as_deleted(self):
+        self.deleted = 1
+        self
+        # set ts_deleted
+
+
     def may_handle_organization(self, org):
         """checks if the user object it is called on
            (which MUST be an OrgAdmin)
@@ -402,6 +405,7 @@ class User(UserMixin, Model, SerializerMixin):
         if org.id in self._org_ids:
             return True
         return False
+
 
     def _org_tree_iterator(self, org_id):
         sub_orgs = Organization.query.filter_by(parent_org_id = org_id)

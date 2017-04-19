@@ -49,5 +49,6 @@ def test_create_user():
     db.session.add(newuser)
     db.session.commit()
     assert newuser.id > 0
-    assert admin.may_handle_organization(certorg) is False
+    assert admin.may_handle_organization(certorg) is False, \
+       'verbund admin may not handle cert org'
     assert admin.may_handle_organization(org) is True
