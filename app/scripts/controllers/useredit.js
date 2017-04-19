@@ -8,7 +8,7 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Auth, GridData, notifications, $stateParams, $q) {
+  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Auth, GridData, notifications, $stateParams, $q) {
 
     var loadUser = function() {
       return User.query({'id': $stateParams.id}).$promise
@@ -28,6 +28,15 @@ angular.module('cpApp')
                   });
     };
 
+    var loadOrgs = function(){
+      return Organization.query_list().$promise
+                .then(function(resp){
+                    return resp.organizations;
+                  }, function(err){
+                    notifications.showError(err.data.message);
+                  });
+    };
+
     var loadMemberships = function(){
       return User.memberships().$promise
                 .then(function(resp){
@@ -38,18 +47,30 @@ angular.module('cpApp')
     };
 
     var loadParallel = function() {
-        return $q.all([ loadUser(), loadRoles(), loadMemberships() ])
+        return $q.all([ loadUser(), loadRoles(), loadOrgs(), loadMemberships() ])
             .then( function( result ) {
-              $scope.user = result.shift();
-              $scope.roles = result.shift();
+              $scope.user        = result.shift();
+              $scope.roles       = result.shift();
+              $scope.orgs        = result.shift();
               $scope.memberships = result.shift()
-                    .filter(function(val){return val.user_id === $scope.user.id});
-              console.log($scope.memberships);
-//+        $scope.memberships = [
-//+            { org: { id: 1, name: "org1" }, role: { id: 1, name: "role1" } },
-//+            { org: { id: 2, name: "org2" }, role: { id: 2, name: "role2" } },
-//+            { org: { id: 3, name: "org3" }, role: { id: 3, name: "role3" } },
-//+        ];
+                    .filter(function(m){return m.user_id === $scope.user.id});
+              $scope.memberships.forEach(function(m){
+                  m.org  = {
+                      id: m.organization_id,
+                      name: $scope.orgs[m.organization_id].display_name
+                  };
+                  m.role = {
+                      id: m.membership_role_id,
+                      name: $scope.roles[m.membership_role_id].display_name
+                  };
+              });
+              $scope.memberships = $scope.memberships.sort(function(a,b){
+                  if ( a.org.name < b.org.name ) {
+                      return -1;
+                  } else {
+                      return 1;
+                  }
+              });
             });
     };
 
