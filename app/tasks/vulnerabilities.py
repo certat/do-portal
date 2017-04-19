@@ -1,5 +1,6 @@
 import requests
 import datetime
+from flask import current_app
 from app import celery, db
 from app.models import Vulnerability
 
@@ -32,7 +33,12 @@ def checkall(checked_patched=False):
 
 
 def check_patched(method, url, data, check_string):
-    page = requests.request(method, url, data=data, stream=False, verify=False)
+    page = requests.request(method,
+                            url,
+                            data=data,
+                            stream=False,
+                            verify=False,
+                            proxies=current_app.config['PROXIES'])
     if page.status_code != 403:
         if check_string in page.text:
             return 0, page.status_code
