@@ -1,6 +1,6 @@
-org: 
+org:
   - abbreviation: cert
-    full_name: "Energy CERT Austria" 
+    full_name: "Energy CERT Austria"
     display_name: "Energy CERT"
   - abbreviation: evn
     parent_org: cert
@@ -26,14 +26,14 @@ user:
     country: Austria
     comment: "Master User"
     email: "cert@master.at"
-    phone: "+43 1 123456"       
+    phone: "+43 1 123456"
   - name: evnmaster
     org: evn
     role: OrgAdmin
     email: "admin@evn.at"
   - name: "EVN User"
     org: evn-gas
-    role: CISOmaster
+    role: CISO
     email: "gasuser@evn.at"
   - name: "EVN User"
     org: evn-strom
