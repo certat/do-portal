@@ -8,6 +8,9 @@
       "password": {
         "type": "string"
       },
+      "name": {
+        "type": "string"
+      },
       "role_id": {
         "type": "integer"
       },
@@ -29,6 +32,9 @@
         "type": "string"
       },
       "password": {
+        "type": "string"
+      },
+      "name": {
         "type": "string"
       }
     },
