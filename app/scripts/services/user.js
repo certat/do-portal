@@ -23,6 +23,12 @@ angular.module('cpApp')
         method: 'GET',
         isArray: false
       },
+      create: {
+        url: config.apiConfig.webServiceUrl+'/users',
+        method: 'POST',
+        isArray: false,
+        withCredentials: true
+      },
       update: {
         method: 'PUT',
         withCredentials: true
