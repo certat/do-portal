@@ -45,6 +45,7 @@ class testdata:
             u = User(
                name = user['name']
             )
+            u.email = user['email']
             u.api_key = u.generate_api_key()
             u.password = 'bla'
             db.session.add(u)

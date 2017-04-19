@@ -42,7 +42,7 @@ user:
   - name: "EVN Gas Admin"
     org: evn-gas
     role: OrgAdmin
-    email: "gasuser@evn.at"
+    email: "gasadmin@evn.at"
   - name: "Verbund Admin"
     org: verbund
     role: OrgAdmin
