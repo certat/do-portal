@@ -46,12 +46,17 @@ angular.module('cpApp')
                   });
     };
 
+    function _array2hash(arr) {
+        var hash = {};
+        arr.forEach(function(i) { hash[i.id] = i });
+        return hash;
+    }
     var loadParallel = function() {
         return $q.all([ loadUser(), loadRoles(), loadOrgs(), loadMemberships() ])
             .then( function( result ) {
               $scope.user        = result.shift();
-              $scope.roles       = result.shift();
-              $scope.orgs        = result.shift();
+              $scope.roles       = _array2hash(result.shift())
+              $scope.orgs        = _array2hash(result.shift())
               $scope.memberships = result.shift()
                     .filter(function(m){return m.user_id === $scope.user.id});
               $scope.memberships.forEach(function(m){
