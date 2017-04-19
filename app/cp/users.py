@@ -200,6 +200,9 @@ def add_cp_user():
     if not g.user.may_handle_organization(org):
         abort(403)
     db.session.add(user)
+    db.session.commit()
+
+    membership.user_id = user.id
     db.session.add(membership)
     db.session.commit()
     return {'user': user.serialize(),
