@@ -16,8 +16,8 @@
       }
     },
     "required": [
-      "login",
       "password",
+      "name",
       "role_id",
       "organization_id"
     ]
@@ -33,7 +33,7 @@
       }
     },
     "required": [
-      "login",
+      "name",
       "password"
     ]
   }

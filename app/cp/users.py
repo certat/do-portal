@@ -31,7 +31,8 @@ def get_cp_users():
             {
               "id": 25,
               "login": "foo@bar.com",
-              "password": "abc123"
+              "password": "abc123",
+              "name": "Max Muster"
             }
           ]
         }
@@ -91,7 +92,8 @@ def get_cp_user(user_id):
         {
           "id": 25,
           "login": "foo@bar.com",
-          "password": "abc123"
+          "password": "abc123",
+          "login": "Max Muster"
         }
 
     :param user_id: User unique ID
@@ -104,6 +106,7 @@ def get_cp_user(user_id):
     :>json integer id: User unique ID
     :>json string login: Login email address
     :>json string password: Password
+    :>json string name: Name
 
     :status 200: Returns user details object
     :status 404: Resource not found
@@ -137,6 +140,7 @@ def add_cp_user():
         {
           "login": "foo@bar.com",
           "password": "abc123",
+          "name": "Max Muster",
           "role_id": 12,
           "organization_id": 201
         }
@@ -160,7 +164,7 @@ def add_cp_user():
         Content-Type: application/json
 
         {
-          "message": "'login' is a required property",
+          "message": "'name' is a required property",
           "validator": "required"
         }
 
@@ -169,8 +173,10 @@ def add_cp_user():
             authorization will be attempted.
     :resheader Content-Type: This depends on `Accept` header or request
 
-    :<json string login: Login email address
+    :<json string login: Login email address. If not present, the user can't
+            login
     :<json string password: Password
+    :<json string name: Name
     :<json integer role_id: Unique ID of the organization user role
     :<json integer organization_id: Unique ID of the organization
 
@@ -260,6 +266,7 @@ def update_cp_user(user_id):
 
     :<json string login: Login email address
     :<json string password: Password
+    :<json string name: Name
 
     :>json string message: Status message
 
