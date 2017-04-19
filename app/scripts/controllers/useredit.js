@@ -8,7 +8,7 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Auth, GridData, notifications, $stateParams, $q) {
+  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Membership, Auth, GridData, notifications, $stateParams, $q) {
 
     var loadUser = function() {
       return User.query({'id': $stateParams.id}).$promise
@@ -20,7 +20,7 @@ angular.module('cpApp')
     };
 
     var loadRoles = function(){
-      return User.roles().$promise
+      return Membership.roles().$promise
                 .then(function(resp){
                     return resp.membership_roles;
                   }, function(err){
@@ -38,7 +38,7 @@ angular.module('cpApp')
     };
 
     var loadMemberships = function(){
-      return User.memberships().$promise
+      return Membership.query().$promise
                 .then(function(resp){
                     return resp.organization_memberships;
                   }, function(err){
