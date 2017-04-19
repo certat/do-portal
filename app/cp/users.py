@@ -203,7 +203,7 @@ def add_cp_user():
     role = MembershipRole.query.get_or_404(role_id)
     org = Organization.query.get_or_404(org_id)
     membership = OrganizationMembership.fromdict({
-        'role_id': role_id,
+        'membership_role_id': role_id,
         'organization_id': org_id })
     if not g.user.may_handle_organization(org):
         abort(403)
