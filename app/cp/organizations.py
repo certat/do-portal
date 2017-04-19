@@ -486,6 +486,10 @@ def delete_cp_organization(org_id):
     o = Organization.query.filter(
         Organization.id == org_id
     ).first_or_404()
+
+    if not g.user.may_handle_organization(o):
+        abort(403)
+
     o.mark_as_deleted()
     db.session.add(o)
     db.session.commit()
