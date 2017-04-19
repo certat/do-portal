@@ -40,7 +40,7 @@ def test_delete_self_fails(client):
     assert rv.status_code == 403
 
 
-def test_higher_up_fails(client):
+def test_delete_user_higher_up_fails(client):
     client.api_user = find_user_by_name('Verbund CISO')
     certmaster_user = find_user_by_name('certmaster')
     rv = client.delete(
@@ -48,7 +48,7 @@ def test_higher_up_fails(client):
     assert rv.status_code == 403
 
 
-def test_managed_user_works(client):
+def test_delete_managed_user_works(client):
     client.api_user = find_user_by_name('certmaster')
     verbund_ciso_user = find_user_by_name('Verbund CISO')
     rv = client.delete(
