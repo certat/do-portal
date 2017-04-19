@@ -366,8 +366,11 @@ class User(UserMixin, Model, SerializerMixin):
         return hashlib.sha256(rand.encode()).hexdigest()
 
 
+
     @staticmethod
     def random_str(length=64):
+
+
         return binascii.hexlify(os.urandom(length)).decode()
 
 
@@ -379,10 +382,10 @@ class User(UserMixin, Model, SerializerMixin):
         return self.can(Permission.ADMINISTER)
 
     def may_handle_user(self, user):
-        """checks wether the user object it is called on
+        """checks if the user object it is called on
            (which MUST be an OrgAdmin)
             may manipulate the user of the parameter list
-           """
+        """
         oms = self.get_organization_memberships()
         for um in user.user_memberships:
            if um.organization_id in self._org_ids:
@@ -391,7 +394,14 @@ class User(UserMixin, Model, SerializerMixin):
 
     # STUB
     def may_handle_organization(self, org):
-        return True
+        """checks if the user object it is called on
+           (which MUST be an OrgAdmin)
+            may manipulate the organization of the parameter list
+        """
+        self.get_organization_memberships()
+        if org.id in self._org_ids:
+            return True
+        return False
 
     def _org_tree_iterator(self, org_id):
         sub_orgs = Organization.query.filter_by(parent_org_id = org_id)
@@ -431,7 +441,7 @@ class User(UserMixin, Model, SerializerMixin):
     def get_users(self):
         """returns a list of unique User records"""
         oms = self.get_organization_memberships()
-       # for om in oms:
+        # for om in oms:
         users = []
         ud = {}
         for om in oms:
@@ -439,12 +449,6 @@ class User(UserMixin, Model, SerializerMixin):
                 users.append(om.user)
                 ud[om.user.id] = 1
         return users
-
-
-    # STUB
-    def mark_as_deleted(self):
-        self.deleted = 1
-        # set ts_deleted
 
 
 class Permission:
@@ -812,6 +816,7 @@ class Organization(Model, SerializerMixin):
     # STUB
     def mark_as_deleted(self):
         self.deleted = 1
+        self
         # set ts_deleted
 
     # STUB
