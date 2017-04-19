@@ -30,7 +30,7 @@ def get_cp_organization_memberships():
           "organization_memberships": [
             {
               "id": 25,
-              "role_id": 12,
+              "membership_role_id": 12,
               "user_id": 153,
               "organization_id": 201,
               "country": "Austria",
@@ -98,7 +98,7 @@ def get_cp_organization_membership(membership_id):
 
         {
           "id": 25,
-          "role_id": 12,
+          "membership_role_id": 12,
           "user_id": 153,
           "organization_id": 201,
           "country": "Austria",
@@ -117,7 +117,7 @@ def get_cp_organization_membership(membership_id):
     :resheader Content-Type: this depends on `Accept` header or request
 
     :>json integer id: Organization membership unique ID
-    :>json integer role_id: Unique ID of the membership role
+    :>json integer membership_role_id: Unique ID of the membership role
     :>json integer user_id: Unique ID of the user
     :>json integer organization_id: Unique ID of the organization
     :>json string country: Country name
@@ -156,7 +156,7 @@ def add_cp_organization_membership():
         Content-Type: application/json
 
         {
-          "role_id": 12,
+          "membership_role_id": 12,
           "user_id": 153,
           "organization_id": 201,
           "country": "Austria",
@@ -186,7 +186,7 @@ def add_cp_organization_membership():
         Content-Type: application/json
 
         {
-          "message": "'role_id' is a required property",
+          "message": "'membership_role_id' is a required property",
           "validator": "required"
         }
 
@@ -195,7 +195,7 @@ def add_cp_organization_membership():
             authorization will be attempted.
     :resheader Content-Type: This depends on `Accept` header or request
 
-    :<json integer role_id: Unique ID of the organization user role
+    :<json integer membership_role_id: Unique ID of the organization user role
     :<json integer user_id: Unique ID of the user
     :<json integer organization_id: Unique ID of the organization
     :<json string country: Country name
@@ -243,7 +243,7 @@ def update_cp_organization_membership(membership_id):
         Content-Type: application/json
 
         {
-          "role_id": 12,
+          "membership_role_id": 12,
           "user_id": 153,
           "organization_id": 201,
           "country": "Austria",
@@ -280,7 +280,7 @@ def update_cp_organization_membership(membership_id):
     :reqheader Accept: Content type(s) accepted by the client
     :resheader Content-Type: This depends on `Accept` header or request
 
-    :<json integer role_id: Unique ID of the membership role
+    :<json integer membership_role_id: Unique ID of the membership role
     :<json integer user_id: Unique ID of the user
     :<json integer organization_id: Unique ID of the organization
     :<json string country: Country name

@@ -2,7 +2,7 @@
   "add_cp_organization_membership": {
     "type": "object",
     "properties": {
-      "role_id": {
+      "membership_role_id": {
         "type": "integer"
       },
       "user_id": {
@@ -31,7 +31,7 @@
       }
     },
     "required": [
-      "role_id",
+      "membership_role_id",
       "user_id",
       "organization_id",
       "email"
@@ -40,7 +40,7 @@
   "update_cp_organization_membership": {
     "type": "object",
     "properties": {
-      "role_id": {
+      "membership_role_id": {
         "type": "integer"
       },
       "user_id": {
@@ -69,7 +69,7 @@
       }
     },
     "required": [
-      "role_id",
+      "membership_role_id",
       "user_id",
       "organization_id",
       "email"
