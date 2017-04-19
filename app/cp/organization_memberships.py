@@ -237,7 +237,7 @@ def update_cp_organization_membership(membership_id):
 
     .. sourcecode:: http
 
-        PUT /api/1.0/organization_memberships HTTP/1.1
+        PUT /api/1.0/organization_memberships/16 HTTP/1.1
         Host: cp.cert.europa.eu
         Accept: application/json
         Content-Type: application/json
@@ -355,7 +355,7 @@ def check_membership_permissions(membership):
     """ The current user must be able to admin both the membership's
     organization and its user.
     """
-    org = Organization.query.get_or_404(membership.org_id)
+    org = Organization.query.get_or_404(membership.organization_id)
     user = Organization.query.get_or_404(membership.user_id)
     if not g.user.may_handle_organization(org):
         abort(403)
