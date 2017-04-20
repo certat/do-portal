@@ -54,7 +54,7 @@ def get_cp_users():
 
     :>json array organizations: List of available user objects
 
-    For user details: :http:get:`/api/1.0/users/(int:org_id)`
+    For user details: :http:get:`/api/1.0/users/(int:user_id)`
 
     :status 200: Users endpoint found, response may be empty
     :status 404: Not found
@@ -141,7 +141,7 @@ def add_cp_user():
           "login": "foo@bar.com",
           "password": "abc123",
           "name": "Max Muster",
-          "role_id": 12,
+          "membership_role_id": 12,
           "organization_id": 201
         }
 
@@ -177,8 +177,14 @@ def add_cp_user():
             login
     :<json string password: Password
     :<json string name: Name
-    :<json integer role_id: Unique ID of the organization user role
+    :<json integer membership_role_id: Unique ID of the organization user role
     :<json integer organization_id: Unique ID of the organization
+    :<json string country: Country name
+    :<json string street: Street address
+    :<json string zip: Zip code
+    :<json string phone: Phone number
+    :<json string email: Email address
+    :<json string comment: Arbitrary comment
 
     :>json string message: Status message
     :>json integer id: User ID
@@ -192,19 +198,31 @@ def add_cp_user():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    role_id = request.json.pop('role_id', None)
-    org_id = request.json.pop('organization_id', None)
+    membership_role_id = request.json.pop('membership_role_id', None)
+    organization_id = request.json.pop('organization_id', None)
+    country = request.json.pop('country', None)
+    street = request.json.pop('street', None)
+    zip_code = request.json.pop('zip', None)
+    phone = request.json.pop('phone', None)
+    email = request.json.pop('email', None)
+    comment = request.json.pop('comment', None)
 
     user = User.fromdict(request.json)
 
     # The role and organization must exist and the current user must be able to
     # admin the organization.
 
-    role = MembershipRole.query.get_or_404(role_id)
-    org = Organization.query.get_or_404(org_id)
+    role = MembershipRole.query.get_or_404(membership_role_id)
+    org = Organization.query.get_or_404(organization_id)
     membership = OrganizationMembership.fromdict({
-        'membership_role_id': role_id,
-        'organization_id': org_id })
+        'membership_role_id': membership_role_id,
+        'organization_id': organization_id,
+        'country' : country,
+        'street' : street,
+        'zip' : zip_code,
+        'phone' : phone,
+        'email' : email,
+        'comment' : comment })
     if not g.user.may_handle_organization(org):
         abort(403)
     db.session.add(user)
@@ -312,7 +330,7 @@ def delete_cp_user(user_id):
           "message": "User deleted"
         }
 
-    :param org_id: Unique ID of the organization
+    :param user_id: Unique ID of the user
 
     :reqheader Accept: Content type(s) accepted by the client
     :resheader Content-Type: this depends on `Accept` header or request

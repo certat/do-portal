@@ -11,17 +11,35 @@
       "name": {
         "type": "string"
       },
-      "role_id": {
+      "membership_role_id": {
         "type": "integer"
       },
       "organization_id": {
         "type": "integer"
+      },
+      "country": {
+        "type": "string"
+      },
+      "street": {
+        "type": "string"
+      },
+      "zip": {
+        "type": "string"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "comment": {
+        "type": "string"
       }
     },
     "required": [
       "password",
       "name",
-      "role_id",
+      "membership_role_id",
       "organization_id"
     ]
   },
