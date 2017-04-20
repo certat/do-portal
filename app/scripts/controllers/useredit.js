@@ -136,6 +136,10 @@ angular.module('cpApp')
     };
 
     $scope.delete_membership = function(m_id, index){
+      if ($scope.memberships.length < 2) {
+        notifications.showError("Cannot delete membership. A user needs at least 1 membership!");
+        return;
+      }
       Membership.delete({'id':m_id}).$promise
             .then(function(resp){
                 notifications.showSuccess(resp);
