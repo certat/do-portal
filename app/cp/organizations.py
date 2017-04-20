@@ -1,4 +1,4 @@
-from flask import g, request, url_for
+from flask import g, abort, request, url_for
 from flask_jsonschema import validate
 from app import db
 from app.models import Organization, ContactEmail, Email
