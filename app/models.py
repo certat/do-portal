@@ -683,8 +683,8 @@ class Organization(Model, SerializerMixin):
     __tablename__ = 'organizations'
     __public__ = ('id', 'abbreviation', 'full_name', 'abuse_emails', 'groups',
                   'ip_ranges', 'fqdns', 'asns', 'old_ID', 'is_sla',
-                  'mail_template', 'mail_times', 'group_id',
-                  'group', 'contact_emails', 'display_name')
+                  'mail_template', 'mail_times', 'group_id', 'group',
+                  'contact_emails', 'display_name', 'parent_org_id')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(
