@@ -83,15 +83,11 @@
           "type": "string",
           "format": "cidr"
         }
-      },
-      "parent_org_id": {
-        "type": "integer"
       }
     },
     "required": [
       "abbreviation",
-      "full_name",
-      "parent_org_id"
+      "full_name"
     ]
   }
 }

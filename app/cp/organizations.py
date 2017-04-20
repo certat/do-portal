@@ -360,7 +360,6 @@ def update_cp_organization(org_id):
           "mail_template": "EnglishReport",
           "mail_times": 3600,
           "old_ID": "00",
-          "parent_org_id": 95
         }
 
     **Example response**:
@@ -405,7 +404,6 @@ def update_cp_organization(org_id):
     :<json array asns: AS numbers
     :<json array fqdns: List of FQDNs
     :<json array ip_ranges: List of IP ranges used by this organization
-    :<json integer parent_org_id: Parent organization ID
     :>json string message: Status message
 
     :status 200: Organization details were successfully updated
