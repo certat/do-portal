@@ -7,147 +7,19 @@
       <div class="row show-grid">
         <div class="col-xs-4"><label>{{user.name}}</label></div>
         <div class="col-xs-8">
-          <a class="btn btn-small btn-default" ui-sref="users({id: user.id})">
+          <a class="btn btn-small btn-default" ui-sref="user_edit({id: user.id})">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
           </a>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<button ng-hide="show_form" class="btn btn-default" ng-click="show_form = !show_form">add new user</button>
-
-<div ng-show="show_form" class="panel panel-primary">
-  <div class="panel-heading">
-    <h3 class="panel-title">New User</h3>
-  </div>
-  <div class="panel-body">
-
     <div class="row show-grid">
-      <div class="col-xs-2">Name</div>
-      <div class="col-xs-10">
-        <input type="text" class="form-control input-sm"
-               placeholder="Name" required
-               ng-model="user.name">
+      <div class="col-xs-12">
+        <a class="btn btn-small btn-default" ui-sref="user_create">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          New User
+        </a>
       </div>
     </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">Login</div>
-      <div class="col-xs-10">
-        <input type="text" class="form-control input-sm"
-               placeholder="Login" required
-               ng-model="user.login">
-      </div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">Password</div>
-      <div class="col-xs-10">
-        <input type="password" class="form-control input-sm"
-               placeholder="Password" required
-               ng-model="user.password">
-      </div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-12"><strong>Membership Details</strong></div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">Role ID</div>
-      <div class="col-xs-10">
-        <select class="form-control input-sm" placeholder="Role ID" required ng-model="user.role_id">
-          <option value="">---Please select---</option>
-          <option ng-repeat="role in roles" value="{{role.id}}">{{role.display_name}}</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">Organization ID</div>
-      <div class="col-xs-10">
-        <select class="form-control input-sm" placeholder="Organization ID" required ng-model="user.organization_id">
-          <option value="">---Please select---</option>
-          <option ng-repeat="organization in organizations" value="{{organization.id}}">{{organization.display_name}}</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">Street</div>
-      <div class="col-xs-10">
-        <input type="text" class="form-control input-sm"
-               placeholder="Street" required
-               ng-model="membership.street">
-      </div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">ZIP</div>
-      <div class="col-xs-10">
-        <input type="text" class="form-control input-sm"
-               placeholder="ZIP" required
-               ng-model="membership.zip">
-      </div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">City</div>
-      <div class="col-xs-10">
-        <input type="text" class="form-control input-sm"
-               placeholder="City" required
-               ng-model="membership.city">
-      </div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">Country</div>
-      <div class="col-xs-10">
-        <input type="text" class="form-control input-sm"
-               placeholder="Country" required
-               ng-model="membership.country">
-      </div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">Comment</div>
-      <div class="col-xs-10">
-        <input type="text" class="form-control input-sm"
-               placeholder="Comment" required
-               ng-model="membership.comment">
-      </div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">Email</div>
-      <div class="col-xs-10">
-        <input type="text" class="form-control input-sm"
-               placeholder="Email" required
-               ng-model="membership.email">
-      </div>
-    </div>
-
-    <div class="row show-grid">
-      <div class="col-xs-2">Phone</div>
-      <div class="col-xs-10">
-        <input type="text" class="form-control input-sm"
-               placeholder="Phone" required
-               ng-model="membership.phone">
-      </div>
-    </div>
-
-  </div>
-
-  <div class="panel-footer">
-    <button class="btn btn-default" ng-click="create_user(user)">
-            <span class="glyphicon glyphicon-floppy-disk"
-                  aria-hidden="true"></span>
-      Create
-    </button>
-    <button class="btn btn-default" ng-click="show_form = false">
-      Cancel
-    </button>
   </div>
 </div>

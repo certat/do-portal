@@ -72,7 +72,20 @@ angular
           }
         }
       })
-      .state('users', {
+      .state('user_create', {
+        url: '/users',
+        views: {
+          header: {
+            templateUrl: 'views/header.html',
+            controller: 'HeaderCtrl'
+          },
+          content: {
+            templateUrl: 'views/user-edit.html',
+            controller: 'UsereditCtrl'
+          }
+        }
+      })
+      .state('user_edit', {
         url: '/users/:id',
         views: {
           header: {
