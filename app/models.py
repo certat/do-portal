@@ -440,6 +440,8 @@ class User(UserMixin, Model, SerializerMixin):
     def get_organizations(self):
         """returns a list of Organization records"""
         self.get_organization_memberships()
+        if not self._org_ids:
+            return []
         return Organization.query.filter(Organization.id.in_(self._org_ids))
 
     def get_users(self):
