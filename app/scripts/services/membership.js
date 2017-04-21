@@ -23,6 +23,12 @@ angular.module('cpApp')
         method: 'PUT',
         withCredentials: true
       },
+      create: {
+        url: config.apiConfig.webServiceUrl+'/organization_memberships',
+        method: 'POST',
+        isArray: false,
+        withCredentials: true
+      },
       delete: {
         method: 'DELETE',
         withCredentials: true

@@ -24,6 +24,7 @@ angular.module('cpApp')
   .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Membership, Auth, GridData, notifications, $stateParams, $state, $q) {
 
     var loadUser = function() {
+      if (!$stateParams.id) { return {} };
       return User.query({'id': $stateParams.id}).$promise
                 .then(function(resp){
                     return resp;
@@ -51,6 +52,7 @@ angular.module('cpApp')
     };
 
     var loadMemberships = function(){
+      if (!$stateParams.id) { return [{}] };
       return Membership.query().$promise
                 .then(function(resp){
                     return resp.organization_memberships;
@@ -59,102 +61,81 @@ angular.module('cpApp')
                   });
     };
 
-    function _prepare_memberships(memberships) {
-      memberships = memberships.filter(function(m){return m.user_id === $scope.user.id});
-      memberships.forEach(function(m){
-          m.org  = {
-            id: m.organization_id,
-            name: $scope.organizations[m.organization_id].display_name
-          };
-          m.role = {
-              id: m.membership_role_id,
-              name: $scope.roles[m.membership_role_id].display_name
-          };
-      });
-      memberships = memberships.sort(function(a,b){
-          if ( a.org.name < b.org.name ) {
-              return -1;
-          } else {
-              return 1;
-          }
-      });
-      return memberships;
-    }
-    function _array2hash(arr) {
-        var hash = {};
-        arr.forEach(function(i) { hash[i.id] = i });
-        return hash;
-    }
     var loadParallel = function() {
         return $q.all([ loadUser(), loadRoles(), loadOrgs(), loadMemberships() ])
             .then( function( result ) {
               $scope.user          = result.shift();
-              $scope.roles         = _array2hash(result.shift())
-              $scope.organizations = _array2hash(result.shift())
-              $scope.memberships   = _prepare_memberships(result.shift());
-              if ($scope.memberships.length <= 0) {
-                $scope.memberships = [{}];
-              }
+              $scope.roles         = result.shift();
+              $scope.organizations = result.shift();
+              $scope.memberships   = result.shift().filter(function(m){return m.user_id === $scope.user.id});
             }
         );
     };
 
-    var create_user = function(){
-      var u = $scope.user;
-      u.role_id = $scope.memberships[0].membership_role_id;
-      u.organization_id = $scope.memberships[0].organization_id;
-      User.create({}, u, function(resp){
-        var user_id = resp.user.id;
-        var m = angular.merge({}, resp.membership, $scope.memberships[0]);
+    $scope.save_membership = function(m) {
+      if(m.id) {
         Membership.update({'id':m.id}, m, function(resp) {
-          $state.go('user_edit',{id: user_id});
           notifications.showSuccess(resp);
         }, function(error){
           notifications.showError(error.data);
         });
+      }
+      else {
+        Membership.create({}, m, function(resp) {
+          m.id = resp.organization_membership.id;
+          notifications.showSuccess(resp);
+        }, function(error){
+          notifications.showError(error.data);
+        });
+      }
+    };
 
+    $scope.create_user = function(){
+      var data = angular.merge({}, $scope.user, $scope.memberships[0]);
+      User.create({}, data, function(resp){
+        $state.go('user_edit', {id: resp.user.id});
+        notifications.showSuccess("User created.");
       }, function(error){
         notifications.showError(error.data);
       });
     };
 
-    var update_user = function(){
+    $scope.update_user = function(){
       var u = $scope.user;
       User.update({'id':u.id}, u, function(resp){
         notifications.showSuccess(resp);
       }, function(error){
         notifications.showError(error.data);
       });
-      $scope.memberships.forEach(function(m) {
-        Membership.update({'id':m.id}, m, function(resp) {
-          $state.go('user_edit',{id: u.id});
-          notifications.showSuccess(resp);
-        }, function(error){
-          notifications.showError(error.data);
-        });
-      });
     };
 
     $scope.delete_membership = function(m_id, index){
-      if ($scope.memberships.length < 2) {
-        notifications.showError("Cannot delete membership. A user needs at least 1 membership!");
-        return;
+
+      if (!m_id) {
+        $scope.memberships.splice(index, 1);
       }
-      Membership.delete({'id':m_id}).$promise
-            .then(function(resp){
-                notifications.showSuccess(resp);
-                $scope.memberships.splice(index, 1);
+      else {
+        // only delete if at least one membership exists on the server
+        var count = 0;
+        $scope.memberships.forEach(function(m) {
+          if (m.id) { count++ }
+        });
+        if (count < 2) {
+          notifications.showError("Cannot delete membership. A user needs at least 1 membership!");
+          return;
+        }
+
+        Membership.delete({'id':m_id},
+            function(resp){
+              notifications.showSuccess(resp);
+              $scope.memberships.splice(index, 1);
             }, function(error){
-                notifications.showError(error.data);
+              notifications.showError(error.data);
             });
-        };
+      }
+    };
+
+    $scope.add_membership = function(){ $scope.memberships.push({ user_id: $scope.user.id }) };
 
     loadParallel().catch( function(err) { notifications.showError(err) });
-    if ($stateParams.id) {
-      $scope.save = update_user;
-    }
-    else {
-      $scope.save = create_user;
-    }
-
   });
