@@ -70,8 +70,9 @@ def test_create_user():
         membership_role=role,
     )
     db.session.commit()
+    oxu
     assert oxu.id > 0, 'OrganizationMembership written'
-    assert len(admin.get_users()), 'Verbund Admin now has 4 users'
+    assert len(admin.get_users()) == 4, 'Verbund Admin now has 4 users'
     App.user = newuser
 
 
@@ -86,3 +87,11 @@ def test_login():
 
 def test_delete_user():
     assert App.user.name == App.username
+    App.user.mark_as_deleted()
+    assert App.user.deleted == 1
+    assert App.user.ts_deleted
+    db.session.add(App.user)
+    db.session.commit()
+    admin = User.query.filter_by(name="Verbund Admin").first()
+    # XXX to be discussed
+    assert len(admin.get_users()) == 4, 'Verbund Admin now has 4 users'

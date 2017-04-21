@@ -225,6 +225,7 @@ class User(UserMixin, Model, SerializerMixin):
     api_key = db.Column(db.String(64), nullable=True)
     is_admin = db.Column(db.Boolean(), default=False)
     deleted = db.Column(db.Integer, default=0)
+    ts_deleted = db.Column(db.DateTime)
     otp_secret = db.Column(db.String(16))
     otp_enabled = db.Column(db.Boolean, default=False, nullable=False)
 
@@ -393,12 +394,9 @@ class User(UserMixin, Model, SerializerMixin):
               return True
         return False
 
-    # STUB
     def mark_as_deleted(self):
         self.deleted = 1
-        self
-        # set ts_deleted
-
+        self.ts_deleted = datetime.datetime.utcnow()
 
     def may_handle_organization(self, org):
         """checks if the user object it is called on
@@ -707,6 +705,7 @@ class Organization(Model, SerializerMixin):
     mail_template = db.Column(db.String(50), default='EnglishReport')
     # send emails this many seconds apart
     mail_times = db.Column(db.Integer, default=3600)
+    ts_deleted = db.Column(db.DateTime)
     deleted = db.Column(db.Integer, default=0)
 
     parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
