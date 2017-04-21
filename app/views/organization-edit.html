@@ -261,22 +261,26 @@
   </div>
   <div class="panel-body">
     <div class="well" ng-repeat="m in memberships">
-      <div class="row show-grid">
-        <div class="col-xs-12">
-          <a class="btn btn-small btn-default" ui-sref="user_edit({id: m.user_id})">Edit User</a>
+      <div ng-repeat="type in ['name','email']">
+        <div class="row show-grid">
+          <div class="col-xs-2">User.{{type}}</div>
+          <div class="col-xs-10">{{ users[m.user_id][type] }}</div>
         </div>
-      </div>
-      <div class="row show-grid">
-        <div class="col-xs-2">User.name</div>
-        <div class="col-xs-10">{{users[m.user_id].name}}</div>
-      </div>
-      <div class="row show-grid">
-        <div class="col-xs-2">User.email</div>
-        <div class="col-xs-10">{{users[m.user_id].email}}</div>
       </div>
       <div class="row show-grid">
         <div class="col-xs-2">Role.name</div>
         <div class="col-xs-10">{{roles[m.membership_role_id].name}}</div>
+      </div>
+      <div ng-repeat="type in ['email','phone','city','country','street','zip','comment']">
+        <div class="row show-grid">
+          <div class="col-xs-2">Membership.{{type}}</div>
+          <div class="col-xs-10">{{ m[type] }}</div>
+        </div>
+      </div>
+      <div class="row show-grid">
+        <div class="col-xs-12">
+          <a class="btn btn-small btn-default" ui-sref="user_edit({id: m.user_id})">Edit</a>
+        </div>
       </div>
     </div>
   </div>
