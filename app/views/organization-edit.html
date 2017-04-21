@@ -261,15 +261,15 @@
   </div>
   <div class="panel-body">
     <div class="well" ng-repeat="m in memberships">
+      <div class="row show-grid">
+        <div class="col-xs-2">Role.name</div>
+        <div class="col-xs-10">{{roles[m.membership_role_id].name}}</div>
+      </div>
       <div ng-repeat="type in ['name','email']">
         <div class="row show-grid">
           <div class="col-xs-2">User.{{type}}</div>
           <div class="col-xs-10">{{ users[m.user_id][type] }}</div>
         </div>
-      </div>
-      <div class="row show-grid">
-        <div class="col-xs-2">Role.name</div>
-        <div class="col-xs-10">{{roles[m.membership_role_id].name}}</div>
       </div>
       <div ng-repeat="type in ['email','phone','city','country','street','zip','comment']">
         <div class="row show-grid">
