@@ -1,9 +1,17 @@
 from app.models import User, Organization, MembershipRole, \
     OrganizationMembership
 from app import db
+# import pytest
 # from .conftest import assert_msg
 # from app.fixtures import testfixture
 
+
+class App:
+    @property
+    def user(self):
+        return self.__user
+
+    username = 'Testuser under Verbund Admin'
 
 def test_user_memberships():
     u = User.query.filter_by(name="certmaster").first()
@@ -36,7 +44,6 @@ def test_create_user():
     + create new user
     + try to
     """
-    username = 'Testuser under Verbund Admin'
 
     admin = User.query.filter_by(name="Verbund Admin").first()
     assert len(admin.user_memberships) == 3
@@ -46,7 +53,7 @@ def test_create_user():
     assert c == 3, 'Verbung Admin has 3 users'
     certorg = Organization.query.filter_by(abbreviation='cert').first()
 
-    newuser = User(name=username)
+    newuser = User(name=App.username)
     newuser.password = 'bla'
     db.session.add(newuser)
     db.session.commit()
@@ -64,3 +71,17 @@ def test_create_user():
     db.session.commit()
     assert oxu.id > 0, 'OrganizationMembership written'
     assert len(admin.get_users()), 'Verbund Admin now has 4 users'
+    App.user = newuser
+
+
+def test_login():
+    # verbundciso is not allowed to login
+    (verbundciso, auth) = User.authenticate('cisouser@verbund.at', 'bla')
+    assert auth is False
+
+    (admin, auth) = User.authenticate('admin@verbund.at', 'bla')
+    assert auth is True
+
+
+def test_delete_user():
+    assert App.user.name == App.username

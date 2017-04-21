@@ -275,6 +275,10 @@ class User(UserMixin, Model, SerializerMixin):
         user = cls.query.filter(cls.email == email).first()
         if user:
             authenticated = user.check_password(password)
+            # user has to 'OrgAdmin' for at least one organisation
+            orgs = user.get_organization_memberships()
+            if orgs == []:
+                authenticated = False
         else:
             authenticated = False
         return user, authenticated
