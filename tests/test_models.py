@@ -13,6 +13,7 @@ class App:
 
     username = 'Testuser under Verbund Admin'
 
+
 def test_user_memberships():
     u = User.query.filter_by(name="certmaster").first()
 
