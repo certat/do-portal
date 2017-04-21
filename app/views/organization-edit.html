@@ -254,3 +254,30 @@
     </button>
   </div>
 </div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Memberships</h3>
+  </div>
+  <div class="panel-body">
+    <div class="well" ng-repeat="m in memberships">
+      <div class="row show-grid">
+        <div class="col-xs-12">
+          <a class="btn btn-small btn-default" ui-sref="user_edit({id: m.user_id})">Edit User</a>
+        </div>
+      </div>
+      <div class="row show-grid">
+        <div class="col-xs-2">User.name</div>
+        <div class="col-xs-10">{{users[m.user_id].name}}</div>
+      </div>
+      <div class="row show-grid">
+        <div class="col-xs-2">User.email</div>
+        <div class="col-xs-10">{{users[m.user_id].email}}</div>
+      </div>
+      <div class="row show-grid">
+        <div class="col-xs-2">Role.name</div>
+        <div class="col-xs-10">{{roles[m.membership_role_id].name}}</div>
+      </div>
+    </div>
+  </div>
+</div>

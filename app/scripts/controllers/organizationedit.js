@@ -8,7 +8,53 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, Auth, GridData, notifications, $stateParams) {
+  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notifications, $stateParams, $q) {
+
+    var loadUsers = function() {
+      if (!$stateParams.id) { return {} };
+      return User.query_list().$promise
+                .then(function(resp){
+                    return resp.users;
+                  }, function(err){
+                    notifications.showError(err.data.message);
+                  });
+    };
+
+    var loadRoles = function(){
+      return Membership.roles().$promise
+                .then(function(resp){
+                    return resp.membership_roles;
+                  }, function(err){
+                    notifications.showError(err.data.message);
+                  });
+    };
+
+    var loadMemberships = function(){
+      if (!$stateParams.id) { return [{}] };
+      return Membership.query().$promise
+                .then(function(resp){
+                    return resp.organization_memberships;
+                  }, function(err){
+                    notifications.showError(err.data.message);
+                  });
+    };
+
+    function _array2hash(arr) {
+        var hash = {};
+        arr.forEach(function(i) { hash[i.id] = i });
+        return hash;
+    }
+    var loadParallel = function() {
+        return $q.all([ loadUsers(), loadRoles(), loadMemberships() ])
+            .then( function( result ) {
+              $scope.users       = _array2hash(result.shift());
+              $scope.roles       = _array2hash(result.shift());
+              $scope.memberships = result.shift().filter(function(m){return m.organization_id == $stateParams.id});
+            }
+        );
+    };
+    loadParallel().catch( function(err) { notifications.showError(err) });
+
     Organization.query({'id': $stateParams.id}).$promise.then(function(resp){
       $scope.org = resp;
       $scope.fuzzed = [];
