@@ -39,33 +39,37 @@ angular.module('cpApp')
                   });
     };
 
+    var loadOrganization = function() {
+      return Organization.query({'id': $stateParams.id}).$promise
+            .then(function(resp){
+                $scope.fuzzed = [];
+                angular.forEach(resp.fqdns, function(val){
+                    GridData('fqdns').query({'id': val}, function(resp){
+                        $scope.fuzzed[val] = resp.typosquats;
+                    });
+                });
+                return resp;
+            }, function(err){
+              notifications.showError(err.data.message);
+            });
+    };
+
     function _array2hash(arr) {
         var hash = {};
         arr.forEach(function(i) { hash[i.id] = i });
         return hash;
     }
     var loadParallel = function() {
-        return $q.all([ loadUsers(), loadRoles(), loadMemberships() ])
+        return $q.all([ loadUsers(), loadRoles(), loadMemberships(), loadOrganization() ])
             .then( function( result ) {
               $scope.users       = _array2hash(result.shift());
               $scope.roles       = _array2hash(result.shift());
               $scope.memberships = result.shift().filter(function(m){return m.organization_id == $stateParams.id});
+              $scope.org = result.shift();
             }
         );
     };
     loadParallel().catch( function(err) { notifications.showError(err) });
-
-    Organization.query({'id': $stateParams.id}).$promise.then(function(resp){
-      $scope.org = resp;
-      $scope.fuzzed = [];
-      angular.forEach(resp.fqdns, function(val){
-        GridData('fqdns').query({'id': val}, function(resp){
-          $scope.fuzzed[val] = resp.typosquats;
-        });
-      });
-    }, function(err){
-      notifications.showError(err.data.message);
-    });
 
     $scope.toggleFuzzyList = function(list, parent){
       var modalInstance = $uibModal.open({
