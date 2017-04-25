@@ -19,6 +19,12 @@ angular.module('cpApp')
         method: 'GET',
         isArray: false
       },
+      create: {
+        url: config.apiConfig.webServiceUrl+'/organizations',
+        method: 'POST',
+        isArray: false,
+        withCredentials: true
+      },
       query: {
         method: 'GET',
         isArray: false

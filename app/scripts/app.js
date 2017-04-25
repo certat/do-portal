@@ -46,6 +46,19 @@ angular
           }
         }
       })
+      .state('organization_create', {
+        url: '/organizations',
+        views: {
+          header: {
+            templateUrl: 'views/header.html',
+            controller: 'HeaderCtrl'
+          },
+          content: {
+            templateUrl: 'views/organization-edit.html',
+            controller: 'OrganizationeditCtrl'
+          }
+        }
+      })
       .state('organizations', {
         url: '/organizations/:id',
         views: {

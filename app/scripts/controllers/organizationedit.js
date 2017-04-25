@@ -8,10 +8,9 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notifications, $stateParams, $q) {
+  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notifications, $stateParams, $q, $state) {
 
     var loadUsers = function() {
-      if (!$stateParams.id) { return {} };
       return User.query_list().$promise
                 .then(function(resp){
                     return resp.users;
@@ -30,7 +29,6 @@ angular.module('cpApp')
     };
 
     var loadMemberships = function(){
-      if (!$stateParams.id) { return [{}] };
       return Membership.query().$promise
                 .then(function(resp){
                     return resp.organization_memberships;
@@ -56,7 +54,7 @@ angular.module('cpApp')
 
     function _array2hash(arr) {
         var hash = {};
-        arr.forEach(function(i) { hash[i.id] = i });
+        arr.forEach(function(i) { hash[i.id] = i; });
         return hash;
     }
     var loadParallel = function() {
@@ -69,7 +67,19 @@ angular.module('cpApp')
             }
         );
     };
-    loadParallel().catch( function(err) { notifications.showError(err) });
+
+    if ($stateParams.id) {
+      loadParallel().catch( function(err) { notifications.showError(err) });
+    }
+    else {
+      $scope.org = {};
+      Organization.query_list().$promise.then(function(resp){
+        $scope.orgs = resp.organizations;
+      }, function(err){
+        console.log(err);
+        notifications.showError(err.data.message);
+      });
+    }
 
     $scope.toggleFuzzyList = function(list, parent){
       var modalInstance = $uibModal.open({
@@ -140,8 +150,17 @@ angular.module('cpApp')
       });
     };
 
-    $scope.save = function(o){
-      Organization.update({'id':o.id}, o, function(resp){
+    $scope.create_organization = function(){
+      Organization.create({}, $scope.org, function(resp){
+        $state.go('organization_edit', {id: resp.organization.id});
+        notifications.showSuccess("Organization created.");
+      }, function(error){
+        notifications.showError(error.data);
+      });
+    };
+
+    $scope.update_organization = function(){
+      Organization.update({'id':$scope.org.id}, $scope.org, function(resp){
         notifications.showSuccess(resp);
       }, function(error){
         notifications.showError(error.data);

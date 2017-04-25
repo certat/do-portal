@@ -24,7 +24,7 @@ angular.module('cpApp')
   .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Membership, Auth, GridData, notifications, $stateParams, $state, $q) {
 
     var loadUser = function() {
-      if (!$stateParams.id) { return {} };
+      if (!$stateParams.id) { return {}; }
       return User.query({'id': $stateParams.id}).$promise
                 .then(function(resp){
                     return resp;
@@ -52,7 +52,7 @@ angular.module('cpApp')
     };
 
     var loadMemberships = function(){
-      if (!$stateParams.id) { return [{}] };
+      if (!$stateParams.id) { return [{}]; }
       return Membership.query().$promise
                 .then(function(resp){
                     return resp.organization_memberships;
