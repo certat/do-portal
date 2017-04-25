@@ -106,10 +106,14 @@ def get_av_scan(sha256):
     :>json string report_parsed: Parsed antivirus scan report
 
     :status 200: Scan report found
+    :status 204: Scan report empty. The client MAY repeat the request at a
+                 later time.
     :status 404: Resource not found
     """
     s = Sample.query.filter_by(sha256=sha256).first_or_404()
-    report = Report.query.filter_by(type_id=2, sample_id=s.id).first_or_404()
+    report = Report.query.filter_by(type_id=2, sample_id=s.id).first()
+    if not report:
+        return ApiResponse({}, 204)
     serialized = report.serialize()
     if 'report' in serialized:
         serialized['report_parsed'] = json.loads(serialized['report'])
