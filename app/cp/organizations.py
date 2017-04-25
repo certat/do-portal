@@ -296,7 +296,6 @@ def add_cp_organization():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    contact_emails = request.json.pop('contact_emails')
     o = Organization.fromdict(request.json)
 
     parent_org = Organization.query.get(o.parent_org_id)
@@ -304,6 +303,7 @@ def add_cp_organization():
         abort(403)
 
     try:
+        contact_emails = request.json.pop('contact_emails')
         for e in contact_emails:
             cp = e.get('cp', False)
             o.contact_emails.append(
@@ -311,7 +311,7 @@ def add_cp_organization():
                     email_=Email(email=e['email']),
                     cp=cp))
     except KeyError as ke:
-        current_app.log.warn('No contact emails provided: {}'.format(ke))
+        print('No contact emails provided: {}'.format(ke))
 
     db.session.add(o)
     db.session.commit()
