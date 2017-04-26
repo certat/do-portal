@@ -348,8 +348,17 @@ def delete_cp_user(user_id):
     ).first_or_404()
     if not g.user.may_handle_user(user):
         abort(403)
+
+    # mark the user's organization memberships as deleted
+    memberships = OrganizationMembership.query.filter_by(user_id = user.id)
+    for m in memberships:
+        m.mark_as_deleted()
+        db.session.add(m)
+
     user.mark_as_deleted()
+
     db.session.add(user)
     db.session.commit()
-    return {'message': 'User deleted'}
+    return {'message': 'User deleted',
+            'organization_memberships': [m.serialize() for m in memberships]}
 
