@@ -51,13 +51,19 @@ def test_delete_user_higher_up_fails(client):
 def test_delete_managed_user_works(client):
     client.api_user = find_user_by_name('certmaster')
     verbund_ciso_user = find_user_by_name('Verbund CISO')
-    # rv = client.get(url_for('cp.get_cp_organization_memberships'))
-    # print(rv.json)
+
+    rv = client.get(url_for('cp.get_cp_organization_memberships'))
+    got = list(rv.json.values())
+    membership_ids_before = [i['id'] for i in got[0]]
+
     rv = client.delete(
         url_for('cp.delete_cp_user', user_id=verbund_ciso_user.id))
     assert rv.status_code == 200
-    # rv = client.get(url_for('cp.get_cp_organization_memberships'))
-    # print(rv.json)
+
+    rv = client.get(url_for('cp.get_cp_organization_memberships'))
+    got = list(rv.json.values())
+    membership_ids_after = [i['id'] for i in got[0]]
+    assert set(membership_ids_before) != set(membership_ids_after)
 
 
 def find_user_by_name(name):
