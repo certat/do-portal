@@ -32,6 +32,10 @@ angular.module('cpApp')
       update: {
         method: 'PUT',
         withCredentials: true
+      },
+      delete: {
+        method: 'DELETE',
+        withCredentials: true
       }
     });
   });

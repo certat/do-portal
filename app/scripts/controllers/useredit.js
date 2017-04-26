@@ -109,6 +109,18 @@ angular.module('cpApp')
       });
     };
 
+    $scope.delete_user = function(){
+      if( window.confirm("Do you really want to delete this user?") ) {
+        User.delete({'id':$scope.user.id}, function(resp){
+          $state.go('user_list');
+          notifications.showSuccess(resp);
+        }, function(error){
+          notifications.showError(error.data);
+        });
+      }
+    };
+
+
     $scope.delete_membership = function(m_id, index){
 
       if (!m_id) {
