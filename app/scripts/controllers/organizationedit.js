@@ -152,7 +152,7 @@ angular.module('cpApp')
 
     $scope.create_organization = function(){
       Organization.create({}, $scope.org, function(resp){
-        $state.go('organization_edit', {id: resp.organization.id});
+        $state.go('organizations', {id: resp.organization.id});
         notifications.showSuccess("Organization created.");
       }, function(error){
         notifications.showError(error.data);
