@@ -122,28 +122,31 @@ angular.module('cpApp')
 
 
     $scope.delete_membership = function(m_id, index){
+      if( window.confirm("Do you really want to delete this membership?") ) {
 
-      if (!m_id) {
-        $scope.memberships.splice(index, 1);
-      }
-      else {
-        // only delete if at least one membership exists on the server
-        var count = 0;
-        $scope.memberships.forEach(function(m) {
-          if (m.id) { count++ }
-        });
-        if (count < 2) {
-          notifications.showError("Cannot delete membership. A user needs at least 1 membership!");
-          return;
+        if (!m_id) {
+          $scope.memberships.splice(index, 1);
         }
+        else {
+          // only delete if at least one membership exists on the server
+          var count = 0;
+          $scope.memberships.forEach(function(m) {
+            if (m.id) { count++ }
+          });
+          if (count < 2) {
+            notifications.showError("Cannot delete membership. A user needs at least 1 membership!");
+            return;
+          }
 
-        Membership.delete({'id':m_id},
-            function(resp){
-              notifications.showSuccess(resp);
-              $scope.memberships.splice(index, 1);
-            }, function(error){
-              notifications.showError(error.data);
-            });
+          Membership.delete({'id':m_id},
+              function(resp){
+                notifications.showSuccess(resp);
+                $scope.memberships.splice(index, 1);
+              }, function(error){
+                notifications.showError(error.data);
+              });
+
+        }
       }
     };
 
