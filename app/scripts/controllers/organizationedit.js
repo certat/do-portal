@@ -166,4 +166,15 @@ angular.module('cpApp')
         notifications.showError(error.data);
       });
     };
+
+    $scope.delete_organization = function(){
+      if( window.confirm("Do you really want to delete this organization?") ) {
+        Organization.delete({'id':$scope.org.id}, function(resp){
+          $state.go('organization_list');
+          notifications.showSuccess(resp);
+        }, function(error){
+          notifications.showError(error.data);
+        });
+      }
+    };
   });

@@ -267,6 +267,10 @@
       <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
       Save
     </button>
+    <button ng-show="org.id" class="btn btn-default pull-right" ng-click="delete_organization()">
+      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+      Delete
+    </button>
     <button ng-hide="org.id" class="btn btn-default" ng-click="create_organization()">
       <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
       Create
