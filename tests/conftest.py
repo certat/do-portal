@@ -67,7 +67,8 @@ def db(request, app):
     user = User.create_test_user()
     TestClient.test_user = user
     TestClient._api_user = user
-
+    MembershipRole._MembershipRole__insert_defaults()
+    testfixture.testdata.addyaml()
     app.test_client_class = TestClient
     app.response_class = TestResponse
 
@@ -93,7 +94,6 @@ def addsampledata(client):
     OrganizationGroup._OrganizationGroup__insert_defaults()
     ReportType._ReportType__insert_defaults()
     Role._Role__insert_defaults()
-    MembershipRole._MembershipRole__insert_defaults()
     o = Organization(
         abbreviation="CERT-EU",
         full_name="Computer Emergency Response Team for EU "
@@ -105,7 +105,6 @@ def addsampledata(client):
         fqdns=['cert.europa.eu']
     )
     _db.session.add(o)
-    testfixture.testdata.addyaml()
     _db.session.commit()
     client.test_user.organization_id = o.id
 

@@ -239,6 +239,11 @@ class User(UserMixin, Model, SerializerMixin):
         back_populates="user",
     )
 
+    user_memberships_dyn = db.relationship(
+        'OrganizationMembership',
+        lazy='dynamic',
+    )
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.email in current_app.config['ADMINS']:
@@ -431,7 +436,6 @@ class User(UserMixin, Model, SerializerMixin):
         admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
         orgs_admin = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).first() #.filter(MembershipRole.name == 'OrgAdmin' )
 #        orgs_admin = OrganizationMembership.query.filter(OrganizationMembership.use = self, membership_role_id = admin_role.id).first()
-
         if (not orgs_admin):
            return []
 
@@ -458,7 +462,7 @@ class User(UserMixin, Model, SerializerMixin):
         ud = {}
         for om in oms:
             if om.user.id not in ud:
-                if om.user.deleted == 0:
+                if om.user.deleted != 1:
                     users.append(om.user)
                 ud[om.user.id] = 1
         return users
@@ -1193,7 +1197,7 @@ class OrganizationMembership(Model, SerializerMixin):
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = db.relationship("User", back_populates="user_memberships")
+    user = db.relationship("User", back_populates="user_memberships", lazy='subquery')
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     # organization = db.relationship("Organization", back_populates="organization_membership")
     organization = db.relationship("Organization")
@@ -1210,6 +1214,8 @@ class OrganizationMembership(Model, SerializerMixin):
     ts_deleted = db.Column(db.DateTime)
 
     def mark_as_deleted(self):
+       # if self.user.user_memberships_dyn.filter_by(deleted = 0).count() <= 1:
+       #     raise AttributeError('Last membership may not be deleted')
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
 

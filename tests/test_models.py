@@ -47,7 +47,7 @@ def test_create_user():
     """
 
     admin = User.query.filter_by(name="Verbund Admin").first()
-    assert len(admin.user_memberships) == 3
+    assert len(admin.user_memberships) == 1
     org = admin.get_organizations().first()
 
     c = len(admin.get_users())
@@ -70,7 +70,6 @@ def test_create_user():
         membership_role=role,
     )
     db.session.commit()
-    oxu
     assert oxu.id > 0, 'OrganizationMembership written'
     assert len(admin.get_users()) == 4, 'Verbund Admin now has 4 users'
     App.user = newuser
@@ -85,6 +84,12 @@ def test_login():
     assert auth is True
 
 
+def test_delete_membership():
+    db.session.add(App.user)
+    # um = App.user.user_memberships[0]
+    # raises(um.mark_as_deleted
+
+
 def test_delete_user():
     assert App.user.name == App.username
     App.user.mark_as_deleted()
@@ -93,7 +98,10 @@ def test_delete_user():
     db.session.commit()
     admin = User.query.filter_by(name="Verbund Admin").first()
     assert len(admin.get_users()) == 3, 'Verbund Admin now has 3 users'
+    i = 0
     for um in App.user.user_memberships:
+        i += 1
         assert um.deleted == 1, \
             'All memeberships also have to be marked as deleted'
         assert um.ts_deleted < datetime.datetime.utcnow()
+    assert i == 1, 'exactly one membership'
