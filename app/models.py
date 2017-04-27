@@ -235,6 +235,7 @@ class User(UserMixin, Model, SerializerMixin):
     user_memberships = db.relationship(
         'OrganizationMembership',
         # backref='user_memberships',
+        lazy='subquery',
         back_populates="user",
     )
 
@@ -397,6 +398,9 @@ class User(UserMixin, Model, SerializerMixin):
     def mark_as_deleted(self):
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
+        db.session.add(self)
+        for um in self.user_memberships:
+            um.mark_as_deleted()
 
     def may_handle_organization(self, org):
         """checks if the user object it is called on
@@ -454,7 +458,8 @@ class User(UserMixin, Model, SerializerMixin):
         ud = {}
         for om in oms:
             if om.user.id not in ud:
-                users.append(om.user)
+                if om.user.deleted == 0:
+                    users.append(om.user)
                 ud[om.user.id] = 1
         return users
 
@@ -822,11 +827,9 @@ class Organization(Model, SerializerMixin):
         org.group_id = 1
         return org
 
-    # STUB
     def mark_as_deleted(self):
         self.deleted = 1
-        self
-        # set ts_deleted
+        self.ts_deleted = datetime.datetime.utcnow()
 
     # STUB
     def has_child_organizations(self):
@@ -1208,7 +1211,7 @@ class OrganizationMembership(Model, SerializerMixin):
 
     def mark_as_deleted(self):
         self.deleted = 1
-        # set ts_deleted
+        self.ts_deleted = datetime.datetime.utcnow()
 
 
 @login_manager.user_loader

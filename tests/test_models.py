@@ -1,7 +1,7 @@
 from app.models import User, Organization, MembershipRole, \
     OrganizationMembership
 from app import db
-# import pytest
+import datetime
 # from .conftest import assert_msg
 # from app.fixtures import testfixture
 
@@ -90,8 +90,10 @@ def test_delete_user():
     App.user.mark_as_deleted()
     assert App.user.deleted == 1
     assert App.user.ts_deleted
-    db.session.add(App.user)
     db.session.commit()
     admin = User.query.filter_by(name="Verbund Admin").first()
-    # XXX to be discussed
-    assert len(admin.get_users()) == 4, 'Verbund Admin now has 4 users'
+    assert len(admin.get_users()) == 3, 'Verbund Admin now has 3 users'
+    for um in App.user.user_memberships:
+        assert um.deleted == 1, \
+            'All memeberships also have to be marked as deleted'
+        assert um.ts_deleted < datetime.datetime.utcnow()
