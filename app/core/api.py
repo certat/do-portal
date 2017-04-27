@@ -28,6 +28,8 @@ class ApiResponse:
                       status=self.status,
                       mimetype='application/json')
         rv.headers.extend(self.headers)
+        if not self.body:
+            rv.status_code = 204
         return rv
 
     def __repr__(self):
