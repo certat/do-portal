@@ -2,6 +2,7 @@ from app.models import User, Organization, MembershipRole, \
     OrganizationMembership
 from app import db
 import datetime
+import pytest
 # from .conftest import assert_msg
 # from app.fixtures import testfixture
 
@@ -85,9 +86,10 @@ def test_login():
 
 
 def test_delete_membership():
-    db.session.add(App.user)
-    # um = App.user.user_memberships[0]
-    # raises(um.mark_as_deleted
+    with pytest.raises(AttributeError):
+        db.session.add(App.user)
+        um = App.user.user_memberships[0]
+        um.mark_as_deleted()
 
 
 def test_delete_user():

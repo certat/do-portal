@@ -405,7 +405,7 @@ class User(UserMixin, Model, SerializerMixin):
         self.ts_deleted = datetime.datetime.utcnow()
         db.session.add(self)
         for um in self.user_memberships:
-            um.mark_as_deleted()
+            um.mark_as_deleted(delete_last_membership = True)
 
     def may_handle_organization(self, org):
         """checks if the user object it is called on
@@ -1213,9 +1213,10 @@ class OrganizationMembership(Model, SerializerMixin):
     deleted = db.Column(db.Integer, default=0)
     ts_deleted = db.Column(db.DateTime)
 
-    def mark_as_deleted(self):
-       # if self.user.user_memberships_dyn.filter_by(deleted = 0).count() <= 1:
-       #     raise AttributeError('Last membership may not be deleted')
+    def mark_as_deleted(self, delete_last_membership = False):
+        mc = self.user.user_memberships_dyn.filter_by(deleted = 0).count()
+        if mc == 1 and delete_last_membership == False:
+            raise AttributeError('Last membership may not be deleted')
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
 
