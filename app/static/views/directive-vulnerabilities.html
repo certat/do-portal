@@ -5,6 +5,15 @@
           Add vulnerability
       </a>
   </h3>
+  <div class="show-grid" ng-show="!!vulnerabilities.length">
+      <div class="input-group">
+          <input type="text" ng-model="search.$" placeholder="Filter by anything" class="form-control" aria-describedby="strict-addon">
+          <span class="input-group-addon" id="strict-addon">
+              <input type="checkbox" ng-model="strict"> Strict
+          </span>
+      </div>
+  </div>
+
   <table class="table table-condensed table-striped" ng-show="!!vulnerabilities.length">
       <colgroup>
         <col width="2%" />

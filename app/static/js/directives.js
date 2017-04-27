@@ -124,24 +124,9 @@ angular.module('Portal.directives', ['Portal.services', 'Portal.templates', 'ui.
       },
 
       link: function(scope, elem, attrs) { // jshint ignore:line
-        scope.pageChanged = function() {
-          scope.loadPage(scope.currentPage);
-        };
-        scope.loadPage = function(no) {
-          if (no === undefined) {
-            no = 1;
-          }
-          GridData('vulnerabilities').query({
-            page: no
-          }, function(resp) {
-            scope.vulnerabilities = resp.items;
-            scope.totalItems = resp.count;
-            scope.currentPage = resp.page;
-          }, function(err) {
-            notifications.showError(err);
-          });
-        };
-        scope.loadPage();
+        GridData('vulnerabilities').query(function(resp) {
+          scope.vulnerabilities = resp.vulnerabilities;
+        });
       }
     };
   }])
