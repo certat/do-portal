@@ -67,7 +67,8 @@ angular.module('cpApp')
               $scope.user          = result.shift();
               $scope.roles         = result.shift();
               $scope.organizations = result.shift();
-              $scope.memberships   = result.shift().filter(function(m){return m.user_id === $scope.user.id});
+              $scope.memberships
+                    = result.shift().filter(function(m){return m.user_id === $scope.user.id});
             }
         );
     };
@@ -91,7 +92,7 @@ angular.module('cpApp')
     };
 
     $scope.create_user = function(){
-      var data = angular.merge({}, $scope.user, $scope.memberships[0]);
+      var data = { user: $scope.user, organization_membership: $scope.memberships[0] };
       User.create({}, data, function(resp){
         $state.go('user_edit', {id: resp.user.id});
         notifications.showSuccess("User created.");
