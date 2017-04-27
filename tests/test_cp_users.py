@@ -1,6 +1,29 @@
 from flask import url_for
 from .conftest import assert_msg
-from app.models import User
+from app.models import User, MembershipRole
+
+
+def test_create_user(client):
+    client.api_user = find_user_by_name('certmaster')
+    org_id = client.api_user.get_organizations().first().id
+    orgadmin_role_id = MembershipRole.query.filter_by(name='OrgAdmin').first().id
+    rv = client.post(
+        url_for('cp.add_cp_user'),
+        json=dict(
+            user=dict(email='mylogin@mydomain.at',
+                      name='Max Muster'),
+            organization_membership=dict(
+                membership_role_id=orgadmin_role_id,
+                organization_id=org_id,
+                email='orgmail@someorg.at')
+        )
+    )
+    assert_msg(rv, value='User added', response_code=201)
+    rv_user = rv.json['user']
+    rv_membership = rv.json['organization_membership']
+    assert rv_user['id'] == rv_membership['user_id']
+    assert rv_user['email'] == 'mylogin@mydomain.at'
+    assert rv_membership['email'] == 'orgmail@someorg.at'
 
 
 def test_return_certmaster_orgs(client):

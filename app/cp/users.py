@@ -198,33 +198,18 @@ def add_cp_user():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    membership_role_id = request.json.pop('membership_role_id', None)
-    organization_id = request.json.pop('organization_id', None)
-    country = request.json.pop('country', None)
-    street = request.json.pop('street', None)
-    zip_code = request.json.pop('zip', None)
-    phone = request.json.pop('phone', None)
-    email = request.json.pop('email', None)
-    comment = request.json.pop('comment', None)
-
-    user = User.fromdict(request.json)
+    user = User.fromdict(request.json['user'])
+    membership = OrganizationMembership.fromdict(
+                    request.json['organization_membership'])
 
     # The role and organization must exist and the current user must be able to
     # admin the organization.
 
-    role = MembershipRole.query.get_or_404(membership_role_id)
-    org = Organization.query.get_or_404(organization_id)
-    membership = OrganizationMembership.fromdict({
-        'membership_role_id': membership_role_id,
-        'organization_id': organization_id,
-        'country' : country,
-        'street' : street,
-        'zip' : zip_code,
-        'phone' : phone,
-        'email' : email,
-        'comment' : comment })
+    role = MembershipRole.query.get_or_404(membership.membership_role_id)
+    org = Organization.query.get_or_404(membership.organization_id)
     if not g.user.may_handle_organization(org):
         abort(403)
+
     db.session.add(user)
     db.session.commit()
 
@@ -232,7 +217,7 @@ def add_cp_user():
     db.session.add(membership)
     db.session.commit()
     return {'user': user.serialize(),
-            'membership': membership.serialize(),
+            'organization_membership': membership.serialize(),
             'message': 'User added'}, 201, \
            {'Location': url_for('cp.get_cp_user', user_id=user.id)}
 
@@ -353,6 +338,5 @@ def delete_cp_user(user_id):
 
     db.session.add(user)
     db.session.commit()
-    return {'message': 'User deleted',
-            'organization_memberships': [m.serialize() for m in memberships]}
+    return {'message': 'User deleted'}
 
