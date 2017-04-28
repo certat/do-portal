@@ -3,14 +3,13 @@
       <h3 class="panel-title">{{user.id ? "Edit User" : "New User"}}</h3>
   </div>
   <div class="panel-body">
-
     <div class="well">
       <div class="row show-grid">
         <div class="col-xs-12"><strong>User Details</strong></div>
       </div>
 
       <div class="row show-grid">
-        <div class="col-xs-2">Name</div>
+        <div class="col-xs-2">Name *</div>
         <div class="col-xs-10">
           <input type="text" class="form-control input-sm"
                  placeholder="Name" required
@@ -19,7 +18,7 @@
       </div>
 
       <div class="row show-grid">
-        <div class="col-xs-2">Email (Login)</div>
+        <div class="col-xs-2">Email (Login) *</div>
         <div class="col-xs-10">
           <input type="text" class="form-control input-sm"
                  placeholder="Email" required
@@ -31,7 +30,7 @@
         <div class="col-xs-2">Password</div>
         <div class="col-xs-10">
           <input type="password" class="form-control input-sm"
-                 placeholder="Password" required
+                 placeholder="Password"
                  ng-model="user.password">
         </div>
       </div>
@@ -54,18 +53,18 @@
       </div>
 
       <div class="row show-grid">
-        <div class="col-xs-2">Role</div>
+        <div class="col-xs-2">Role *</div>
         <div class="col-xs-10">
-          <select convert-to-number class="form-control input-sm" required ng-model="m.membership_role_id">
+          <select convert-to-number positive-integer class="form-control input-sm" required ng-model="m.membership_role_id">
             <option ng-repeat="role in roles" value="{{role.id}}">{{role.display_name}}</option>
           </select>
         </div>
       </div>
 
       <div class="row show-grid">
-        <div class="col-xs-2">Organization</div>
+        <div class="col-xs-2">Organization *</div>
         <div class="col-xs-10">
-          <select convert-to-number class="form-control input-sm" required ng-model="m.organization_id">
+          <select convert-to-number class="form-control input-sm" required positive-integer ng-model="m.organization_id">
             <option ng-repeat="organization in organizations" value="{{organization.id}}">{{organization.abbreviation}}</option>
           </select>
         </div>
@@ -75,7 +74,7 @@
         <div class="col-xs-2">Street</div>
         <div class="col-xs-10">
           <input type="text" class="form-control input-sm"
-                 placeholder="Street" required
+                 placeholder="Street"
                  ng-model="m.street">
         </div>
       </div>
@@ -84,7 +83,7 @@
         <div class="col-xs-2">ZIP</div>
         <div class="col-xs-10">
           <input type="text" class="form-control input-sm"
-                 placeholder="ZIP" required
+                 placeholder="ZIP"
                  ng-model="m.zip">
         </div>
       </div>
@@ -93,7 +92,7 @@
         <div class="col-xs-2">City</div>
         <div class="col-xs-10">
           <input type="text" class="form-control input-sm"
-                 placeholder="City" required
+                 placeholder="City"
                  ng-model="m.city">
         </div>
       </div>
@@ -102,7 +101,7 @@
         <div class="col-xs-2">Country</div>
         <div class="col-xs-10">
           <input type="text" class="form-control input-sm"
-                 placeholder="Country" required
+                 placeholder="Country"
                  ng-model="m.country">
         </div>
       </div>
@@ -111,7 +110,7 @@
         <div class="col-xs-2">Comment</div>
         <div class="col-xs-10">
           <input type="text" class="form-control input-sm"
-                 placeholder="Comment" required
+                 placeholder="Comment"
                  ng-model="m.comment">
         </div>
       </div>
@@ -120,7 +119,7 @@
         <div class="col-xs-2">Email</div>
         <div class="col-xs-10">
           <input type="text" class="form-control input-sm"
-                 placeholder="Email" required
+                 placeholder="Email"
                  ng-model="m.email">
         </div>
       </div>
@@ -129,7 +128,7 @@
         <div class="col-xs-2">Phone</div>
         <div class="col-xs-10">
           <input type="text" class="form-control input-sm"
-                 placeholder="Phone" required
+                 placeholder="Phone"
                  ng-model="m.phone">
         </div>
       </div>

@@ -21,6 +21,17 @@ angular.module('cpApp')
         }
     };
   })
+  .directive('positiveInteger', function() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ctrl) {
+        ctrl.$validators.integer = function(modelValue, viewValue) {
+          var val = parseInt(viewValue, 10);
+	  return (val > 0);
+        };
+      }
+    };
+  })
   .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Membership, Auth, GridData, notifications, $stateParams, $state, $q) {
 
     var loadUser = function() {

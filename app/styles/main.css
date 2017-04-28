@@ -149,3 +149,6 @@ body {
   color: #000;
   padding: 0.2em 0;
 }
+select.ng-invalid.ng-touched, input.ng-invalid.ng-touched {
+  border: 1px solid #ff8787;
+}
