@@ -33,8 +33,7 @@
     "required": [
       "membership_role_id",
       "user_id",
-      "organization_id",
-      "email"
+      "organization_id"
     ]
   },
   "update_cp_organization_membership": {
@@ -71,8 +70,7 @@
     "required": [
       "membership_role_id",
       "user_id",
-      "organization_id",
-      "email"
+      "organization_id"
     ]
   }
 }
