@@ -1,4 +1,5 @@
 import datetime
+from sqlalchemy import or_
 from flask import request, redirect, url_for, g
 from flask_jsonschema import validate
 from app.core import ApiResponse
@@ -70,9 +71,10 @@ def get_vulnerabilities():
     """
     three_months_ago = datetime.datetime.now() - datetime.timedelta(90)
     today = datetime.datetime.now()
-    vulns = Vulnerability.query. \
-        filter(Vulnerability.patched.between(three_months_ago, today)). \
-        all()
+    vuln_cond = or_(Vulnerability.patched is None,
+                    Vulnerability.patched.between(three_months_ago, today))
+
+    vulns = Vulnerability.query.filter(vuln_cond).all()
     return ApiResponse({'vulnerabilities': [v.serialize() for v in vulns]})
 
 
@@ -405,7 +407,7 @@ def test_vulnerability(vuln_id):
     if rc == 1:
         g.patched = datetime.datetime.now()
     elif rc == 0:
-        g.patched = ''
+        g.patched = None
 
     g.request_response_code = status_code
 

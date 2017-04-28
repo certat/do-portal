@@ -23,7 +23,7 @@ def checkall(checked_patched=False):
             if rc == 1:
                 vuln.patched = datetime.datetime.now()
             elif rc == 0:
-                vuln.patched = ''
+                vuln.patched = None
 
             vuln.request_response_code = status_code
             vuln.updated = datetime.datetime.now()
