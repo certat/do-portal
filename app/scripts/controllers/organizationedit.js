@@ -50,8 +50,8 @@ angular.module('cpApp')
                   });
     };
 
-    var loadOrganization = function() {
-      return Organization.query({'id': $stateParams.id}).$promise
+    var loadOrganization = function(org_id) {
+      return Organization.query({'id': org_id}).$promise
             .then(function(resp){
                 $scope.fuzzed = [];
                 angular.forEach(resp.fqdns, function(val){
@@ -71,12 +71,18 @@ angular.module('cpApp')
         return hash;
     }
     var loadParallel = function() {
-        return $q.all([ loadUsers(), loadRoles(), loadMemberships(), loadOrganization() ])
+        return $q.all([ loadUsers(), loadRoles(), loadMemberships(), loadOrganization($stateParams.id) ])
             .then( function( result ) {
               $scope.users       = _array2hash(result.shift());
               $scope.roles       = _array2hash(result.shift());
               $scope.memberships = result.shift().filter(function(m){return m.organization_id == $stateParams.id});
               $scope.org = result.shift();
+              if ($scope.org.parent_org_id) {
+                loadOrganization($scope.org.parent_org_id)
+                  .then(function(resp) {
+                    $scope.parent_org = resp;
+                  });
+              }
             }
         );
     };
