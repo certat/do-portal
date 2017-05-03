@@ -8,7 +8,7 @@ from io import BytesIO
 import gzip
 from flask import request, current_app, g, send_file
 from flask_jsonschema import validate
-from app.core import ApiResponse, ApiPagedResponse
+from app.core import ApiResponse, ApiPagedResponse, ApiException
 from app import vxstream, db
 from app.api import api
 from app.models import Report, Sample
@@ -407,6 +407,9 @@ def add_vxstream_url_analysis():
                 'Accept': 'application/json'
             }
             resp = vxstream.submiturl(sdata, headers=headers)
+
+            if resp['response_code'] == -1:
+                raise ApiException(resp['response']['error'])
 
             samples[resp['response']['sha256']] = url
             statuses.append(resp['response'])
