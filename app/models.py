@@ -1143,6 +1143,35 @@ class Contact(Model):
     email = db.Column(db.String(255), nullable=False)
     deleted = db.Column(db.Integer, default=0)
 
+class Country(Model, SerializerMixin):
+    __tablename__ = 'countries'
+    __public__ = ('id', 'cc', 'name')
+    query_class = FilteredQuery
+    cc = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    deleted = db.Column(db.Integer, default=0)
+    users_for_country = db.relationship(
+        'OrganizationMembership',
+        back_populates='country'
+    )
+
+    @staticmethod
+    def __insert_defaults():
+        countries = [
+          ['AT',               'Austria'],
+          ['DE',               'Germany'],
+          ['CH',               'Switzerland'],
+        ]
+        for r in countries:
+            country = Country.query.filter_by(name=r[0]).first()
+
+            if country is None:
+                country = Country(cc=r[0], name=r[1] )
+                db.session.add(country)
+        db.session.commit()
+
+
 class MembershipRole(Model, SerializerMixin):
     __tablename__ = 'membership_roles'
     __public__ = ('id', 'name', 'display_name')
@@ -1196,7 +1225,8 @@ class MembershipRole(Model, SerializerMixin):
 class OrganizationMembership(Model, SerializerMixin):
     __tablename__ = 'organization_memberships'
     __public__ = ('id', 'user_id', 'organization_id', 'street', 'zip', 'city',
-                  'country', 'comment', 'email', 'phone', 'membership_role_id')
+                  'country', 'comment', 'email', 'phone', 'membership_role_id',
+                  'pgp_key_id', 'pgp_key_fingerprint', 'pgp_key', 'smime', 'country_id')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -1209,12 +1239,18 @@ class OrganizationMembership(Model, SerializerMixin):
     street = db.Column(db.String(255))
     zip = db.Column(db.String(25))
     city = db.Column(db.String(255))
-    country = db.Column(db.String(50))  # should be a lookup table
+    # country = db.Column(db.String(50))  # should be a lookup table
+    country_id = db.Column(db.Integer, db.ForeignKey('countries.id'))
+    country = db.relationship("Country")
     comment = db.Column(db.String(255))
     email = db.Column(db.String(255))
     phone = db.Column(db.String(255))
     deleted = db.Column(db.Integer, default=0)
     ts_deleted = db.Column(db.DateTime)
+    pgp_key_id = db.Column(db.String(255))
+    pgp_key_fingerprint = db.Column(db.String(255))
+    pgp_key = db.Column(db.Text)
+    smime = db.Column(db.Text)
 
     def mark_as_deleted(self, delete_last_membership = False):
         mc = self.user.user_memberships_dyn.filter_by(deleted = 0).count()

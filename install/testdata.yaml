@@ -23,7 +23,7 @@ user:
     street: "Karlsplatz 1"
     city: "Wien"
     zip: "1010"
-    country: Austria
+    country: AT
     comment: "Master User"
     email: "cert@master.at"
     phone: "+43 1 123456"

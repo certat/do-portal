@@ -15,14 +15,15 @@ from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, Vulnerability, Tag
 from app.models import ContactEmail, emails_organizations, tags_vulnerabilities
 from app.models import Role, ReportType, OrganizationMembership, MembershipRole
+from app.models import Country
 
 class testdata:
 
    def addyaml():
-      """Add sample data from yaml file""" 
+      """Add sample data from yaml file"""
       with open("install/testdata.yaml", 'r') as stream:
            data_loaded = yaml.load(stream)
-   
+
       for org in data_loaded['org']:
          if 'full_name' not in org:
             org['full_name'] = org['abbreviation']
@@ -34,11 +35,11 @@ class testdata:
             display_name=org['display_name'],
          )
          if ('parent_org' in org):
-            po = Organization.query.filter_by(abbreviation=org['parent_org']).first() 
+            po = Organization.query.filter_by(abbreviation=org['parent_org']).first()
             o.parent_org = po
          db.session.add(o)
-         db.session.commit()    
-   
+         db.session.commit()
+
       for user in data_loaded['user']:
          u = User.query.filter_by(name = user['name']).first()
          if (not u):
@@ -49,7 +50,7 @@ class testdata:
             u.api_key = u.generate_api_key()
             u.password = 'bla'
             db.session.add(u)
-         
+
          role = MembershipRole.query.filter_by(name=user['role']).first()
          org = Organization.query.filter_by(abbreviation=user['org']).first()
          if 'email' not in user:
@@ -61,26 +62,28 @@ class testdata:
          if 'city' not in user:
              user['city'] = 'n/a'
          if 'country' not in user:
-             user['country'] = 'no country for old men'
+             country_o = Country.query.filter_by(cc='AT').first()
+         else:
+             country_o = Country.query.filter_by(cc=user['country']).first()
          if 'comment' not in user:
              user['comment'] = 'no comment'
          if 'phone' not in user:
              user['phone'] = '12345678'
-         
+
          oxu = OrganizationMembership(
             email =  user['email'],
             street = user['street'],
             city = user['city'],
             zip  = user['zip'],
-            country = user['country'],
+            country = country_o,
             comment = user['comment'],
             phone =user['phone'],
-            organization = org, 
+            organization = org,
             user = u,
             membership_role = role,
          )
-         db.session.commit()    
-   
+         db.session.commit()
+
    def print():
       """output sample data"""
       u = User.query.filter_by(name="certmaster").first()
@@ -91,30 +94,30 @@ class testdata:
           print(uo.organization.full_name)
           for co in uo.organization.child_organizations:
              print(co.full_name)
-   
+
       print('**** organization_memberships ******')
       for oxu in u.get_organization_memberships():
-      
-          print('%s %s %s' % 
+
+          print('%s %s %s' %
               (oxu.email, oxu.membership_role.name,  oxu.organization.full_name))
-   
+
       #print(u.org_ids)
-   
+
       print('**** organization_memberships ******')
-      oms = User.query.filter_by(name = 'Verbund Admin').first().get_organization_memberships()  
+      oms = User.query.filter_by(name = 'Verbund Admin').first().get_organization_memberships()
       if (oms):
-        for oxu in oms: 
-          print('%s %s %s' % 
+        for oxu in oms:
+          print('%s %s %s' %
              (oxu.email, oxu.membership_role.name,  oxu.organization.full_name))
-   
+
       print('**** organizations ******')
       orgs = u.get_organizations()
       i = 0
       for org in orgs:
-          print('%d %s %s' % 
+          print('%d %s %s' %
               (i, org.full_name, org.abbreviation))
           i += 1
-   
+
       print('**** permission checks ******')
       evn_user = User.query.filter_by(name = 'EVN User').first()
       evnmaster = User.query.filter_by(name = 'evnmaster').first()
@@ -124,18 +127,18 @@ class testdata:
            (u.may_handle_user(evn_user), evn_user.may_handle_user(u)))
       print("cert for evnmaster %s \nevnmaster for cert %s" %
            (u.may_handle_user(evnmaster), evnmaster.may_handle_user(u)))
-   
-   
+
+
       print('**** user.get_userss ******')
       users = u.get_users()
       for user in users:
          print("%s" % (user.name))
-      
+
       print('**** user.get_users(evnmaster) ******')
       users = evnmaster.get_users()
       for user in users:
          print("%s" % (user.name))
-     
-   
+
+
    if __name__ == '__main__':
        cli()

@@ -35,9 +35,9 @@ def cli():
 
 @cli.command()
 def addyaml():
-   """Add sample data from yaml file""" 
+   """Add sample data from yaml file"""
    testfixture.testdata.addyaml()
-   db.session.commit()    
+   db.session.commit()
 
 @cli.command()
 def add():
@@ -54,19 +54,19 @@ def add():
     )
     cert_user.password = 'bla'
     db.session.add(cert_user)
-    
+
     cert_user4cert = OrganizationMembership(
         email = 'certifant@cert.at',
         zip = '1234',
-        organization = cert,        
+        organization = cert,
         user = cert_user
     )
-       
-    db.session.commit()    
-    
-    click.echo('Done Org id: ' + str(cert.id)) 
-    click.echo('Done User id: ' + str(cert_user.id)) 
-    click.echo('adding sub org') 
+
+    db.session.commit()
+
+    click.echo('Done Org id: ' + str(cert.id))
+    click.echo('Done User id: ' + str(cert_user.id))
+    click.echo('adding sub org')
 
     evn = Organization(
         abbreviation="EVN",
@@ -79,11 +79,11 @@ def add():
         name = "evn master user"
     )
     evn_user.password = 'bla'
-    
+
     OrganizationMembership(
         email = 'master@evn.at',
         zip = '5678',
-        organization = evn,        
+        organization = evn,
         user = evn_user
     )
 
@@ -99,20 +99,22 @@ def add():
     )
     evn_strom_user.password = 'bla'
     db.session.add(evn_strom_user)
-    
+
     evnstrom_orguser = OrganizationMembership(
         email = 'strom@evn.at',
         zip = '5678',
-        organization = evn_strom,        
+        organization = evn_strom,
         user = evn_strom_user
     )
-    db.session.commit()    
-    
+    db.session.commit()
+
 
 @cli.command()
 def delete():
     """delete sample data"""
     OrganizationMembership.query.delete()
+     #contactemails_organizations.delete()
+    emails_organizations.delete()
     User.query.filter(User.name != 'testadmin').delete()
     Organization.query.filter(Organization.abbreviation != "CERT-EU").delete()
     db.session.commit()
@@ -131,17 +133,17 @@ def print():
 
    click.echo('**** organization_memberships ******')
    for oxu in u.get_organization_memberships():
-   
-       click.echo('%s %s' % 
+
+       click.echo('%s %s' %
            (oxu.email, oxu.organization.full_name))
 
    #click.echo(u.org_ids)
 
    click.echo('**** organization_memberships ******')
-   oms = User.query.filter_by(name = 'Verbund Admin').first().get_organization_memberships()  
+   oms = User.query.filter_by(name = 'Verbund Admin').first().get_organization_memberships()
    if (oms):
-     for oxu in oms: 
-       click.echo('%s %s %s' % 
+     for oxu in oms:
+       click.echo('%s %s %s' %
           (oxu.email, oxu.membership_role.name,  oxu.organization.full_name))
 
    click.echo('**** organizations ******')
@@ -149,7 +151,7 @@ def print():
    i = 0
    for org in orgs:
        click.echo(u.id)
-       click.echo('%d %s %s' % 
+       click.echo('%d %s %s' %
            (i, org.full_name, org.abbreviation))
        i += 1
 
@@ -168,12 +170,12 @@ def print():
    users = u.get_users()
    for user in users:
       click.echo("%s" % (user.name))
-   
+
    click.echo('**** user.get_users(evnmaster) ******')
    users = evnmaster.get_users()
    for user in users:
       click.echo("%s" % (user.name))
-  
+
 
 if __name__ == '__main__':
     cli()
