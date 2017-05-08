@@ -78,6 +78,7 @@ def test_create_user():
         pgp_key_fingerprint='ADFEFEF123123',
         pgp_key='asdasasfasfasf',
         smime='asdasdasd',
+        coc=b'asasda'
     )
     db.session.commit()
     assert oxu.id > 0, 'OrganizationMembership written'

@@ -1227,7 +1227,7 @@ class OrganizationMembership(Model, SerializerMixin):
     __tablename__ = 'organization_memberships'
     __public__ = ('id', 'user_id', 'organization_id', 'street', 'zip', 'city',
                   'country', 'comment', 'email', 'phone', 'membership_role_id',
-                  'pgp_key_id', 'pgp_key_fingerprint', 'pgp_key', 'smime', 'country_id')
+                  'pgp_key_id', 'pgp_key_fingerprint', 'pgp_key', 'smime', 'country_id', 'coc')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -1252,6 +1252,7 @@ class OrganizationMembership(Model, SerializerMixin):
     pgp_key_fingerprint = db.Column(db.String(255))
     pgp_key = db.Column(db.Text)
     smime = db.Column(db.Text)
+    coc = db.Column(db.LargeBinary)
 
     def mark_as_deleted(self, delete_last_membership = False):
         mc = self.user.user_memberships_dyn.filter_by(deleted = 0).count()
