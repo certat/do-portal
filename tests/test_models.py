@@ -61,6 +61,7 @@ def test_create_user():
     newuser.picture = b'asasda'
     newuser.birthdate = datetime.datetime.utcnow()
     newuser.title = 'DDDr. hc. mult.'
+    newuser.origin = 'your mother'
     db.session.add(newuser)
     db.session.commit()
     assert newuser.id > 0

@@ -215,7 +215,7 @@ class MailmanMember(MailmanModel):
 class User(UserMixin, Model, SerializerMixin):
     """User model"""
     __tablename__ = 'users'
-    __public__ = ('id', 'name', 'email', 'api_key', 'otp_enabled', 'picture', 'birthdate', 'title')
+    __public__ = ('id', 'name', 'email', 'api_key', 'otp_enabled', 'picture', 'birthdate', 'title', 'origin')
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
@@ -231,6 +231,7 @@ class User(UserMixin, Model, SerializerMixin):
     picture = db.Column(db.LargeBinary)
     birthdate = db.Column(db.Date)
     title = db.Column(db.String(255))
+    origin = db.Column(db.String(255))
 
     _orgs = []
     _org_ids = []
