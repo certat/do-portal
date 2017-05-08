@@ -10,7 +10,7 @@ from flask.testing import FlaskClient
 from app import create_app
 from app import db as _db
 from app.models import User, OrganizationGroup, ReportType, Role
-from app.models import Organization, ContactEmail, MembershipRole
+from app.models import Organization, ContactEmail, MembershipRole, Country
 from app.utils import bosh_client
 from app.fixtures import testfixture
 
@@ -68,6 +68,7 @@ def db(request, app):
     TestClient.test_user = user
     TestClient._api_user = user
     MembershipRole._MembershipRole__insert_defaults()
+    Country._Country__insert_defaults()
     testfixture.testdata.addyaml()
     app.test_client_class = TestClient
     app.response_class = TestResponse

@@ -21,6 +21,7 @@ def test_user_memberships():
     for uo in u.user_memberships:
         assert uo.email == 'cert@master.at'
         assert uo.organization.full_name == 'Energy CERT Austria'
+        assert uo.country.name == 'Austria', 'Country is an object'
         cc = 0
         for co in uo.organization.child_organizations:
             cc += 1
@@ -57,6 +58,9 @@ def test_create_user():
 
     newuser = User(name=App.username)
     newuser.password = 'bla'
+    newuser.picture = b'asasda'
+    newuser.birthdate = datetime.datetime.utcnow()
+    newuser.title = 'DDDr. hc. mult.'
     db.session.add(newuser)
     db.session.commit()
     assert newuser.id > 0
@@ -69,6 +73,10 @@ def test_create_user():
         organization=org,
         user=newuser,
         membership_role=role,
+        pgp_key_id='asdasdasd',
+        pgp_key_fingerprint='ADFEFEF123123',
+        pgp_key='asdasasfasfasf',
+        smime='asdasdasd',
     )
     db.session.commit()
     assert oxu.id > 0, 'OrganizationMembership written'
