@@ -32,7 +32,11 @@ def get_cp_users():
               "id": 25,
               "login": "foo@bar.com",
               "password": "abc123",
-              "name": "Max Muster"
+              "name": "Max Muster",
+              "picture": "image/png;base64,iVBORw0KGgoAAAANS...",
+              "birthdate": "1951-03-22",
+              "title": "Dr.",
+              "origin": "Uranus"
             }
           ]
         }
@@ -93,7 +97,11 @@ def get_cp_user(user_id):
           "id": 25,
           "login": "foo@bar.com",
           "password": "abc123",
-          "login": "Max Muster"
+          "login": "Max Muster",
+          "picture": "image/png;base64,iVBORw0KGgoAAAANS...",
+          "birthdate": "1951-03-22",
+          "title": "Dr.",
+          "origin": "Uranus"
         }
 
     :param user_id: User unique ID
@@ -107,6 +115,10 @@ def get_cp_user(user_id):
     :>json string login: Login email address
     :>json string password: Password
     :>json string name: Name
+    :>json string picture: Base64-encoded PNG profile picture
+    :>json string birthdate: Birthdate as YYYY-MM-DD
+    :>json string title: Academic or honorific title
+    :>json string origin: Origin
 
     :status 200: Returns user details object
     :status 404: Resource not found
@@ -141,6 +153,10 @@ def add_cp_user():
           "login": "foo@bar.com",
           "password": "abc123",
           "name": "Max Muster",
+          "picture": "image/png;base64,iVBORw0KGgoAAAANS...",
+          "birthdate": "1951-03-22",
+          "title": "Dr.",
+          "origin": "Uranus",
           "membership_role_id": 12,
           "organization_id": 201
         }
@@ -177,14 +193,23 @@ def add_cp_user():
             login
     :<json string password: Password
     :<json string name: Name
+    :<json string picture: Base64-encoded PNG profile picture
+    :<json string birthdate: Birthdate as YYYY-MM-DD
+    :<json string title: Academic or honorific title
+    :<json string origin: Origin
     :<json integer membership_role_id: Unique ID of the organization user role
     :<json integer organization_id: Unique ID of the organization
-    :<json string country: Country name
+    :<json string country_id: Unique ID of the country
     :<json string street: Street address
     :<json string zip: Zip code
     :<json string phone: Phone number
     :<json string email: Email address
     :<json string comment: Arbitrary comment
+    :<json string pgp_key_id: PGP key ID
+    :<json string pgp_key_fingerprint: PGP key fingerprint
+    :<json string pgp_key: PGP key
+    :<json string smime: S/MIME
+    :<json string coc: Code of Conduct
 
     :>json string message: Status message
     :>json integer id: User ID
@@ -271,6 +296,10 @@ def update_cp_user(user_id):
     :<json string login: Login email address
     :<json string password: Password
     :<json string name: Name
+    :<json string picture: Base64-encoded PNG profile picture
+    :<json string birthdate: Birthdate as YYYY-MM-DD
+    :<json string title: Academic or honorific title
+    :<json string origin: Origin
 
     :>json string message: Status message
 

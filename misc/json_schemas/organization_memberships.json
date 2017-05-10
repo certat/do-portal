@@ -11,8 +11,8 @@
       "organization_id": {
         "type": "integer"
       },
-      "country": {
-        "type": "string"
+      "country_id": {
+        "type": "integer"
       },
       "street": {
         "type": "string"
@@ -27,6 +27,21 @@
         "type": "string"
       },
       "comment": {
+        "type": "string"
+      },
+      "pgp_key_id": {
+        "type": "string"
+      },
+      "pgp_key_fingerprint": {
+        "type": "string"
+      },
+      "pgp_key": {
+        "type": "string"
+      },
+      "smime": {
+        "type": "string"
+      },
+      "coc": {
         "type": "string"
       }
     },
@@ -48,8 +63,8 @@
       "organization_id": {
         "type": "integer"
       },
-      "country": {
-        "type": "string"
+      "country_id": {
+        "type": "integer"
       },
       "street": {
         "type": "string"
@@ -64,6 +79,21 @@
         "type": "string"
       },
       "comment": {
+        "type": "string"
+      },
+      "pgp_key_id": {
+        "type": "string"
+      },
+      "pgp_key_fingerprint": {
+        "type": "string"
+      },
+      "pgp_key": {
+        "type": "string"
+      },
+      "smime": {
+        "type": "string"
+      },
+      "coc": {
         "type": "string"
       }
     },

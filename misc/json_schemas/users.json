@@ -13,6 +13,18 @@
           },
           "name": {
             "type": "string"
+          },
+          "picture": {
+            "type": "string"
+          },
+          "birthdate": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
           }
         },
         "required": [
@@ -69,6 +81,18 @@
         "type": "string"
       },
       "name": {
+        "type": "string"
+      },
+      "picture": {
+        "type": "string"
+      },
+      "birthdate": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "origin": {
         "type": "string"
       }
     },

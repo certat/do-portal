@@ -38,7 +38,12 @@ def get_cp_organization_memberships():
               "zip": "1234",
               "phone": "+4315671234",
               "email": "max@muster.at",
-              "comment": "foo"
+              "comment": "foo",
+              "pgp_key_id": "abc123",
+              "pgp_key_fingerprint": "def456",
+              "pgp_key": "ghi789",
+              "smime": "something",
+              "coc": "anything goes"
             }
           ]
         }
@@ -102,12 +107,17 @@ def get_cp_organization_membership(membership_id):
           "membership_role_id": 12,
           "user_id": 153,
           "organization_id": 201,
-          "country": "Austria",
+          "country_id": 23,
           "street": "Mustergasse 2/4",
           "zip": "1234",
           "phone": "+4315671234",
           "email": "max@muster.at",
-          "comment": "foo"
+          "comment": "foo",
+          "pgp_key_id": "abc123",
+          "pgp_key_fingerprint": "def456",
+          "pgp_key": "ghi789",
+          "smime": "something",
+          "coc": "anything goes"
         }
 
     :param membership_id: Organization membership unique ID
@@ -121,12 +131,17 @@ def get_cp_organization_membership(membership_id):
     :>json integer membership_role_id: Unique ID of the membership role
     :>json integer user_id: Unique ID of the user
     :>json integer organization_id: Unique ID of the organization
-    :>json string country: Country name
+    :>json string country: Unique ID of the country
     :>json string street: Street address
     :>json string zip: Zip code
     :>json string phone: Phone number
     :>json string email: Email address
     :>json string comment: Arbitrary comment
+    :>json string pgp_key_id: PGP key ID
+    :>json string pgp_key_fingerprint: PGP key fingerprint
+    :>json string pgp_key: PGP key
+    :>json string smime: S/MIME
+    :>json string coc: Code of Conduct
 
     :status 200: Returns organization membership details object
     :status 404: Resource not found
@@ -160,12 +175,17 @@ def add_cp_organization_membership():
           "membership_role_id": 12,
           "user_id": 153,
           "organization_id": 201,
-          "country": "Austria",
+          "country_id": 23,
           "street": "Mustergasse 2/4",
           "zip": "1234",
           "phone": "+4315671234",
           "email": "max@muster.at",
-          "comment": "foo"
+          "comment": "foo",
+          "pgp_key_id": "abc123",
+          "pgp_key_fingerprint": "def456",
+          "pgp_key": "ghi789",
+          "smime": "something",
+          "coc": "anythnig goes"
         }
 
     **Example response**:
@@ -199,12 +219,17 @@ def add_cp_organization_membership():
     :<json integer membership_role_id: Unique ID of the organization user role
     :<json integer user_id: Unique ID of the user
     :<json integer organization_id: Unique ID of the organization
-    :<json string country: Country name
+    :<json string country_id: Unique ID of the country
     :<json string street: Street address
     :<json string zip: Zip code
     :<json string phone: Phone number
     :<json string email: Email address
     :<json string comment: Arbitrary comment
+    :<json string pgp_key_id: PGP key ID
+    :<json string pgp_key_fingerprint: PGP key fingerprint
+    :<json string pgp_key: PGP key
+    :<json string smime: S/MIME
+    :<json string coc: Code of Conduct
 
     :>json string message: Status message
     :>json integer id: Organization membership ID
@@ -247,12 +272,17 @@ def update_cp_organization_membership(membership_id):
           "membership_role_id": 12,
           "user_id": 153,
           "organization_id": 201,
-          "country": "Austria",
+          "country": 23,
           "street": "Mustergasse 2/4",
           "zip": "1234",
           "phone": "+4315671234",
           "email": "max@muster.at",
-          "comment": "foo"
+          "comment": "foo",
+          "pgp_key_id": "abc123",
+          "pgp_key_fingerprint": "def456",
+          "pgp_key": "ghi789",
+          "smime": "something",
+          "coc": "anything goes"
         }
 
     **Example response**:
@@ -284,12 +314,17 @@ def update_cp_organization_membership(membership_id):
     :<json integer membership_role_id: Unique ID of the membership role
     :<json integer user_id: Unique ID of the user
     :<json integer organization_id: Unique ID of the organization
-    :<json string country: Country name
+    :<json string country_id: Unique ID of the country
     :<json string street: Street address
     :<json string zip: Zip code
     :<json string phone: Phone number
     :<json string email: Email address
     :<json string comment: Arbitrary comment
+    :<json string pgp_key_id: PGP key ID
+    :<json string pgp_key_fingerprint: PGP key fingerprint
+    :<json string pgp_key: PGP key
+    :<json string smime: S/MIME
+    :<json string coc: Code of Conduct
 
     :>json string message: Status message
 
