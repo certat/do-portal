@@ -221,7 +221,7 @@ class User(UserMixin, Model, SerializerMixin):
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     name = db.Column(db.String(255), nullable=False)
     _password = db.Column('password', db.String(255), nullable=False, default=binascii.hexlify(os.urandom(12)).decode())
-    _email = db.Column(db.String(255), unique=True)
+    _email = db.Column('email', db.String(255), unique=True)
     api_key = db.Column(db.String(64), nullable=True)
     is_admin = db.Column(db.Boolean(), default=False)
     deleted = db.Column(db.Integer, default=0)
