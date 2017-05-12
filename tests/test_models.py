@@ -57,6 +57,9 @@ def test_create_user():
     certorg = Organization.query.filter_by(abbreviation='cert').first()
 
     newuser = User(name=App.username)
+    with pytest.raises(AttributeError):
+        newuser.email = 'testbla.com'
+    newuser.email = 'test@bla.com'
     newuser.password = 'bla'
     newuser.picture = b'asasda'
     newuser.birthdate = datetime.datetime.utcnow()

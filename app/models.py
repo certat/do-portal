@@ -18,7 +18,7 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from itsdangerous import BadTimeSignature, TimedJSONWebSignatureSerializer
 from app.utils.mixins import SerializerMixin
 from app.utils.inflect import pluralize
-
+from validate_email import validate_email
 
 #: we don't have an app context yet,
 #: we need to load the configuration from the config module
@@ -215,13 +215,13 @@ class MailmanMember(MailmanModel):
 class User(UserMixin, Model, SerializerMixin):
     """User model"""
     __tablename__ = 'users'
-    __public__ = ('id', 'name', 'email', 'api_key', 'otp_enabled', 'picture', 'birthdate', 'title', 'origin')
+    __public__ = ('id', 'name', 'api_key', 'otp_enabled', 'picture', 'birthdate', 'title', 'origin', 'email')
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     name = db.Column(db.String(255), nullable=False)
     _password = db.Column('password', db.String(255), nullable=False, default=binascii.hexlify(os.urandom(12)).decode())
-    email = db.Column(db.String(255), unique=True)
+    _email = db.Column(db.String(255), unique=True)
     api_key = db.Column(db.String(64), nullable=True)
     is_admin = db.Column(db.Boolean(), default=False)
     deleted = db.Column(db.Integer, default=0)
@@ -281,12 +281,22 @@ class User(UserMixin, Model, SerializerMixin):
     def check_password(self, password):
         return check_password_hash(self._password, password)
 
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, email):
+        if not validate_email(email):
+            raise AttributeError(email, 'seems not to be valid')
+        self._email = email
+
     @classmethod
     def authenticate(cls, email, password):
-        user = cls.query.filter(cls.email == email).first()
+        user = cls.query.filter(cls._email == email).first()
         if user:
             authenticated = user.check_password(password)
-            # user has to 'OrgAdmin' for at least one organisation
+            # user has to be 'OrgAdmin' for at least one organisation
             orgs = user.get_organization_memberships()
             if orgs == []:
                 authenticated = False
