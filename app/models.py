@@ -1254,7 +1254,7 @@ class OrganizationMembership(Model, SerializerMixin):
     country_id = db.Column(db.Integer, db.ForeignKey('countries.id'))
     country = db.relationship("Country")
     comment = db.Column(db.String(255))
-    email = db.Column(db.String(255))
+    _email = db.Column('email', db.String(255))
     phone = db.Column(db.String(255))
     deleted = db.Column(db.Integer, default=0)
     ts_deleted = db.Column(db.DateTime)
@@ -1270,6 +1270,16 @@ class OrganizationMembership(Model, SerializerMixin):
             raise AttributeError('Last membership may not be deleted')
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
+
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, email):
+        if not validate_email(email):
+            raise AttributeError(email, 'seems not to be valid')
+        self._email = email
 
 
 @login_manager.user_loader

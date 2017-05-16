@@ -74,6 +74,7 @@ def test_create_user():
     role = MembershipRole.query.filter_by(name='CISO').first()
     oxu = OrganizationMembership(
         phone='4711',
+        email='asd@addasd.at',
         organization=org,
         user=newuser,
         membership_role=role,
