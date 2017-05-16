@@ -26,6 +26,24 @@ def test_create_user(client):
     assert rv_membership['email'] == 'orgmail@someorg.at'
 
 
+def test_create_user_with_invalid_email(client):
+    client.api_user = find_user_by_name('certmaster')
+    org_id = client.api_user.get_organizations().first().id
+    orgadmin_role_id = MembershipRole.query.filter_by(name='OrgAdmin').first().id
+    rv = client.post(
+        url_for('cp.add_cp_user'),
+        json=dict(
+            user=dict(email='foobar',
+                      name='Max Muster'),
+            organization_membership=dict(
+                membership_role_id=orgadmin_role_id,
+                organization_id=org_id,
+                email='orgmail@someorg.at')
+        )
+    )
+    assert rv.status_code == 422
+
+
 def test_return_certmaster_orgs(client):
     client.api_user = find_user_by_name('certmaster')
     rv = client.get(url_for('cp.get_cp_organizations'))

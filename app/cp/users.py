@@ -223,7 +223,11 @@ def add_cp_user():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    user = User.fromdict(request.json['user'])
+    try:
+        user = User.fromdict(request.json['user'])
+    except AttributeError:
+        return {'message': 'Attribute error. Invalid email?',}, 422, {}
+
     membership = OrganizationMembership.fromdict(
                     request.json['organization_membership'])
 
@@ -314,7 +318,12 @@ def update_cp_user(user_id):
         return redirect(url_for('cp.add_cp_user'))
     if not g.user.may_handle_user(user):
         abort(403)
-    user.from_json(request.json)
+
+    try:
+        user.from_json(request.json)
+    except AttributeError:
+        return {'message': 'Attribute error. Invalid email?',}, 422, {}
+
     db.session.add(user)
     db.session.commit()
     return {'message': 'User saved'}
