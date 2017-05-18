@@ -134,6 +134,44 @@
       </div>
 
       <div class="row show-grid">
+        <div class="col-xs-2">PGP Key ID</div>
+        <div class="col-xs-10">
+          <textarea class="form-control" rows="3"
+                    placeholder="PGP Key ID" ng-model="m.pgp_key_id"></textarea>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">PGP Key Fingerprint</div>
+        <div class="col-xs-10">
+          <textarea class="form-control" rows="3"
+                    placeholder="PGP Key Fingerprint" ng-model="m.pgp_key_fingerprint"></textarea>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">PGP Key</div>
+        <div class="col-xs-10">
+          <textarea class="form-control" rows="3"
+                    placeholder="PGP Key" ng-model="m.pgp_key"></textarea>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">SMIME</div>
+        <div class="col-xs-10">
+          <input type="file" data-key="smime" class="form-control" cp-file-select>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">COC</div>
+        <div class="col-xs-10">
+          <input type="file" data-key="coc" class="form-control" cp-file-select>
+        </div>
+      </div>
+
+      <div class="row show-grid">
         <div class="col-xs-12">
           <button ng-show="user.id" class="btn btn-default" ng-click="save_membership(m)">
             <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>

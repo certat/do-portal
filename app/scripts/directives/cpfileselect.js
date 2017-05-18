@@ -11,7 +11,7 @@ angular.module('cpApp')
     return {
       link: function postLink(scope, element) {
         element.bind('change', function(e){
-          scope.getFile(e.target.files[0]);
+          scope.getFile(e.target.files[0], scope, element);
         });
       }
     };

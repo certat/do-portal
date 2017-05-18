@@ -32,7 +32,7 @@ angular.module('cpApp')
       }
     };
   })
-  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Membership, Auth, GridData, notifications, $stateParams, $state, $q) {
+  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Membership, Auth, GridData, notifications, $stateParams, $state, $q, FileReader) {
 
     var loadUser = function() {
       if (!$stateParams.id) { return {}; }
@@ -165,4 +165,14 @@ angular.module('cpApp')
     $scope.add_membership = function(){ $scope.memberships.push({ user_id: $scope.user.id }) };
 
     loadParallel().catch( function(err) { notifications.showError(err) });
+
+    // adds an inputfile to the membership.
+    // example: <input type="file" cp-file-select data-key="smime">
+    // result: { ..., m.smime: "data:text/plain;base64,iVB... }
+    $scope.getFile = function (file, inputscope, element) {
+      FileReader.readAsDataUrl(file, $scope)
+        .then(function (result) {
+          inputscope.m[element.data('key')] = result;
+        });
+    };
   });
