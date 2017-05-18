@@ -7,7 +7,7 @@ from urllib.error import HTTPError
 from mailmanclient import MailmanConnectionError, Client
 import onetimepass
 from app import db, login_manager, config
-from sqlalchemy import desc
+from sqlalchemy import desc, event
 from sqlalchemy.dialects import postgres
 from flask_sqlalchemy import BaseQuery
 from flask import current_app, request
@@ -19,6 +19,7 @@ from itsdangerous import BadTimeSignature, TimedJSONWebSignatureSerializer
 from app.utils.mixins import SerializerMixin
 from app.utils.inflect import pluralize
 from validate_email import validate_email
+from app.utils.mail import send_email
 
 #: we don't have an app context yet,
 #: we need to load the configuration from the config module
@@ -1281,6 +1282,15 @@ class OrganizationMembership(Model, SerializerMixin):
             raise AttributeError(email, 'seems not to be valid')
         self._email = email
 
+""" watch for insert on Org Memberships """
+def org_mem_listerner(mapper, connection, org_mem):
+    if org_mem.membership_role.name == 'OrgAdmin':
+        print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
+        send_email('energy-cert account', [org_mem.user.email],
+               'auth/email/ec_activate_account', org_mem=org_mem)
+
+
+event.listen(OrganizationMembership, 'after_insert', org_mem_listerner, retval=True, propagate=True)
 
 @login_manager.user_loader
 def load_user(user_id):

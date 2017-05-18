@@ -248,7 +248,7 @@ class TestingConfig(Config):
     CELERY_ALWAYS_EAGER = True
     LDAP_AUTH_ENABLED = True
     BOSH_ENABLED = True
-
+    MAIL_DEFAULT_SENDER='testing@test.at'
 
 class ProductionConfig(Config):
     JSON_AS_ASCII = False
