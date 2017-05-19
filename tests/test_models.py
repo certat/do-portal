@@ -98,6 +98,10 @@ def test_login():
     (admin, auth) = User.authenticate('admin@verbund.at', 'bla')
     assert auth is True
 
+    new_password = User.reset_password_send_email('admin@verbund.at')
+    (admin, auth) = User.authenticate('admin@verbund.at', new_password)
+    assert auth is True
+
 
 def test_delete_membership():
     with pytest.raises(AttributeError):

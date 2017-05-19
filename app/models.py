@@ -3,6 +3,7 @@ import base64
 import datetime
 import binascii
 import hashlib
+import random
 from urllib.error import HTTPError
 from mailmanclient import MailmanConnectionError, Client
 import onetimepass
@@ -304,6 +305,19 @@ class User(UserMixin, Model, SerializerMixin):
         else:
             authenticated = False
         return user, authenticated
+
+    @classmethod
+    def reset_password_send_email(cls, email):
+        user = cls.query.filter(cls._email == email).first()
+        if user:
+            password = binascii.hexlify(os.urandom(random.randint(12, 16))).decode('ascii')
+            user.password = password
+            send_email('energy-cert account', [user.email],
+                   'auth/email/ec_reset_password', user=user, new_password=password)
+            db.session.add(user)
+            db.session.commit()
+            return password
+        return False
 
     def get_auth_token(self, last_totp=None):
         """Think of :class:`URLSafeTimedSerializer` `salt` parameter as
@@ -1285,9 +1299,11 @@ class OrganizationMembership(Model, SerializerMixin):
 """ watch for insert on Org Memberships """
 def org_mem_listerner(mapper, connection, org_mem):
     if org_mem.membership_role.name == 'OrgAdmin':
-        print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
+        ## print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
+        password = binascii.hexlify(os.urandom(random.randint(12, 16))).decode('ascii')
+        org_mem.user.password = password
         send_email('energy-cert account', [org_mem.user.email],
-               'auth/email/ec_activate_account', org_mem=org_mem)
+               'auth/email/ec_activate_account', org_mem=org_mem, new_password=password)
 
 
 event.listen(OrganizationMembership, 'after_insert', org_mem_listerner, retval=True, propagate=True)
