@@ -310,6 +310,9 @@ class User(UserMixin, Model, SerializerMixin):
     def reset_password_send_email(cls, email):
         user = cls.query.filter(cls._email == email).first()
         if user:
+            orgs = user.get_organization_memberships()
+            if orgs == []:
+                return False
             password = binascii.hexlify(os.urandom(random.randint(12, 16))).decode('ascii')
             user.password = password
             send_email('energy-cert account', [user.email],
