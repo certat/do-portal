@@ -229,7 +229,7 @@ class User(UserMixin, Model, SerializerMixin):
     ts_deleted = db.Column(db.DateTime)
     otp_secret = db.Column(db.String(16))
     otp_enabled = db.Column(db.Boolean, default=False, nullable=False)
-    picture = db.Column(db.LargeBinary)
+    picture = db.Column(db.Text)
     birthdate = db.Column(db.Date)
     title = db.Column(db.String(255))
     origin = db.Column(db.String(255))
@@ -963,7 +963,7 @@ class Task(Model):
     id = db.Column(db.Integer, primary_key=True)
     task_id = db.Column(db.String(255), nullable=True, unique=True)
     status = db.Column(db.String(50), nullable=True)
-    result = db.Column(db.LargeBinary, nullable=True)
+    result = db.Column(db.Text, nullable=True)
     date_done = db.Column(db.DateTime, nullable=True)
     traceback = db.Column(db.Text, nullable=True)
 
@@ -1263,7 +1263,7 @@ class OrganizationMembership(Model, SerializerMixin):
     pgp_key_fingerprint = db.Column(db.String(255))
     pgp_key = db.Column(db.Text)
     smime = db.Column(db.Text)
-    coc = db.Column(db.LargeBinary)
+    coc = db.Column(db.Text)
 
     def mark_as_deleted(self, delete_last_membership = False):
         mc = self.user.user_memberships_dyn.filter_by(deleted = 0).count()
