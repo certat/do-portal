@@ -64,7 +64,14 @@
 
       <div class="row show-grid">
         <div class="col-xs-2">picture</div>
-        <div class="col-xs-10">
+        <div class="col-xs-1">
+          <div class="checkbox">
+            <label>
+              <input ng-model="user.delete_picture" type="checkbox"> Delete
+            </label>
+          </div>
+        </div>
+        <div ng-hide="user.delete_picture" class="col-xs-9">
           <input type="file" data-key="picture" class="form-control" cp-file-select>
         </div>
       </div>
@@ -193,14 +200,28 @@
 
       <div class="row show-grid">
         <div class="col-xs-2">SMIME</div>
-        <div class="col-xs-10">
+        <div class="col-xs-1">
+          <div class="checkbox">
+            <label>
+              <input ng-model="m.delete_smime" type="checkbox"> Delete
+            </label>
+          </div>
+        </div>
+        <div ng-hide="m.delete_smime" class="col-xs-9">
           <input type="file" data-key="smime" class="form-control" cp-file-select>
         </div>
       </div>
 
       <div class="row show-grid">
         <div class="col-xs-2">COC</div>
-        <div class="col-xs-10">
+        <div class="col-xs-1">
+          <div class="checkbox">
+            <label>
+              <input ng-model="m.delete_coc" type="checkbox"> Delete
+            </label>
+          </div>
+        </div>
+        <div ng-hide="m.delete_coc" class="col-xs-9">
           <input type="file" data-key="coc" class="form-control" cp-file-select>
         </div>
       </div>

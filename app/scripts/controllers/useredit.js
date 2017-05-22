@@ -85,7 +85,16 @@ angular.module('cpApp')
         );
     };
 
+    function _handle_upload_field(obj, key) {
+      if (obj['delete_'+key]) { obj[key] = ''; } // delete checkbox is checked
+      delete obj['delete_'+key]; // dont send checkbox value to server
+      angular.element("input[type='file'][data-key='"+key+"']").val(null); // reset input field
+    }
+
     $scope.save_membership = function(m) {
+      _handle_upload_field(m,'coc');
+      _handle_upload_field(m,'smime');
+
       if(m.id) {
         Membership.update({'id':m.id}, m, function(resp) {
           notifications.showSuccess(resp);
@@ -104,6 +113,7 @@ angular.module('cpApp')
     };
 
     $scope.create_user = function(){
+      _handle_upload_field($scope.user,'picture');
       var data = { user: $scope.user, organization_membership: $scope.memberships[0] };
       User.create({}, data, function(resp){
         $state.go('user_edit', {id: resp.user.id});
@@ -115,6 +125,7 @@ angular.module('cpApp')
 
     $scope.update_user = function(){
       var u = $scope.user;
+      _handle_upload_field(u,'picture');
       User.update({'id':u.id}, u, function(resp){
         notifications.showSuccess(resp);
       }, function(error){
@@ -132,7 +143,6 @@ angular.module('cpApp')
         });
       }
     };
-
 
     $scope.delete_membership = function(m_id, index){
       if( window.confirm("Do you really want to delete this membership?") ) {
