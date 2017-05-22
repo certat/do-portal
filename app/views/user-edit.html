@@ -8,6 +8,21 @@
         <div class="col-xs-12"><strong>User Details</strong></div>
       </div>
 
+      <div ng-show="user.picture" class="row show-grid">
+        <div class="col-xs-12">
+          <img data-ng-src="{{user.picture}}">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Title</div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="Title"
+                 ng-model="user.title">
+        </div>
+      </div>
+
       <div class="row show-grid">
         <div class="col-xs-2">Name *</div>
         <div class="col-xs-10">
@@ -32,6 +47,25 @@
           <input type="password" class="form-control input-sm"
                  placeholder="Password"
                  ng-model="user.password">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Birthdate</div>
+        <div class="col-xs-10">
+          <p class="input-group">
+            <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="user.birthdate" is-open="birthdate.popup.opened" datepicker-options="birthdate.options" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="birthdate.open()"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">picture</div>
+        <div class="col-xs-10">
+          <input type="file" data-key="picture" class="form-control" cp-file-select>
         </div>
       </div>
 

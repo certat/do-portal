@@ -32,12 +32,13 @@ angular.module('cpApp')
       }
     };
   })
-  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Membership, Auth, GridData, notifications, $stateParams, $state, $q, FileReader) {
+  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Membership, Auth, GridData, notifications, $stateParams, $state, $q, FileReader, uibDateParser) {
 
     var loadUser = function() {
       if (!$stateParams.id) { return {}; }
       return User.query({'id': $stateParams.id}).$promise
                 .then(function(resp){
+                    if (resp.birthdate) { resp.birthdate = new Date(resp.birthdate) }
                     return resp;
                   }, function(err){
                     notifications.showError(err.data.message);
@@ -172,7 +173,22 @@ angular.module('cpApp')
     $scope.getFile = function (file, inputscope, element) {
       FileReader.readAsDataUrl(file, $scope)
         .then(function (result) {
-          inputscope.m[element.data('key')] = result;
+          var key = element.data('key');
+          if (key === 'picture') {
+            inputscope.user[key] = result;
+          }
+          else {
+            inputscope.m[key] = result;
+          }
         });
+    };
+
+    $scope.birthdate = {
+      options: {
+        startingDay: 1,
+        showWeeks: false,
+      },
+      popup: { opened: false },
+      open: function() { $scope.birthdate.popup.opened = true }
     };
   });
