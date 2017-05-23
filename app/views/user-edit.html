@@ -141,9 +141,9 @@
       <div class="row show-grid">
         <div class="col-xs-2">Country</div>
         <div class="col-xs-10">
-          <input type="text" class="form-control input-sm"
-                 placeholder="Country"
-                 ng-model="m.country">
+          <select convert-to-number positive-integer class="form-control input-sm" ng-model="m.country_id">
+            <option ng-repeat="country in countries" value="{{country.id}}">{{country.name}}</option>
+          </select>
         </div>
       </div>
 

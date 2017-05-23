@@ -32,7 +32,7 @@ angular.module('cpApp')
       }
     };
   })
-  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Membership, Auth, GridData, notifications, $stateParams, $state, $q, FileReader, uibDateParser) {
+  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Country, Membership, Auth, GridData, notifications, $stateParams, $state, $q, FileReader, uibDateParser) {
 
     var loadUser = function() {
       if (!$stateParams.id) { return {}; }
@@ -73,12 +73,22 @@ angular.module('cpApp')
                   });
     };
 
+    var loadCountries = function(){
+      return Country.query_list().$promise
+                .then(function(resp){
+                    return resp.countries;
+                  }, function(err){
+                    notifications.showError(err.data.message);
+                  });
+    };
+
     var loadParallel = function() {
-        return $q.all([ loadUser(), loadRoles(), loadOrgs(), loadMemberships() ])
+        return $q.all([ loadUser(), loadRoles(), loadOrgs(), loadCountries(), loadMemberships() ])
             .then( function( result ) {
               $scope.user          = result.shift();
               $scope.roles         = result.shift();
               $scope.organizations = result.shift();
+              $scope.countries     = result.shift();
               $scope.memberships
                     = result.shift().filter(function(m){return m.user_id === $scope.user.id});
             }
