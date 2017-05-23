@@ -33,6 +33,15 @@ angular
           }
         }
       })
+      .state('lost_password', {
+        url: '/lost_password',
+        views: {
+          content: {
+            templateUrl: 'views/lost-password.html',
+            controller: 'LoginCtrl'
+          }
+        }
+      })
       .state('organization_list', {
         url: '/organization_list',
         views: {

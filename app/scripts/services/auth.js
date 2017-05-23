@@ -68,6 +68,10 @@ angular.module('cpApp')
       resetAPIKey: function(){
         console.log('Deprecated! Use Auth.' + this.get.name + '("reset-api-key")');
         return this.get('reset-api-key');
+      },
+
+      lost_password: function(email) {
+        return $http.post(config.apiConfig.webServiceUrl+'/lost_password', email);
       }
     };
   });

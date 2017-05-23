@@ -28,4 +28,13 @@ angular.module('cpApp')
         notifications.showError(err.data.message);
       });
     };
+
+    $scope.lost_password = function () {
+      Auth.lost_password({email: $scope.email})
+                .then(function(resp){
+                    notifications.showSuccess(resp);
+                  }, function(err){
+                    notifications.showError(err.data.message);
+                  });
+    };
   });
