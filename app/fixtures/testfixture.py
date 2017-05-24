@@ -5,6 +5,7 @@ from collections import namedtuple
 import requests
 import datetime
 import yaml
+import csv
 
 from app import create_app
 from flask import current_app
@@ -18,6 +19,19 @@ from app.models import Role, ReportType, OrganizationMembership, MembershipRole
 from app.models import Country
 
 class testdata:
+   def addcountries():
+      """Add country list from csv file"""
+      with open('install/iso_3166_2_countries.csv') as csvfile:
+          data = csv.reader(csvfile, delimiter = ',')
+          data = list(data)
+          for r in data[2:]:
+          #    print(r[1], r[10])
+              country = Country.query.filter_by(cc=r[10]).first()
+              if country is None:
+                  country = Country(cc=r[10], name=r[1] )
+                  db.session.add(country)
+          db.session.commit()
+
 
    def addyaml():
       """Add sample data from yaml file"""

@@ -40,6 +40,10 @@ def addyaml():
    db.session.commit()
 
 @cli.command()
+def addcountries():
+   testfixture.testdata.addcountries()
+
+@cli.command()
 def add():
     """Add sample data"""
 

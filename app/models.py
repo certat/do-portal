@@ -4,6 +4,7 @@ import datetime
 import binascii
 import hashlib
 import random
+import csv
 from urllib.error import HTTPError
 from mailmanclient import MailmanConnectionError, Client
 import onetimepass
@@ -1176,7 +1177,7 @@ class Country(Model, SerializerMixin):
     __tablename__ = 'countries'
     __public__ = ('id', 'cc', 'name')
     query_class = FilteredQuery
-    cc = db.Column(db.String(255), nullable=False)
+    cc = db.Column(db.String(255), nullable=False, unique=True)
     name = db.Column(db.String(255), nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     deleted = db.Column(db.Integer, default=0)
@@ -1199,7 +1200,16 @@ class Country(Model, SerializerMixin):
                 country = Country(cc=r[0], name=r[1] )
                 db.session.add(country)
         db.session.commit()
-
+#        with open('install/iso_3166_2_countries.csv') as csvfile:
+#            data = csv.reader(csvfile, delimiter = ',')
+#            data = list(data)
+#            for r in data[2:]:
+#            #    print(r[1], r[10])
+#                country = Country.query.filter_by(cc=r[10]).first()
+#                if country is None:
+#                    country = Country(cc=r[10], name=r[1] )
+#                    db.session.add(country)
+#            db.session.commit()
 
 class MembershipRole(Model, SerializerMixin):
     __tablename__ = 'membership_roles'
@@ -1301,7 +1311,7 @@ class OrganizationMembership(Model, SerializerMixin):
 
 """ watch for insert on Org Memberships """
 def org_mem_listerner(mapper, connection, org_mem):
-    if org_mem.membership_role.name == 'OrgAdmin':
+    if org_mem.membership_role and org_mem.membership_role.name == 'OrgAdmin':
         ## print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
         password = binascii.hexlify(os.urandom(random.randint(12, 16))).decode('ascii')
         org_mem.user.password = password
