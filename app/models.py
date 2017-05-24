@@ -1188,28 +1188,28 @@ class Country(Model, SerializerMixin):
 
     @staticmethod
     def __insert_defaults():
-        countries = [
-          ['AT',               'Austria'],
-          ['DE',               'Germany'],
-          ['CH',               'Switzerland'],
-        ]
-        for r in countries:
-            country = Country.query.filter_by(name=r[0]).first()
-
-            if country is None:
-                country = Country(cc=r[0], name=r[1] )
-                db.session.add(country)
-        db.session.commit()
-#        with open('install/iso_3166_2_countries.csv') as csvfile:
-#            data = csv.reader(csvfile, delimiter = ',')
-#            data = list(data)
-#            for r in data[2:]:
-#            #    print(r[1], r[10])
-#                country = Country.query.filter_by(cc=r[10]).first()
-#                if country is None:
-#                    country = Country(cc=r[10], name=r[1] )
-#                    db.session.add(country)
-#            db.session.commit()
+##        countries = [
+##          ['AT',               'Austria'],
+##          ['DE',               'Germany'],
+##          ['CH',               'Switzerland'],
+##        ]
+##        for r in countries:
+##            country = Country.query.filter_by(name=r[0]).first()
+##
+##            if country is None:
+##                country = Country(cc=r[0], name=r[1] )
+##                db.session.add(country)
+##        db.session.commit()
+        with open('install/iso_3166_2_countries.csv') as csvfile:
+            data = csv.reader(csvfile, delimiter = ',')
+            data = list(data)
+            for r in data[2:]:
+            #    print(r[1], r[10])
+                country = Country.query.filter_by(cc=r[10]).first()
+                if country is None:
+                    country = Country(cc=r[10], name=r[1] )
+                    db.session.add(country)
+            db.session.commit()
 
 class MembershipRole(Model, SerializerMixin):
     __tablename__ = 'membership_roles'
