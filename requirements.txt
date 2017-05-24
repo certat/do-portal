@@ -92,3 +92,4 @@ flask-fixtures
 pytest-tap
 Pyyaml
 validate_email
+Flask-Session
