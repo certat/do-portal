@@ -195,7 +195,13 @@ angular.module('cpApp')
         .then(function (result) {
           var key = element.data('key');
           if (key === 'picture') {
-            inputscope.user[key] = result;
+            if ( file.size > 1024*1024 ) {
+              notifications.showError('picture size exceeded 1MB');
+            }
+            else {
+              inputscope.user[key] = result;
+              inputscope.user['picture_filename'] = file.name;
+            }
           }
           else {
             inputscope.m[key] = result;

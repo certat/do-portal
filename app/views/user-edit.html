@@ -9,8 +9,13 @@
       </div>
 
       <div ng-show="user.picture" class="row show-grid">
-        <div class="col-xs-12">
-          <img data-ng-src="{{user.picture}}">
+        <div class="col-xs-offset-2 col-xs-3">
+          <div class="thumbnail">
+            <img data-ng-src="{{user.picture}}">
+          </div>
+        </div>
+        <div class="col-xs-7">
+          {{user.picture_filename}}
         </div>
       </div>
 
