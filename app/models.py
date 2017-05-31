@@ -232,6 +232,7 @@ class User(UserMixin, Model, SerializerMixin):
     otp_secret = db.Column(db.String(16))
     otp_enabled = db.Column(db.Boolean, default=False, nullable=False)
     picture = db.Column(db.Text)
+    picture_filename = db.Column(db.String(255))
     birthdate = db.Column(db.Date)
     title = db.Column(db.String(255))
     origin = db.Column(db.String(255))
@@ -1290,7 +1291,9 @@ class OrganizationMembership(Model, SerializerMixin):
     pgp_key_fingerprint = db.Column(db.String(255))
     pgp_key = db.Column(db.Text)
     smime = db.Column(db.Text)
+    smime_filename = db.Column(db.String(255))
     coc = db.Column(db.Text)
+    coc_filename = db.Column(db.String(255))
 
     def mark_as_deleted(self, delete_last_membership = False):
         mc = self.user.user_memberships_dyn.filter_by(deleted = 0).count()

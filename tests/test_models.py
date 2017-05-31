@@ -14,9 +14,11 @@ class App:
 
     username = 'Testuser under Verbund Admin'
 
+
 def test_countries_inserted():
     country = Country.query.filter_by(cc='AR').first()
     assert country.name == 'Argentina', 'Dont cry for me Argentina'
+
 
 def test_user_memberships():
     u = User.query.filter_by(name="certmaster").first()
