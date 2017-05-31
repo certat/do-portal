@@ -10,12 +10,18 @@
 
       <div ng-show="user.picture" class="row show-grid">
         <div class="col-xs-offset-2 col-xs-3">
-          <div class="thumbnail">
-            <img data-ng-src="{{user.picture}}">
-          </div>
+          <div class="thumbnail"><img data-ng-src="{{user.picture}}"></div>
         </div>
-        <div class="col-xs-7">
-          {{user.picture_filename}}
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Picture</div>
+
+        <div class="col-xs-10">
+          <input ng-hide="user.picture" type="file" data-key="picture" class="form-control" cp-file-select>
+          <button ng-show="user.picture" ng-click="deleteFile(user,'picture')" title="Delete Picture">
+            Delete {{user.picture_filename}}
+          </button>
         </div>
       </div>
 
@@ -64,20 +70,6 @@
               <button type="button" class="btn btn-default" ng-click="birthdate.open()"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
           </p>
-        </div>
-      </div>
-
-      <div class="row show-grid">
-        <div class="col-xs-2">picture</div>
-        <div class="col-xs-1">
-          <div class="checkbox">
-            <label>
-              <input ng-model="user.delete_picture" type="checkbox"> Delete
-            </label>
-          </div>
-        </div>
-        <div ng-hide="user.delete_picture" class="col-xs-9">
-          <input type="file" data-key="picture" class="form-control" cp-file-select>
         </div>
       </div>
 
@@ -205,29 +197,21 @@
 
       <div class="row show-grid">
         <div class="col-xs-2">SMIME</div>
-        <div class="col-xs-1">
-          <div class="checkbox">
-            <label>
-              <input ng-model="m.delete_smime" type="checkbox"> Delete
-            </label>
-          </div>
-        </div>
-        <div ng-hide="m.delete_smime" class="col-xs-9">
-          <input type="file" data-key="smime" class="form-control" cp-file-select>
+        <div class="col-xs-10">
+          <input ng-hide="m.smime" type="file" data-key="smime" class="form-control" cp-file-select>
+          <button ng-show="m.smime" ng-click="deleteFile(m,'smime')" title="Delete SMIME">
+            Delete {{m.smime_filename}}
+          </button>
         </div>
       </div>
 
       <div class="row show-grid">
         <div class="col-xs-2">COC</div>
-        <div class="col-xs-1">
-          <div class="checkbox">
-            <label>
-              <input ng-model="m.delete_coc" type="checkbox"> Delete
-            </label>
-          </div>
-        </div>
-        <div ng-hide="m.delete_coc" class="col-xs-9">
-          <input type="file" data-key="coc" class="form-control" cp-file-select>
+        <div class="col-xs-10">
+          <input ng-hide="m.coc" type="file" data-key="coc" class="form-control" cp-file-select>
+          <button ng-show="m.coc" ng-click="deleteFile(m,'coc')" title="Delete COC">
+            Delete {{m.coc_filename}}
+          </button>
         </div>
       </div>
 

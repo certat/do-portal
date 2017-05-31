@@ -194,19 +194,25 @@ angular.module('cpApp')
       FileReader.readAsDataUrl(file, $scope)
         .then(function (result) {
           var key = element.data('key');
+          var obj;
           if (key === 'picture') {
+            obj = inputscope.user;
             if ( file.size > 1024*1024 ) {
               notifications.showError('picture size exceeded 1MB');
-            }
-            else {
-              inputscope.user[key] = result;
-              inputscope.user['picture_filename'] = file.name;
+              return;
             }
           }
           else {
-            inputscope.m[key] = result;
+            obj = inputscope.m;
           }
+          obj[key] = result;
+          obj[key+'_filename'] = file.name;
         });
+    };
+
+    $scope.deleteFile = function(obj, key) {
+      delete obj[key];
+      delete obj[key+'_filename'];
     };
 
     $scope.birthdate = {
