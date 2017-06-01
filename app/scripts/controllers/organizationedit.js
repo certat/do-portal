@@ -86,7 +86,10 @@ angular.module('cpApp')
             .then( function( result ) {
               $scope.users       = _array2hash(result.shift());
               $scope.roles       = _array2hash(result.shift());
-              $scope.memberships = result.shift().filter(function(m){return m.organization_id == $stateParams.id});
+              var memberships = result.shift().filter(function(m){return m.organization_id == $stateParams.id});
+              memberships.forEach(function(m){ m.country = m.country.name });
+              $scope.memberships = memberships;
+
               $scope.org = result.shift();
               if ($scope.org.parent_org_id) {
                 loadOrganization($scope.org.parent_org_id)

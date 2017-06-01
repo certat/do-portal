@@ -1,16 +1,16 @@
 <div class="panel panel-primary">
   <div class="panel-heading">
-      <h3 class="panel-title">{{user.id ? "Edit User" : "New User"}}</h3>
+      <h3 class="panel-title">{{user.id ? "Edit Contact" : "New Contact"}}</h3>
   </div>
   <div class="panel-body">
     <div class="well">
       <div class="row show-grid">
-        <div class="col-xs-12"><strong>User Details</strong></div>
+        <div class="col-xs-12"><strong>Contact Details</strong></div>
       </div>
 
       <div ng-show="user.picture" class="row show-grid">
-        <div class="col-xs-offset-2 col-xs-3">
-          <div class="thumbnail"><img data-ng-src="{{user.picture}}" style="height:180px;width:100%;"></div>
+        <div class="col-xs-12">
+          <div class="thumbnail pull-right"><img data-ng-src="{{user.picture}}" style="height:100px;width:100%;"></div>
         </div>
       </div>
 
@@ -196,22 +196,30 @@
       </div>
 
       <div class="row show-grid">
-        <div class="col-xs-2">SMIME</div>
+        <div class="col-xs-2">S/MIME</div>
         <div class="col-xs-10">
-          <input ng-hide="m.smime" type="file" data-key="smime" class="form-control" cp-file-select>
-          <button ng-show="m.smime" ng-click="deleteFile(m,'smime')" title="Delete SMIME">
-            Delete {{m.smime_filename}}
-          </button>
+          <div ng-hide="m.smime">
+            <input type="file" data-key="smime" class="form-control" cp-file-select>
+          </div>
+          <div ng-show="m.smime">
+            <a class="btn btn-sm btn-default" ng-click="deleteFile(m,'smime')" title="Delete S/MIME">Delete</button>
+            <a class="btn btn-sm btn-default" href="{{m.smime}}" download="{{m.smime.filename}}">Download </a>
+            {{m.smime_filename}}
+          </div>
         </div>
       </div>
 
       <div class="row show-grid">
-        <div class="col-xs-2">COC</div>
+        <div class="col-xs-2">Code of Conduct</div>
         <div class="col-xs-10">
-          <input ng-hide="m.coc" type="file" data-key="coc" class="form-control" cp-file-select>
-          <button ng-show="m.coc" ng-click="deleteFile(m,'coc')" title="Delete COC">
-            Delete {{m.coc_filename}}
-          </button>
+          <div ng-hide="m.coc">
+            <input type="file" data-key="coc" class="form-control" cp-file-select>
+          </div>
+          <div ng-show="m.coc">
+            <a class="btn btn-sm btn-default" ng-click="deleteFile(m,'coc')" title="Delete Code of Conduct">Delete</button>
+            <a class="btn btn-sm btn-default" href="{{m.coc}}" download="{{m.coc.filename}}">Download </a>
+            {{m.coc_filename}}
+          </div>
         </div>
       </div>
 

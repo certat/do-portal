@@ -223,4 +223,5 @@ angular.module('cpApp')
       popup: { opened: false },
       open: function() { $scope.birthdate.popup.opened = true }
     };
+
   });
