@@ -211,8 +211,8 @@ angular.module('cpApp')
     };
 
     $scope.deleteFile = function(obj, key) {
-      delete obj[key];
-      delete obj[key+'_filename'];
+      obj[key]             = '';
+      obj[key+'_filename'] = '';
     };
 
     $scope.birthdate = {
