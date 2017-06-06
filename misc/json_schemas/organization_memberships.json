@@ -41,7 +41,13 @@
       "smime": {
         "type": "string"
       },
+      "smime_filename": {
+        "type": "string"
+      },
       "coc": {
+        "type": "string"
+      },
+      "coc_filename": {
         "type": "string"
       }
     },
@@ -93,7 +99,13 @@
       "smime": {
         "type": "string"
       },
+      "smime_filename": {
+        "type": "string"
+      },
       "coc": {
+        "type": "string"
+      },
+      "coc_filename": {
         "type": "string"
       }
     },

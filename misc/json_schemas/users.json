@@ -17,6 +17,9 @@
           "picture": {
             "type": "string"
           },
+          "picture_filename": {
+            "type": "string"
+          },
           "birthdate": {
             "type": "string"
           },
@@ -84,6 +87,9 @@
         "type": "string"
       },
       "picture": {
+        "type": "string"
+      },
+      "picture_filename": {
         "type": "string"
       },
       "birthdate": {
