@@ -105,5 +105,16 @@
     "required": [
       "name"
     ]
+  },
+  "lost_password": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "email"
+    ]
   }
 }
