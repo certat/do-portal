@@ -203,7 +203,7 @@
           </div>
           <div ng-show="m.smime">
             <a class="btn btn-sm btn-default" ng-click="deleteFile(m,'smime')" title="Delete S/MIME">Delete</button>
-            <a class="btn btn-sm btn-default" href="{{m.smime}}" download="{{m.smime.filename}}">Download </a>
+            <a class="btn btn-sm btn-default" href="{{m.smime}}" download="{{m.smime_filename}}">Download </a>
             {{m.smime_filename}}
           </div>
         </div>
@@ -217,7 +217,7 @@
           </div>
           <div ng-show="m.coc">
             <a class="btn btn-sm btn-default" ng-click="deleteFile(m,'coc')" title="Delete Code of Conduct">Delete</button>
-            <a class="btn btn-sm btn-default" href="{{m.coc}}" download="{{m.coc.filename}}">Download </a>
+            <a class="btn btn-sm btn-default" href="{{m.coc}}" download="{{m.coc_filename}}">Download </a>
             {{m.coc_filename}}
           </div>
         </div>
