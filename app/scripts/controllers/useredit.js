@@ -207,7 +207,6 @@ angular.module('cpApp')
           }
           obj[key] = result;
           obj[key+'_filename'] = file.name;
-            console.log(obj);
         });
     };
 
