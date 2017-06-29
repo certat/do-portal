@@ -1,0 +1,26 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Contacts</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row show-grid">
+      <div class="col-xs-offset-8 col-xs-4">
+        <select convert-to-number positive-integer class="form-control input-sm" ng-model="membership_role_id">
+          <option ng-repeat="role in roles" value="{{role.id}}">{{role.display_name}}</option>
+        </select>
+      </div>
+    </div>
+    <div ng-repeat="user in users">
+      <div ng-repeat="m in user.memberships">
+        <div class="row show-grid" ng-show="m.membership_role_id === membership_role_id">
+          <div class="col-xs-12">
+            <label>{{user.name}}</label>
+            {{organizations[m.organization_id].full_name}}
+            {{m.email}}
+            {{m.phone}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
