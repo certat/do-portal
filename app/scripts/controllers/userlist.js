@@ -29,6 +29,15 @@ angular.module('cpApp')
                   });
     };
 
+    var loadRoles = function(){
+      return Membership.roles().$promise
+                .then(function(resp){
+                    return resp.membership_roles;
+                  }, function(err){
+                    notifications.showError(err.data.message);
+                  });
+    };
+
     var loadOrganizations = function(){
       return Organization.query_list().$promise
                 .then(function(resp){
@@ -44,19 +53,23 @@ angular.module('cpApp')
         return hash;
     }
     var loadParallel = function() {
-        return $q.all([ loadUsers(), loadMemberships(), loadOrganizations() ])
+        return $q.all([ loadUsers(), loadMemberships(), loadRoles(), loadOrganizations() ])
             .then( function( result ) {
               $scope.users         = _array2hash(result.shift());
               $scope.memberships   = result.shift();
+              $scope.roles         = result.shift();
               $scope.organizations = _array2hash(result.shift());
 
               $scope.memberships.forEach(function(m) {
                 var u = $scope.users[m.user_id];
+                if (!u.hasOwnProperty('memberships')) {
+                  u.memberships = [];
+                }
+                u.memberships.push(m);
 
                 if (!u.hasOwnProperty('organizations')) {
                   u.organizations = [];
                 }
-
                 u.organizations.push($scope.organizations[m.organization_id].full_name);
               });
 
