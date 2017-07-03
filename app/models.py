@@ -1265,7 +1265,7 @@ class MembershipRole(Model, SerializerMixin):
 class OrganizationMembership(Model, SerializerMixin):
     __tablename__ = 'organization_memberships'
     __public__ = ('id', 'user_id', 'organization_id', 'street', 'zip', 'city',
-                  'country', 'comment', 'email', 'phone', 'membership_role_id',
+                  'country', 'comment', 'email', 'phone', 'mobile', 'membership_role_id',
                   'pgp_key_id', 'pgp_key_fingerprint', 'pgp_key', 'smime', 'country_id', 'coc')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
@@ -1285,6 +1285,7 @@ class OrganizationMembership(Model, SerializerMixin):
     comment = db.Column(db.String(255))
     _email = db.Column('email', db.String(255))
     phone = db.Column(db.String(255))
+    mobile = db.Column(db.String(255))
     deleted = db.Column(db.Integer, default=0)
     ts_deleted = db.Column(db.DateTime)
     pgp_key_id = db.Column(db.String(255))
