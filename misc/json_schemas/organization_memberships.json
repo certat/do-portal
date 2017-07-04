@@ -23,6 +23,9 @@
       "phone": {
         "type": "string"
       },
+      "mobile": {
+        "type": "string"
+      },
       "email": {
         "type": "string"
       },
