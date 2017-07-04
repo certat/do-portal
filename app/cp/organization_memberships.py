@@ -242,8 +242,13 @@ def add_cp_organization_membership():
         that authorization has been refused for those credentials.
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
+    :status 422: Validation error
     """
-    membership = OrganizationMembership.fromdict(request.json)
+    try:
+        membership = OrganizationMembership.fromdict(request.json)
+    except AttributeError:
+        return {'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {}
+
     check_membership_permissions(membership)
     db.session.add(membership)
     db.session.commit()
@@ -338,7 +343,12 @@ def update_cp_organization_membership(membership_id):
     if not membership:
         return redirect(url_for('cp.add_cp_organization_membership'))
     check_membership_permissions(membership)
-    membership.from_json(request.json)
+
+    try:
+        membership.from_json(request.json)
+    except AttributeError:
+        return {'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {}
+
     db.session.add(membership)
     db.session.commit()
     return {'message': 'Organization membership saved'}
