@@ -494,6 +494,56 @@ def reset_api_key():
     db.session.commit()
     return {'message': 'Your API key has been reset'}
 
+@auth.route('/lost_password', methods=['POST'])
+@validate('users', 'lost_password')
+@json_response
+def lost_password():
+    """Request a new password
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+        POST /iauth/lost_password HTTP/1.1
+        Accept: application/json
+        Content-Type: application/json
+
+        {
+          "email": "foo@bar.com"
+        }
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.0 201 CREATED
+        Content-Type: application/json
+
+        {
+          "message": "Password sent"
+        }
+
+    :reqheader Accept: Content type(s) accepted by the client
+    :reqheader API-Authorization: API key. If present authentication and
+            authorization will be attempted.
+    :resheader Content-Type: This depends on `Accept` header or request
+
+    :<json string email: Email address for which to reset the password
+
+    :>json string message: Status message
+
+    :status 200: Password restore email was successfully sent
+    :status 400: Bad request
+    :status 403: Access denied. Authorization will not help and the request
+        SHOULD NOT be repeated.
+    :status 422: There was a problem with sending the email
+    """
+    try:
+        User.reset_password_send_email(request.json['email'])
+    except AttributeError:
+        return {'message': 'Attribute error. Invalid email?',}, 422, {}
+    return {'message': 'Password restore email sent'}, 200, {}
+
 
 @auth.route('/activate-account/<token>', methods=['GET', 'POST'])
 def set_password(token):
