@@ -71,7 +71,7 @@ angular.module('cpApp')
       },
 
       lost_password: function(email) {
-        return $http.post(config.apiConfig.webServiceUrl+'/lost_password', email);
+        return $http.post(config.apiConfig.authUrl+'/lost_password', email);
       }
     };
   });
