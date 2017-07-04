@@ -22,6 +22,7 @@ from app.utils.mixins import SerializerMixin
 from app.utils.inflect import pluralize
 from validate_email import validate_email
 from app.utils.mail import send_email
+import phonenumbers
 
 #: we don't have an app context yet,
 #: we need to load the configuration from the config module
@@ -1284,8 +1285,8 @@ class OrganizationMembership(Model, SerializerMixin):
     country = db.relationship("Country")
     comment = db.Column(db.String(255))
     _email = db.Column('email', db.String(255))
-    phone = db.Column(db.String(255))
-    mobile = db.Column(db.String(255))
+    _phone = db.Column('phone', db.String(255))
+    _mobile = db.Column('mobile', db.String(255))
     deleted = db.Column(db.Integer, default=0)
     ts_deleted = db.Column(db.DateTime)
     pgp_key_id = db.Column(db.String(255))
@@ -1310,8 +1311,36 @@ class OrganizationMembership(Model, SerializerMixin):
     @email.setter
     def email(self, email):
         if not validate_email(email):
+            db.session.rollback()
             raise AttributeError(email, 'seems not to be valid')
         self._email = email
+
+    @property
+    def phone(self):
+        return self._phone
+
+    @phone.setter
+    def phone(self, phone):
+        try:
+            x = phonenumbers.parse(phone, None)
+        except phonenumbers.phonenumberutil.NumberParseException as err:
+            db.session.rollback()
+            raise AttributeError(phone, 'seems not to be valid:', err)
+        self._phone = phone
+
+    @property
+    def mobile(self):
+        return self._mobile
+
+    @mobile.setter
+    def mobile(self, mobile):
+        try:
+            x = phonenumbers.parse(mobile, None)
+        except phonenumbers.phonenumberutil.NumberParseException as err:
+            db.session.rollback()
+            raise AttributeError(mobile, 'seems not to be valid:', err)
+        self._mobile = mobile
+
 
 """ watch for insert on Org Memberships """
 def org_mem_listerner(mapper, connection, org_mem):

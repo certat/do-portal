@@ -77,9 +77,23 @@ def test_create_user():
         'verbund admin may not handle cert org'
     assert admin.may_handle_organization(org) is True
     role = MembershipRole.query.filter_by(name='CISO').first()
+    with pytest.raises(AttributeError):
+        oxu = OrganizationMembership(
+            phone='+43434711',
+            email='asdaddasd.at',
+            organization=org,
+            user=newuser,
+            membership_role=role,
+            pgp_key_id='asdasdasd',
+            pgp_key_fingerprint='ADFEFEF123123',
+            pgp_key='asdasasfasfasf',
+            smime='asdasdasd',
+            coc=b'asasda'
+        )
     oxu = OrganizationMembership(
-        phone='4711',
-        email='asd@addasd.at',
+        phone='+123214711',
+        mobile='+12321312',
+        email='asda@ddasd.at',
         organization=org,
         user=newuser,
         membership_role=role,
@@ -109,10 +123,20 @@ def test_login():
 
 
 def test_delete_membership():
+    u = User.query.filter_by(name=App.user.name).first()
     with pytest.raises(AttributeError):
-        db.session.add(App.user)
-        um = App.user.user_memberships[0]
+        um = u.user_memberships[0]
         um.mark_as_deleted()
+
+
+def test_update_incorrect_data():
+    u = User.query.filter_by(name=App.user.name).first()
+    with pytest.raises(AttributeError):
+        u.user_memberships[0].phone = '1235455'
+    with pytest.raises(AttributeError):
+        u.user_memberships[0].mobile = '1235455'
+    with pytest.raises(AttributeError):
+        u.email = 'somethingwrong'
 
 
 def test_delete_user():
@@ -128,5 +152,5 @@ def test_delete_user():
         i += 1
         assert um.deleted == 1, \
             'All memeberships also have to be marked as deleted'
-        assert um.ts_deleted < datetime.datetime.utcnow()
+        assert um.ts_deleted <= datetime.datetime.utcnow()
     assert i == 1, 'exactly one membership'

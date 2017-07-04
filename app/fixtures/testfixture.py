@@ -82,7 +82,9 @@ class testdata:
          if 'comment' not in user:
              user['comment'] = 'no comment'
          if 'phone' not in user:
-             user['phone'] = '12345678'
+             user['phone'] = '+12345678'
+         if 'mobile' not in user:
+             user['mobile'] = '+33456788'
 
          oxu = OrganizationMembership(
             email =  user['email'],
@@ -92,6 +94,7 @@ class testdata:
             country = country_o,
             comment = user['comment'],
             phone =user['phone'],
+            mobile =user['mobile'],
             organization = org,
             user = u,
             membership_role = role,

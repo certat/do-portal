@@ -93,3 +93,4 @@ pytest-tap
 Pyyaml
 validate_email
 Flask-Session
+phonenumbers

@@ -26,7 +26,7 @@ user:
     country: AT
     comment: "Master User"
     email: "cert@master.at"
-    phone: "+43 1 123456"
+    phone: "+431123456"
   - name: evnmaster
     org: evn
     role: OrgAdmin
