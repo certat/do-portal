@@ -1,8 +1,51 @@
-<div class="panel panel-primary">
+<div class="clearfix">
+    <a ng-show="org.id" role="button" class="btn btn-sm pull-right" ng-class="{'btn-success':edit, 'btn-default':!edit}" ng-click="edit=!edit">edit</a>
+</div><br/>
+
+<div ng-show="org.id && !edit" class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Organization details</h3>
+  </div>
+
+  <div class="panel-body">
+    <div>Parent Organization Abbreviation: {{parent_org.abbreviation}}</div>
+    <div>Abbreviation: {{org.abbreviation}}</div>
+    <div>Name: {{org.full_name}}</div>
+    <div>Mailing Interval: {{org.mail_times}}</div>
+    <div>IP ranges:
+      <div ng-repeat="i in org.ip_ranges">
+        {{i}}
+      </div>
+    </div>
+    <div>ASNs:
+      <div ng-repeat="a in org.asns">
+        {{a}}
+      </div>
+    </div>
+    <div>Abuse emails:
+      <div ng-repeat="e in org.abuse_emails">
+        {{e}}
+      </div>
+    </div>
+    <div>Contact emails:
+      <div ng-repeat="e in org.contact_emails">
+        {{e}}
+      </div>
+    </div>
+    <div>FQDNS:
+      <div ng-repeat="f in org.fqdns">
+        {{f}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div ng-show="edit" class="panel panel-primary">
   <div class="panel-heading">
     <h3 ng-show="org.id" class="panel-title">Edit organization details</h3>
-    <h3 ng-hide="org.id" class="panel-title">Create organization</h3>
+    <h3 ng-show="!org.id" class="panel-title">Create organization</h3>
   </div>
+
   <div class="panel-body">
 
     <div ng-show="parent_org" class="row show-grid">
