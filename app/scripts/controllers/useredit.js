@@ -24,8 +24,8 @@ angular.module('cpApp')
   .directive('positiveInteger', function() {
     return {
       require: 'ngModel',
-      link: function(scope, element, attrs, ctrl) {
-        ctrl.$validators.integer = function(modelValue, viewValue) {
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$validators.integer = function(modelValue, viewValue) {
           var val = parseInt(viewValue, 10);
 	  return (val > 0);
         };

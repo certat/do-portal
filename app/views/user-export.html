@@ -1,26 +1,28 @@
+<div class="clearfix">
+    <a role="button" class="btn btn-sm pull-right" ng-class="{'btn-success':text, 'btn-default':!text}" ng-click="text=!text">text</a>
+</div><br/>
+
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">Contacts</h3>
   </div>
   <div class="panel-body">
     <div class="row show-grid">
+      <div class="col-xs-offset-8 col-xs-4">membership_role_id: {{membership_role_id}}</div>
+    </div>
+    <div class="row show-grid">
       <div class="col-xs-offset-8 col-xs-4">
-        <select convert-to-number positive-integer class="form-control input-sm" ng-model="membership_role_id">
+        <select watch-model convert-to-number positive-integer class="form-control input-sm" ng-model="membership_role_id">
           <option ng-repeat="role in roles" value="{{role.id}}">{{role.display_name}}</option>
         </select>
       </div>
     </div>
-    <div ng-repeat="user in users">
-      <div ng-repeat="m in user.memberships">
-        <div class="row show-grid" ng-show="m.membership_role_id === membership_role_id">
-          <div class="col-xs-12">
-            <label>{{user.name}}</label>
-            {{organizations[m.organization_id].full_name}}
-            {{m.email}}
-            {{m.phone}}
-          </div>
-        </div>
-      </div>
+
+    <textarea ng-show="text" readonly class="form-control">{{arr2text(filtered_memberships)}}</textarea>
+
+    <div ng-show="!text" ng-repeat="membership in filtered_memberships" class="row show-grid">
+      <div class="col-md-2" ng-repeat="field in membership track by $index">{{field}}</div>
     </div>
+
   </div>
 </div>
