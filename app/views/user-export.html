@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <textarea ng-show="text" readonly class="form-control">{{arr2text(filtered_memberships)}}</textarea>
+    <textarea rows="20" ng-show="text" readonly class="form-control">{{arr2text(filtered_memberships)}}</textarea>
 
     <div ng-show="!text" ng-repeat="membership in filtered_memberships" class="row show-grid">
       <div class="col-md-2" ng-repeat="field in membership track by $index">{{field}}</div>
