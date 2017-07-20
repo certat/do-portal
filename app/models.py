@@ -23,6 +23,7 @@ from app.utils.inflect import pluralize
 from validate_email import validate_email
 from app.utils.mail import send_email
 import phonenumbers
+import time
 
 #: we don't have an app context yet,
 #: we need to load the configuration from the config module
@@ -438,6 +439,7 @@ class User(UserMixin, Model, SerializerMixin):
     def mark_as_deleted(self):
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
+        self.email = str(time.time()) + self.email
         db.session.add(self)
         for um in self.user_memberships:
             um.mark_as_deleted(delete_last_membership = True)
