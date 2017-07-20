@@ -1251,6 +1251,7 @@ class MembershipRole(Model, SerializerMixin):
           ['admin-c',                       'Domain Administativer Kontakt (admin-c)'],
           ['CISO',                          'CISO'],
           ['private',                       'Privat'],
+          ['aecSMSalerting', 'AEC SMS Alarmierung'],
         ]
         for r in roles:
             role = MembershipRole.query.filter_by(name=r[0]).first()
