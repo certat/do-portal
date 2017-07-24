@@ -106,8 +106,8 @@ angular.module('cpApp')
       _handle_upload_field(m,'smime');
 
       // sms alert mobile validation
-      if (m.sms_alert && !m.mobile) {
-        notifications.showError("mobile number is required if SMS Alert is activated.");
+      if (m.sms_alerting && !m.mobile) {
+        notifications.showError("mobile number is required if SMS Alerting is activated.");
         return;
       }
 
