@@ -25,6 +25,11 @@ def test_user_memberships():
 
     for uo in u.user_memberships:
         assert uo.email == 'cert@master.at'
+        assert uo.zip == '1010'
+        assert uo.city == 'Wien'
+        assert uo.street == 'Karlsplatz 1'
+        assert uo.mobile == "+3412312312"
+        assert uo.sms_alerting == 1
         assert uo.organization.full_name == 'Energy CERT Austria'
         assert uo.country.name == 'Austria', 'Country is an object'
         cc = 0
@@ -114,7 +119,7 @@ def test_login():
     (verbundciso, auth) = User.authenticate('cisouser@verbund.at', 'bla')
     assert auth is False
 
-    (admin, auth) = User.authenticate('admin@verbund.at', 'bla')
+    (admin, auth) = User.authenticate('admin@verbund.at', 'blabla')
     assert auth is True
 
     new_password = User.reset_password_send_email('admin@verbund.at')

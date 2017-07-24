@@ -33,9 +33,9 @@ class testdata:
           db.session.commit()
 
 
-   def addyaml():
+   def addyaml(yamlfile = "install/testdata.yaml"):
       """Add sample data from yaml file"""
-      with open("install/testdata.yaml", 'r') as stream:
+      with open(yamlfile, 'r') as stream:
            data_loaded = yaml.load(stream)
 
       for org in data_loaded['org']:
@@ -62,7 +62,10 @@ class testdata:
             )
             u.email = user['email']
             u.api_key = u.generate_api_key()
-            u.password = 'bla'
+            if 'password' in user:
+                u.password = user['password']
+            else:
+                u.password = 'bla'
             db.session.add(u)
 
          role = MembershipRole.query.filter_by(name=user['role']).first()
@@ -85,6 +88,8 @@ class testdata:
              user['phone'] = '+12345678'
          if 'mobile' not in user:
              user['mobile'] = '+33456788'
+         if 'sms_alerting' not in user:
+             user['sms_alerting'] = 0
 
          oxu = OrganizationMembership(
             email =  user['email'],
@@ -98,6 +103,7 @@ class testdata:
             organization = org,
             user = u,
             membership_role = role,
+            sms_alerting = user['sms_alerting'],
          )
          db.session.commit()
 

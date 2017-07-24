@@ -27,6 +27,9 @@ user:
     comment: "Master User"
     email: "cert@master.at"
     phone: "+431123456"
+    password: "bla"
+    mobile: "+3412312312"
+    sms_alerting: 1
   - name: evnmaster
     org: evn
     role: OrgAdmin
@@ -47,6 +50,7 @@ user:
     org: verbund
     role: OrgAdmin
     email: "admin@verbund.at"
+    password:  "blabla"
   - name: "Verbund CISO"
     org: verbund
     role: CISO
