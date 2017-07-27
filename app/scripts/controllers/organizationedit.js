@@ -101,6 +101,10 @@ angular.module('cpApp')
         );
     };
 
+    if ($stateParams.edit) {
+      $scope.edit = true;
+    }
+
     if ($stateParams.id) {
       loadParallel().catch( function(err) { notifications.showError(err) });
     }

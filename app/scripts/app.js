@@ -56,7 +56,7 @@ angular
         }
       })
       .state('organization_create', {
-        url: '/organizations',
+        url: '/organizations?edit=1',
         views: {
           header: {
             templateUrl: 'views/header.html',
