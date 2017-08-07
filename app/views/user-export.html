@@ -15,10 +15,19 @@
       </div>
     </div>
 
-    <textarea rows="20" ng-show="text" readonly class="form-control">{{arr2text(filtered_memberships)}}</textarea>
+    <textarea rows="20" ng-show="text" readonly class="form-control">{{addHeader(arr2text(filtered_memberships))}}</textarea>
 
-    <div ng-show="!text" ng-repeat="membership in filtered_memberships" class="row show-grid">
-      <div class="col-md-2" ng-repeat="field in membership track by $index">{{field}}</div>
+    <div ng-show="!text">
+      <div class="row show-grid">
+        <div class="col-md-2"><strong>name</strong></div>
+        <div class="col-md-2"><strong>organization</strong></div>
+        <div class="col-md-2"><strong>email</strong></div>
+        <div class="col-md-2"><strong>phone</strong></div>
+        <div class="col-md-2"><strong>mobile</strong></div>
+      </div>
+      <div ng-repeat="membership in filtered_memberships" class="row show-grid">
+        <div class="col-md-2" ng-repeat="field in membership track by $index">{{field}}</div>
+      </div>
     </div>
 
   </div>

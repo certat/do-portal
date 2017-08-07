@@ -35,7 +35,8 @@ angular.module('cpApp')
                   [u.name,
                    scope.organizations[m.organization_id].full_name,
                    m.email,
-                   m.phone
+                   m.phone,
+                   m.mobile
                   ]
                 );
               }
@@ -117,6 +118,10 @@ angular.module('cpApp')
     };
 
     loadParallel();
+
+    $scope.addHeader = function(txt) {
+      return 'name,organization,email,phone,mobile\n'+txt;
+    };
 
     $scope.arr2text = function(arr) {
       if (!arr) return '';
