@@ -126,6 +126,13 @@ def test_login():
     (admin, auth) = User.authenticate('admin@verbund.at', new_password)
     assert auth is True
 
+    # admin@verbund has 4 contacts via organization_memberships
+    assert admin.get_organization_memberships().count() == 4
+
+    full_names = list(map(lambda org: org.full_name, admin.get_organizations()))
+    full_names.sort()
+    assert full_names == ['verbund', 'verbund-gas', 'verbund-strom', 'verbund-strom-leitung'],\
+        'correct list of orgs for verbund'
 
 def test_delete_membership():
     u = User.query.filter_by(name=App.user.name).first()
