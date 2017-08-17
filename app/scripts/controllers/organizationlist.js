@@ -10,45 +10,43 @@
 angular.module('cpApp')
   .controller('OrganizationListCtrl', function ($scope, $filter, $uibModal, Organization, Auth, GridData, notifications) {
     Organization.query_list().$promise.then(function(resp){
-      var output_orgs = [];
-      make_tree(output_orgs, resp.organizations)
-      $scope.orgs = output_orgs;
+      var tree = arr2tree(resp.organizations, 'id','parent_org_id');
+      var orgs = [];
+      tree2offset(tree, orgs, 0);
+      $scope.orgs = orgs;
     }, function(err){
       notifications.showError(err.data.message);
     });
 
-    function make_tree(output_orgs, input_orgs) {
-      var root_org = find_root(input_orgs);
-      root_org.offset = 0;
-      output_orgs.push(root_org);
-      find_children(output_orgs, input_orgs, root_org.id, 1);
-    }
-
-    function find_root(orgs) {
-      var root;
-      orgs.forEach(function(o) {
-        if (!o.parent_org_id) {
-          if (typeof root !== 'undefined') {
-            notifications.showError('There are multiple root organizations in the database.');
-          }
-          else {
-            root = o;
-          }
-        }
+    // creates a tree from a flat set of hierarchically related data
+    function arr2tree(treeData, key, parentKey) {
+      var keys = [];
+      treeData.map(function(x){
+        x.Children = [];
+        keys.push(x[key]);
       });
-      if (typeof root === 'undefined') {
-        notifications.showError('No root organization found in the database.');
+      var roots = treeData.filter(function(x){return keys.indexOf(x[parentKey])==-1});
+      var nodes = [];
+      roots.map(function(x){nodes.push(x)});
+      while(nodes.length > 0) {
+        var node = nodes.pop();
+        var children = treeData.filter(function(x){return x[parentKey] == node[key]});
+        children.map(function(x){
+          node.Children.push(x);
+          nodes.push(x)
+        });
       }
-      return root;
-    }
+      return roots;
+    };
 
-    function find_children(output_orgs, input_orgs, parentid, offset) {
-      input_orgs.forEach(function(o) {
-        if (!o.hasOwnProperty('offset') && o.parent_org_id === parentid) {
-          o.offset = offset;
-          output_orgs.push(o);
-          find_children(output_orgs, input_orgs, o.id, offset+1);
-        }
+    // flatten the tree but remember the parent/child structure via an offset property
+    function tree2offset(tree, orgs, offset) {
+      tree.forEach(function(x) {
+        x.offset = offset;
+        orgs.push(x);
+        tree2offset(x.Children, orgs, offset+1);
+        delete x.Children;
       });
     }
+
   });
