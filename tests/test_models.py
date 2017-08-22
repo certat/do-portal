@@ -44,7 +44,7 @@ def test_get_users():
     # c = 0
     # for user in u.get_users():
     #    c += 1
-    assert len(u.get_users()) == 7, 'find all subordinate users - once'
+    assert len(u.get_users()) == 8, 'find all subordinate users - once'
     # assert c == 7, 'find all subordinate users - once'
 
 
@@ -167,3 +167,15 @@ def test_delete_user():
             'All memeberships also have to be marked as deleted'
         assert um.ts_deleted <= datetime.datetime.utcnow()
     assert i == 1, 'exactly one membership'
+
+
+# https://domainis.univie.ac.at/mantis/view.php?id=4071
+def test_read_org_with_more_admins():
+    admin = User.query.filter_by(name="EVN Gas Admin").first()
+    oms4user = admin.get_organization_memberships()
+# Organization.query.get_or_404(org_id)
+    orgs = admin.get_organizations()
+    assert [o.full_name for o in orgs] == ['evn-gas', 'evn-strom'], 'correct orgs'
+    assert len([o.id for o in orgs]) == 2, 'OrgAdmin for 2 orgs'
+
+

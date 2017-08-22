@@ -46,6 +46,14 @@ user:
     org: evn-gas
     role: OrgAdmin
     email: "gasadmin@evn.at"
+  - name: "EVN Gas Admin 2"
+    org: evn-gas
+    role: OrgAdmin
+    email: "gasadmin2@evn.at"
+  - name: "EVN Gas Admin"
+    org: evn-strom
+    role: OrgAdmin
+    email: "gasundstrom.admin@evn.at"
   - name: "Verbund Admin"
     org: verbund
     role: OrgAdmin

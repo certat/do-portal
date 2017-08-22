@@ -471,17 +471,22 @@ class User(UserMixin, Model, SerializerMixin):
         # Or = self.user_memberships.membership_role.filter(MembershipRole.name == 'OrgAdmin' )
         # there must be a better way to write this
         admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
-        orgs_admin = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).first() #.filter(MembershipRole.name == 'OrgAdmin' )
+        # orgs_admin = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).first() #.filter(MembershipRole.name == 'OrgAdmin' )
 #        orgs_admin = OrganizationMembership.query.filter(OrganizationMembership.use = self, membership_role_id = admin_role.id).first()
-        if (not orgs_admin):
+
+
+        orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).all()
+
+        if (not orgs_admins):
            return []
 
-        self._orgs = [orgs_admin]
-        self._org_ids = [orgs_admin.organization.id]
+        self._orgs = [orgs_admins]
+        self._org_ids = [org.organization.id for org in orgs_admins]
 
         # find all orgs where the org.id is the parent_org_id recursivly
         #  for org in orgs_admin:
-        self._org_tree_iterator(orgs_admin.organization_id)
+        for oa in orgs_admins:
+            self._org_tree_iterator(oa.organization_id)
         return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids))
 
     def get_organizations(self):
