@@ -65,7 +65,7 @@ class testdata:
             if 'password' in user:
                 u.password = user['password']
             else:
-                u.password = 'bla'
+                u.password = 'Bla12345'
             db.session.add(u)
 
          role = MembershipRole.query.filter_by(name=user['role']).first()
