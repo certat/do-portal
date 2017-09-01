@@ -237,6 +237,7 @@ class DevelConfig(Config):
 
 
 class TestingConfig(Config):
+    # DEBUG = True
     TESTING = True
     SERVER_NAME = 'localhost'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'do-testing'

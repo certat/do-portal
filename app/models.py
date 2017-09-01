@@ -1367,7 +1367,8 @@ class OrganizationMembership(Model, SerializerMixin):
 """ watch for insert on Org Memberships """
 def org_mem_listerner(mapper, connection, org_mem):
     if org_mem.membership_role and org_mem.membership_role.name == 'OrgAdmin':
-        ## print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
+        # print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
+        # print(org_mem.membership_role.name,  org_mem.email)
         password = binascii.hexlify(os.urandom(random.randint(12, 16))).decode('ascii')
         org_mem.user.password = password
         send_email('energy-cert account', [org_mem.user.email],
