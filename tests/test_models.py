@@ -126,6 +126,11 @@ def test_login():
     (admin, auth) = User.authenticate('admin@verbund.at', new_password)
     assert auth is True
 
+    new_password2 = 'blibli'
+    admin.password = new_password2
+    (admin, auth) = User.authenticate('admin@verbund.at', new_password2)
+    assert auth is True
+
     # admin@verbund has 4 contacts via organization_memberships
     assert admin.get_organization_memberships().count() == 4
 

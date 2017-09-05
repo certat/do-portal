@@ -324,6 +324,8 @@ def update_cp_user(user_id):
     except AttributeError:
         return {'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {}
 
+    if 'password' in request.json:
+        user.password = request.json['password']
     db.session.add(user)
     db.session.commit()
     return {'message': 'User saved'}
