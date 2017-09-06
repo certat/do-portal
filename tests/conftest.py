@@ -64,12 +64,14 @@ def db(request, app):
     _db.drop_all()
     # Create the tables based on the current model
     _db.create_all()
-    user = User.create_test_user()
-    TestClient.test_user = user
-    TestClient._api_user = user
     MembershipRole._MembershipRole__insert_defaults()
     Country._Country__insert_defaults()
+    # user = User.create_test_user()
     testfixture.testdata.addyaml()
+    user = User.query.filter_by(name="certmaster").first()
+    TestClient.test_user = user
+    TestClient._api_user = user
+    TestClient.test_user.organization_id = Organization.query.filter_by(abbreviation='cert').first().id
     app.test_client_class = TestClient
     app.response_class = TestResponse
 
@@ -107,7 +109,7 @@ def addsampledata(client):
     )
     _db.session.add(o)
     _db.session.commit()
-    client.test_user.organization_id = o.id
+    # client.test_user.organization_id = o.id
 
 
 @pytest.fixture(scope='module')

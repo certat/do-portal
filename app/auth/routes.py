@@ -470,8 +470,9 @@ def change_password():
     :statuscode 200: Password successfully changed
     :statuscode 422: Unprocessable Entity.
     """
-    if not current_user.check_password(request.json.get('current_password')):
-        return {'message': 'Invalid current password'}, 400
+    # it makes no sense to check the current password
+    # if not current_user.check_password(request.json.get('current_password')):
+    #    return {'message': 'Invalid current password'}, 400
     new_pass = request.json.get('new_password', None)
     confirm_pass = request.json.get('confirm_password', None)
     if new_pass != confirm_pass:

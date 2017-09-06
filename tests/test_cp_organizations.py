@@ -7,13 +7,7 @@ def test_create_org(client):
     rv = client.post(
         url_for('cp.add_cp_organization'),
         json=dict(abbreviation="CERT-EU",
-                  full_name="Computer Emergency Response Team for EU "
-                            "Institutions Agencies and Bodies",
-                  ip_ranges=["212.8.189.16/28"],
-                  abuse_emails=["cert-eu@ec.europa.eu"],
-                  contact_emails=[{"email": "cert-eu@ec.europa.eu"}],
-                  asns=[5400],
-                  fqdns=["cert.europa.eu"],
+                  full_name="Computer Emergency Response Team for EU ",
                   parent_org_id=client.test_user.organization_id)
     )
     assert_msg(rv, value='Organization added', response_code=201)
@@ -24,13 +18,7 @@ def test_update_org(client):
         url_for('cp.update_cp_organization',
                 org_id=client.test_user.organization_id),
         json=dict(abbreviation="CERT-EU",
-                  full_name="Computer Emergency Response Team for EU "
-                            "Institutions Agencies and Bodies",
-                  ip_ranges=["212.8.189.16/28"],
-                  abuse_emails=["cert-eu@ec.europa.eu"],
-                  contact_emails=[{"email": "cert-eu-new@ec.europa.eu"}],
-                  asns=[5400],
-                  fqdns=["cert.europa.eu"],
+                  full_name="Computer Emergency Response Team for EU new",
                   parent_org_id=client.test_user.organization_id)
     )
     assert rv.status_code == 200
@@ -56,7 +44,8 @@ def test_delete_org(client):
     got = list(rv.json.values())
     got_ids = [i['id'] for i in got[0]]
 
-    for org_id in got_ids:
+    ## exclude last org, which cannot be deleted
+    for org_id in got_ids[:-1]:
         rv = client.delete(url_for('cp.delete_cp_organization',
                            org_id=org_id))
         assert_msg(rv, value='Organization deleted')
