@@ -40,10 +40,7 @@ def get_cp_organization_memberships():
               "email": "max@muster.at",
               "comment": "foo",
               "pgp_key_id": "abc123",
-              "pgp_key_fingerprint": "def456",
-              "pgp_key": "ghi789",
-              "smime": "something",
-              "coc": "anything goes"
+              "pgp_key_fingerprint": "def456"
             }
           ]
         }
