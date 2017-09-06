@@ -44,7 +44,7 @@ def test_delete_org(client):
     got = list(rv.json.values())
     got_ids = [i['id'] for i in got[0]]
 
-    ## exclude last org, which cannot be deleted
+    # exclude last org, which cannot be deleted
     for org_id in got_ids[:-1]:
         rv = client.delete(url_for('cp.delete_cp_organization',
                            org_id=org_id))
