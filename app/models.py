@@ -509,6 +509,9 @@ class User(UserMixin, Model, SerializerMixin):
                 ud[om.user.id] = 1
         return users
 
+    def get_memberships(self):
+        """returns all memeberships for user"""
+        return self.user_memberships
 
 class Permission:
     """Permissions pseudo-model. Uses 8 bits to assign permissions.

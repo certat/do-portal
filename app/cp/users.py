@@ -134,6 +134,103 @@ def get_cp_user(user_id):
         abort(403)
     return user.serialize()
 
+@cp.route('/users/<int:user_id>/memberships', methods=['GET'])
+@json_response
+def get_cp_users_memberships(user_id):
+    """Return user identified by ``user_id``
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+        GET /cp/1.0/users/44/memberships HTTP/1.1
+        Host: do.cert.europa.eu
+        Accept: application/json
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+
+        {
+          "memberships": [
+            {
+              "city": "Wien",
+              "country": {
+                "cc": "AT",
+                "id": 10,
+                "name": "Austria"
+              },
+              "country_id": 10,
+              "email": "proschinger@energy-cert.at",
+              "id": 53,
+              "membership_role_id": 2,
+              "mobile": "+436649650926",
+              "organization_id": 3,
+              "phone": null,
+              "sms_alerting": null,
+              "street": "Karlsplatz 1/2/9",
+              "user_id": 58,
+              "zip": "1010"
+            },
+            {
+              "email": "christian.proschinger@nic.at",
+              "id": 173,
+              "membership_role_id": 15,
+              "mobile": "+436649650922",
+              "organization_id": 30,
+              "phone": null,
+              "sms_alerting": null,
+              "user_id": 58
+            },
+            {
+              "email": "security@nic.at",
+              "id": 174,
+              "membership_role_id": 5,
+              "mobile": "+436649650922",
+              "organization_id": 30,
+              "phone": "+436649650922",
+              "sms_alerting": null,
+              "user_id": 58
+            }
+          ]
+        }
+
+
+    :param user_id: User unique ID
+
+    :reqheader Accept: Content type(s) accepted by the client
+    :reqheader API-Authorization: API key. If present authentication and
+            authorization will be attempted.
+    :resheader Content-Type: this depends on `Accept` header or request
+
+    :>json integer id: User unique ID
+    :>json string login: Login email address
+    :>json string password: Password
+    :>json string name: Name
+    :>json string picture: Base64-encoded PNG profile picture
+    :>json string birthdate: Birthdate as YYYY-MM-DD
+    :>json string title: Academic or honorific title
+    :>json string origin: Origin
+
+    :status 200: Returns user details object
+    :status 404: Resource not found
+    :status 401: Authorization failure. The client MAY repeat the request with
+        a suitable API-Authorization header field. If the request already
+        included Authorization credentials, then the 401 response indicates
+        that authorization has been refused for those credentials.
+    :status 403: Access denied. Authorization will not help and the request
+        SHOULD NOT be repeated.
+    """
+    user = User.query.get_or_404(user_id)
+    if not g.user.may_handle_user(user):
+        abort(403)
+    memberships = user.get_memberships()
+    return {'memberships': [m.serialize() for m in memberships]}
+
+
 @cp.route('/users', methods=['POST'])
 @validate('users', 'add_cp_user')
 @json_response
