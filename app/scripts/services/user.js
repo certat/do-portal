@@ -36,6 +36,12 @@ angular.module('cpApp')
       delete: {
         method: 'DELETE',
         withCredentials: true
-      }
+      },
+      memberships: {
+          url: config.apiConfig.webServiceUrl+'/users/:id/memberships',
+        method: 'GET',
+        isArray: false,
+        withCredentials: true
+      },
     });
   });

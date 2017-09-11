@@ -65,9 +65,9 @@ angular.module('cpApp')
 
     var loadMemberships = function(){
       if (!$stateParams.id) { return [{}]; }
-      return Membership.query().$promise
+      return User.memberships({'id': $stateParams.id}).$promise
                 .then(function(resp){
-                    return resp.organization_memberships;
+                    return resp.memberships;
                   }, function(err){
                     notifications.showError(err.data.message);
                   });
@@ -89,8 +89,7 @@ angular.module('cpApp')
               $scope.roles         = result.shift();
               $scope.organizations = result.shift();
               $scope.countries     = result.shift();
-              $scope.memberships
-                    = result.shift().filter(function(m){return m.user_id === $scope.user.id});
+              $scope.memberships   = result.shift();
             }
         );
     };
