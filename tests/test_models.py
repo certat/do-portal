@@ -134,10 +134,11 @@ def test_login():
     # admin@verbund has 4 contacts via organization_memberships
     assert admin.get_organization_memberships().count() == 4
 
-    # full_names = list(map(lambda org: org.full_name, admin.get_organizations()))
+    #full_names = list(map(lambda org: org.full_name, admin.get_organizations()))
     full_names = [ org.full_name for org in admin.get_organizations() ]
     full_names.sort()
-    assert full_names == ['verbund', 'verbund-gas', 'verbund-strom', 'verbund-strom-leitung'],\
+    assert full_names == ['verbund', 'verbund-gas',
+                          'verbund-strom', 'verbund-strom-leitung'],\
         'correct list of orgs for verbund'
 
 def test_delete_membership():

@@ -220,7 +220,7 @@ class MailmanMember(MailmanModel):
 class User(UserMixin, Model, SerializerMixin):
     """User model"""
     __tablename__ = 'users'
-    __public__ = ('id', 'name', 'api_key', 'otp_enabled', 'picture', 'birthdate', 'title', 'origin', 'email')
+    __public__ = ('id', 'name', 'api_key', 'otp_enabled', 'picture', 'birthdate', 'title', 'origin', 'email', 'picture_filename')
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
@@ -1279,7 +1279,7 @@ class OrganizationMembership(Model, SerializerMixin):
     __public__ = ('id', 'user_id', 'organization_id', 'street', 'zip', 'city',
                   'country', 'comment', 'email', 'phone', 'mobile', 'membership_role_id',
                   'pgp_key_id', 'pgp_key_fingerprint', 'pgp_key', 'smime', 'country_id',
-                  'coc', 'sms_alerting')
+                  'coc', 'coc_filename', 'smime_filename', 'sms_alerting')
 
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
