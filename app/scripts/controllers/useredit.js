@@ -100,6 +100,14 @@ angular.module('cpApp')
       angular.element("input[type='file'][data-key='"+key+"']").val(null); // reset input field
     }
 
+    // e.g.: if a phone number is deleted the value is set to the empty string
+    // but the server expects { phone: null }
+    function emptyToNull(obj) {
+        Object.keys(obj).forEach(function(key) {
+            if( obj[key] === '' ) { obj[key] = null; }
+        });
+    }
+
     $scope.save_membership = function(m) {
       _handle_upload_field(m,'coc');
       _handle_upload_field(m,'smime');
@@ -111,6 +119,7 @@ angular.module('cpApp')
       }
 
       if(m.id) {
+        emptyToNull(m);
         Membership.update({'id':m.id}, m, function(resp) {
           notifications.showSuccess(resp);
         }, function(error){
