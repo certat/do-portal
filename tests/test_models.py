@@ -134,12 +134,14 @@ def test_login():
     # admin@verbund has 4 contacts via organization_memberships
     assert admin.get_organization_memberships().count() == 4
 
-    #full_names = list(map(lambda org: org.full_name, admin.get_organizations()))
-    full_names = [ org.full_name for org in admin.get_organizations() ]
+    # full_names =
+    #     list(map(lambda org: org.full_name, admin.get_organizations()))
+    full_names = [org.full_name for org in admin.get_organizations()]
     full_names.sort()
     assert full_names == ['verbund', 'verbund-gas',
                           'verbund-strom', 'verbund-strom-leitung'],\
         'correct list of orgs for verbund'
+
 
 def test_delete_membership():
     u = User.query.filter_by(name=App.user.name).first()
@@ -156,6 +158,14 @@ def test_update_incorrect_data():
         u.user_memberships[0].mobile = '1235455'
     with pytest.raises(AttributeError):
         u.email = 'somethingwrong'
+
+
+def test_update_membership_data():
+    u = User.query.filter_by(name=App.user.name).first()
+    u.user_memberships[0].phone = None
+    assert u.user_memberships[0].phone is None, 'phone number correctlty set to Null/None'
+    u.user_memberships[0].mobile = '+43123124123'
+    assert u.user_memberships[0].mobile == '+43123124123', 'mobile number correctlty set'
 
 
 def test_delete_user():

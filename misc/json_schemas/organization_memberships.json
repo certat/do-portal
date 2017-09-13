@@ -82,10 +82,13 @@
         "type": "string"
       },
       "phone": {
-        "type": "string"
+        "type": ["string", "null"]
+      },
+      "mobile": {
+        "type": ["string", "null"]
       },
       "email": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "comment": {
         "type": "string"

@@ -1347,7 +1347,8 @@ class OrganizationMembership(Model, SerializerMixin):
     @phone.setter
     def phone(self, phone):
         try:
-            x = phonenumbers.parse(phone, None)
+            if phone != None:
+                x = phonenumbers.parse(phone, None)
         except phonenumbers.phonenumberutil.NumberParseException as err:
             db.session.rollback()
             raise AttributeError(phone, 'seems not to be valid:', err)
@@ -1360,7 +1361,8 @@ class OrganizationMembership(Model, SerializerMixin):
     @mobile.setter
     def mobile(self, mobile):
         try:
-            x = phonenumbers.parse(mobile, None)
+            if mobile != None:
+                x = phonenumbers.parse(mobile, None)
         except phonenumbers.phonenumberutil.NumberParseException as err:
             db.session.rollback()
             raise AttributeError(mobile, 'seems not to be valid:', err)
