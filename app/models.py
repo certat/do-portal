@@ -1347,7 +1347,9 @@ class OrganizationMembership(Model, SerializerMixin):
     @phone.setter
     def phone(self, phone):
         try:
-            if phone != None:
+            if not phone:
+                phone = None
+            else:
                 x = phonenumbers.parse(phone, None)
         except phonenumbers.phonenumberutil.NumberParseException as err:
             db.session.rollback()
@@ -1361,7 +1363,9 @@ class OrganizationMembership(Model, SerializerMixin):
     @mobile.setter
     def mobile(self, mobile):
         try:
-            if mobile != None:
+            if not mobile:
+                mobile = None
+            else:
                 x = phonenumbers.parse(mobile, None)
         except phonenumbers.phonenumberutil.NumberParseException as err:
             db.session.rollback()

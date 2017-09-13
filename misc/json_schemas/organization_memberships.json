@@ -118,7 +118,8 @@
     "required": [
       "membership_role_id",
       "user_id",
-      "organization_id"
+      "organization_id",
+      "phone"
     ]
   }
 }

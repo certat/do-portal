@@ -163,9 +163,11 @@ def test_update_incorrect_data():
 def test_update_membership_data():
     u = User.query.filter_by(name=App.user.name).first()
     u.user_memberships[0].phone = None
-    assert u.user_memberships[0].phone is None, 'phone number correctlty set to Null/None'
+    assert u.user_memberships[0].phone is None, \
+        'phone number correctlty set to Null/None'
     u.user_memberships[0].mobile = '+43123124123'
-    assert u.user_memberships[0].mobile == '+43123124123', 'mobile number correctlty set'
+    assert u.user_memberships[0].mobile == '+43123124123', \
+        'mobile number correctlty set'
 
 
 def test_delete_user():
@@ -188,10 +190,9 @@ def test_delete_user():
 # https://domainis.univie.ac.at/mantis/view.php?id=4071
 def test_read_org_with_more_admins():
     admin = User.query.filter_by(name="EVN Gas Admin").first()
-    oms4user = admin.get_organization_memberships()
-# Organization.query.get_or_404(org_id)
+    # oms4user = admin.get_organization_memberships()
+    # Organization.query.get_or_404(org_id)
     orgs = admin.get_organizations()
-    assert [o.full_name for o in orgs] == ['evn-gas', 'evn-strom'], 'correct orgs'
+    assert [o.full_name for o in orgs] == \
+        ['evn-gas', 'evn-strom'], 'correct orgs'
     assert len([o.id for o in orgs]) == 2, 'OrgAdmin for 2 orgs'
-
-

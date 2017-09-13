@@ -6,7 +6,8 @@ from app.models import User, MembershipRole
 def test_create_user(client):
     client.api_user = find_user_by_name('certmaster')
     org_id = client.api_user.get_organizations().first().id
-    orgadmin_role_id = MembershipRole.query.filter_by(name='OrgAdmin').first().id
+    orgadmin_role_id = \
+        MembershipRole.query.filter_by(name='OrgAdmin').first().id
     rv = client.post(
         url_for('cp.add_cp_user'),
         json=dict(
@@ -29,7 +30,8 @@ def test_create_user(client):
 def test_create_user_with_invalid_email(client):
     client.api_user = find_user_by_name('certmaster')
     org_id = client.api_user.get_organizations().first().id
-    orgadmin_role_id = MembershipRole.query.filter_by(name='OrgAdmin').first().id
+    orgadmin_role_id = \
+        MembershipRole.query.filter_by(name='OrgAdmin').first().id
     rv = client.post(
         url_for('cp.add_cp_user'),
         json=dict(
