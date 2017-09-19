@@ -114,7 +114,7 @@ class Model(db.Model):
 
     def from_json(self, json):
         for attr, value in json.items():
-            if isinstance(value, (str, int, list)):
+            if isinstance(value, (str, int, list)) or value is None:
                 if hasattr(self, attr):
                     setattr(self, attr, value)
         return self

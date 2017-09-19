@@ -76,10 +76,10 @@
         "type": "integer"
       },
       "street": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "zip": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "phone": {
         "type": ["string", "null"]
@@ -91,28 +91,28 @@
         "type": ["string", "null"]
       },
       "comment": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "pgp_key_id": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "pgp_key_fingerprint": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "pgp_key": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "smime": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "smime_filename": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "coc": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "coc_filename": {
-        "type": "string"
+        "type": ["string", "null"]
       }
     },
     "required": [
