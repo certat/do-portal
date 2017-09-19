@@ -81,28 +81,28 @@
     "type": "object",
     "properties": {
       "email": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "password": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "name": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "picture": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "picture_filename": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "birthdate": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "title": {
-        "type": "string"
+        "type": ["string", "null"]
       },
       "origin": {
-        "type": "string"
+        "type": ["string", "null"]
       }
     },
     "required": [
