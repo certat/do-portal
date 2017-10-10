@@ -24,7 +24,8 @@ angular.module('cpApp')
               notifications.showSuccess(resp.data.message);
             },
             function(err){
-              notifications.showError(errorMapper.map(err.data));
+              notifications.showError(err.data.message);
+              // notifications.showError(errorMapper.map(err.data));
             }
           );
         };
