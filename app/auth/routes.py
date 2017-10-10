@@ -484,6 +484,8 @@ def change_password():
         return {'message': 'Your password has been updated'}
     except AssertionError as ae:
         return {'message': str(ae)}
+    except AttributeError as ae:
+        return {'message': str(ae)}
 
 
 @auth.route('/reset-api-key')

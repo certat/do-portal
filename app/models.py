@@ -29,6 +29,25 @@ import time
 #: we need to load the configuration from the config module
 _config = config.get(os.getenv('DO_CONFIG') or 'default')
 
+def check_password_quality(password):
+    import re
+    error_text = ''
+    ea = []
+    if len(password) < 8:
+        ea.append('password too short')
+    if not re.search(r"\d", password):
+        ea.append('password has to contain a number')
+    if not re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password):
+        ea.append('password has to contain a special character')
+    if not re.search(r"[A-Z]", password):
+        ea.append('password has to contain an upper case letter')
+    if not re.search(r"[a-z]", password):
+        ea.append('password has to contain a lower case letter')
+
+    error_text = '; '.join(ea)
+    return error_text
+
+
 emails_organizations = db.Table(
     'emails_organizations', db.metadata,
     db.Column('id', db.Integer, primary_key=True),
@@ -280,6 +299,9 @@ class User(UserMixin, Model, SerializerMixin):
 
     @password.setter
     def password(self, password):
+        password_errors = check_password_quality(password)
+        if password_errors:
+            raise AttributeError(password_errors)
         self._password = generate_password_hash(
             password, method='pbkdf2:sha512:100001', salt_length=32
         )
@@ -317,7 +339,7 @@ class User(UserMixin, Model, SerializerMixin):
             orgs = user.get_organization_memberships()
             if orgs == []:
                 return False
-            password = binascii.hexlify(os.urandom(random.randint(12, 16))).decode('ascii')
+            password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii')+'aB1$'
             user.password = password
             send_email('energy-cert account', [user.email],
                    'auth/email/ec_reset_password', user=user, new_password=password)
@@ -1378,7 +1400,7 @@ def org_mem_listerner(mapper, connection, org_mem):
     if org_mem.membership_role and org_mem.membership_role.name == 'OrgAdmin':
         # print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
         # print(org_mem.membership_role.name,  org_mem.email)
-        password = binascii.hexlify(os.urandom(random.randint(12, 16))).decode('ascii')
+        password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii') + 'Ba1%'
         org_mem.user.password = password
         send_email('energy-cert account', [org_mem.user.email],
                'auth/email/ec_activate_account', org_mem=org_mem, new_password=password)
@@ -1422,15 +1444,18 @@ def load_token(token):
     # server side and not rely on the users cookie to exipre.
 
     max_age = current_app.config['REMEMBER_COOKIE_DURATION'].total_seconds()
-
+    print("*****",  max_age)
     # Decrypt the Security Token, data = [username, hashpass, id]
     s = URLSafeTimedSerializer(
         current_app.config['SECRET_KEY'],
         salt='user-auth',
         signer_kwargs=dict(key_derivation='hmac',
                            digest_method=hashlib.sha256))
+    from pprint import pprint
     try:
-        data = s.loads(token, max_age=max_age)
+        (data, timestamp) = s.loads(token, max_age=max_age, return_timestamp=True)
+        pprint(data)
+        pprint(timestamp)
     except (BadTimeSignature, SignatureExpired):
         return None
 

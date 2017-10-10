@@ -70,7 +70,7 @@ def test_create_user():
     with pytest.raises(AttributeError):
         newuser.email = 'testbla.com'
     newuser.email = 'test@bla.com'
-    newuser.password = 'bla'
+    newuser.password = 'blaBla123%'
     newuser.picture = b'asasda'
     newuser.birthdate = datetime.datetime.utcnow()
     newuser.title = 'DDDr. hc. mult.'
@@ -119,14 +119,14 @@ def test_login():
     (verbundciso, auth) = User.authenticate('cisouser@verbund.at', 'bla')
     assert auth is False
 
-    (admin, auth) = User.authenticate('admin@verbund.at', 'blabla')
+    (admin, auth) = User.authenticate('admin@verbund.at', 'blaBla12$')
     assert auth is True
 
     new_password = User.reset_password_send_email('admin@verbund.at')
     (admin, auth) = User.authenticate('admin@verbund.at', new_password)
     assert auth is True
 
-    new_password2 = 'blibli'
+    new_password2 = 'B12blibli%'
     admin.password = new_password2
     (admin, auth) = User.authenticate('admin@verbund.at', new_password2)
     assert auth is True

@@ -322,8 +322,8 @@ def add_cp_user():
     """
     try:
         user = User.fromdict(request.json['user'])
-    except AttributeError:
-        return {'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {}
+    except AttributeError as ae:
+        return {'message': 'Attribute error. Invalid email, phone or mobile?' + str(ae) ,}, 422, {}
 
     membership = OrganizationMembership.fromdict(
                     request.json['organization_membership'])
@@ -421,10 +421,13 @@ def update_cp_user(user_id):
     except AttributeError:
         return {'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {}
 
-    if 'password' in request.json:
-        user.password = request.json['password']
-    db.session.add(user)
-    db.session.commit()
+    try:
+        if 'password' in request.json:
+            user.password = request.json['password']
+            db.session.add(user)
+            db.session.commit()
+    except AttributeError as ae:
+        return {'message': str(ae)}, 422, {}
     return {'message': 'User saved'}
 
 

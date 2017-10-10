@@ -8,7 +8,7 @@ import json
 import datetime
 from flask import Flask, Blueprint
 from flask import current_app, request, g
-from flask_login import login_required
+from flask_login import login_required, decode_cookie
 from app.utils import addslashes, _HTTP_METHOD_TO_AUDIT_MAP
 from app.api.decorators import rate_limit, crossdomain
 
