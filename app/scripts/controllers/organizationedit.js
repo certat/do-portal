@@ -84,8 +84,8 @@ angular.module('cpApp')
     var loadParallel = function() {
         return $q.all([ loadUsers(), loadRoles(), loadMemberships(), loadOrganization($stateParams.id) ])
             .then( function( result ) {
-              $scope.users       = _array2hash(result.shift());
-              $scope.roles       = _array2hash(result.shift());
+              $scope.users    = _array2hash(result.shift());
+              $scope.roles    = _array2hash(result.shift());
               var memberships = result.shift().filter(function(m){return m.organization_id == $stateParams.id});
               memberships.forEach(function(m){ m.country = m.country ? m.country.name : '' });
               $scope.memberships = memberships;
@@ -117,75 +117,6 @@ angular.module('cpApp')
         notifications.showError(err.data.message);
       });
     }
-
-    $scope.toggleFuzzyList = function(list, parent){
-      var modalInstance = $uibModal.open({
-        templateUrl: 'views/modal-list-typosquats.html',
-        controller: 'TyposquatsmodalCtrl',
-        size: 'lg',
-        resolve: {
-          fqdns: function(){
-            return list;
-          },
-          parent: function(){
-            return parent;
-          }
-        }
-      });
-      modalInstance.result.then(function (resp) {
-        console.log(resp);
-        //success
-      }, function () {
-        // modal dismissed, do cleanup
-      });
-    };
-
-    $scope.appendItem = function(type, org){
-      if(org.hasOwnProperty(type)){
-        org[type].unshift('');
-      }else{
-        org[type] = [''];
-      }
-    };
-    $scope.removeItem = function(type, org, val){
-      org[type] = $filter('filter')(
-        org[type],
-        function(v){
-          return v !== val;
-        }
-      );
-    };
-
-    $scope.cpAccess = function(org, contactEmail){
-      var newAccount = {
-        organization_id: org.id,
-        name: org.abbreviation + ' (' + contactEmail + ')',
-        email: contactEmail
-      };
-      Auth.registerCPAccount(newAccount).then(function(resp){
-        notifications.showSuccess(resp.data);
-        Organization.query(function(resp){
-          $scope.org = resp;
-        });
-      }, function(error){
-        notifications.showError(error.data);
-      });
-    };
-    $scope.cpRevokeAccess = function(org, contactEmail){
-      var unregAccount = {
-        organization_id: org.id,
-        name: org.abbreviation + ' (' + contactEmail + ')',
-        email: contactEmail
-      };
-      Auth.unregisterCPAccount(unregAccount).then(function(resp){
-        notifications.showSuccess(resp.data);
-        Organization.query(function(resp){
-          $scope.org = resp;
-        });
-      }, function(error){
-        notifications.showError(error.data);
-      });
-    };
 
     $scope.create_organization = function(){
       Organization.create({}, $scope.org, function(resp){

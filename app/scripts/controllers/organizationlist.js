@@ -9,6 +9,7 @@
  */
 angular.module('cpApp')
   .controller('OrganizationListCtrl', function ($scope, $filter, $uibModal, Organization, Auth, GridData, notifications) {
+
     Organization.query_list().$promise.then(function(resp){
       var tree = arr2tree(resp.organizations, 'id','parent_org_id');
       var orgs = [];

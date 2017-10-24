@@ -29,33 +29,6 @@ angular.module('cpApp')
             }
           );
         };
-        scope.resetAPIKey = function(){
-          Auth.resetAPIKey().then(
-            function(resp){
-              Auth.getAccountInfo().then(function(resp){
-                scope.account = resp.data;
-              });
-              notifications.showSuccess(resp.data.message);
-            },
-            function(err){
-              notifications.showError(err.data);
-            }
-          );
-        };
-
-        scope.toggle2FA = function(){
-          Auth.post(scope.account, 'toggle-2fa').then(
-            function(resp){
-              scope.account.otp_enabled = !scope.account.otp_enabled;
-              delete scope.account.totp;
-              //scope.account.otp_toggle = !scope.account.otp_toggle;
-              notifications.showSuccess(resp.data.message);
-            },
-            function(err){
-              notifications.showError(err.data);
-            }
-          );
-        };
       }
     };
   });
