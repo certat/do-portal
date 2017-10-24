@@ -14,26 +14,6 @@
       </div>
     </div>
   </uib-tab>
-  <uib-tab heading="API Key">
-    <div class="panel panel-default panel-tab">
-      <div class="panel-body"><p>
-        <pre><b>{{ account.api_key }}</b></pre>
-        </p><p>Using the API key: </p>
-        <p>
-        <pre>$ curl -H "Content-Type: application/json" -H "Accept: application/json" \<br>-H "API-Authorization: {{ account.api_key }}" \<br>"https://cp.cert.europa.eu/api/1.0/organizations"
-        </pre>
-        </p>
-        <p>Alternatively you can login using your credentials and pass the cookie to subsequest requests:</p>
-        <pre>$ curl -v -H "Accept: application/json" -H "Content-Type:
-        application/json" -X POST \<br>"https://cp.cert.europa.eu/auth/login" -d '{"email": "user@domain.tld", "password": "qkQhJwh6DvCuc0A"}'</pre>
-        <pre>$ curl -v -H "Accept: application/json" -H "Content-Type: application/json" -H "Cookie: rm=.eJwNzsEKwjAMANB_GTuKNE3TNJ704Mm7COIh6RIUnRP3_6DvC951WJfZ97M-Xtu-zMNm-Nhzirxb70qQd5ASjP19-srhgsfz2M0mNorutbqHqapnTkTCtWM3ghRJJwM3J5MQKCCGRWpEZcgQudbiSmhJwhuqkQc0AQRKHFNWwdKDW8tNTaETFyzEJBgM-g_CcPsBdHAzng.CTS4pA.7XllCsBFv7q0GyNiMG6W4BrQAa0xvvMBY1dF1YZ1SCQ" -X GET "https://cp.cert.europa.eu/api/1.0/organizations"
-</pre>
-      </div>
-      <div class="panel-footer">
-        <button class="btn btn-default" ng-click="resetAPIKey()">Reset key</button>
-      </div>
-    </div>
-  </uib-tab>
   <uib-tab heading="Password">
     <div class="panel panel-default panel-tab">
       <div class="panel-body">
@@ -69,78 +49,4 @@
       </div>
     </div>
   </uib-tab>
-  <uib-tab heading="2FA">
-    <div class="panel panel-default panel-tab">
-      <div class="panel-body">
-        <hr>
-        <div class="row show-grid">
-          <div class="col-xs-2"><label>2FA status</label></div>
-          <div class="col-xs-4">
-            <button class="btn btn-danger" ng-show="!account.otp_enabled">DISABLED</button>
-            <button class="btn btn-success" ng-show="!!account.otp_enabled">ENABLED</button>
-          </div>
-        </div>
-        <hr>
-        <div>
-          <div class="row show-grid">
-            <div class="col-xs-2"><label>Enable 2FA</label></div>
-            <div class="col-xs-4">
-              <ui-switch ng-model="account.otp_toggle"></ui-switch>
-            </div>
-          </div>
-          <div class="row show-grid" ng-show="!!account.otp_toggle">
-            <div class="col-xs-2"><label>Scan QRCode</label></div>
-            <div class="col-xs-4"><img id="qrcode" ng-src="{{authUrl}}/2fa-qrcode"></div>
-          </div>
-          <div class="row show-grid" ng-show="!!account.otp_toggle">
-            <div class="col-xs-2"><label>Authentication code</label></div>
-            <div class="col-xs-2">
-              <input type="number" class="form-control input-sm"
-                     placeholder="Enter the 6-digit code" ng-model="account.totp">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="panel-footer">
-        <button class="btn btn-default" ng-click="toggle2FA()">Save</button>
-      </div>
-    </div>
-  </uib-tab>
 </uib-tabset>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
