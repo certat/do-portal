@@ -16,6 +16,8 @@ angular.module('cpApp')
         scope.credentials = {};
         Auth.getAccountInfo().then(function(resp){
           scope.account = resp.data;
+          // dont show API key in 'My Account > Details'
+          delete scope.account.api_key;
           scope.account.otp_toggle = scope.account.otp_enabled;
         });
         scope.changePassword = function(){
