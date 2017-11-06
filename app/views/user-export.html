@@ -9,8 +9,8 @@
   <div class="panel-body">
     <div class="row show-grid">
       <div class="col-xs-offset-8 col-xs-4">
-        <select watch-model convert-to-number positive-integer class="form-control input-sm" ng-model="membership_role_id">
-          <option ng-repeat="role in roles" value="{{role.id}}">{{role.display_name}}</option>
+        <select watch-model convert-to-number positive-integer class="form-control input-sm" ng-init="membership_role_id=0" ng-model="membership_role_id">
+          <option ng-repeat="role in export_types" value="{{role.id}}">{{role.display_name}}</option>
         </select>
       </div>
     </div>
@@ -19,14 +19,10 @@
 
     <div ng-show="!text">
       <div class="row show-grid">
-        <div class="col-md-2"><strong>name</strong></div>
-        <div class="col-md-2"><strong>organization</strong></div>
-        <div class="col-md-2"><strong>email</strong></div>
-        <div class="col-md-2"><strong>phone</strong></div>
-        <div class="col-md-2"><strong>mobile</strong></div>
+        <div ng-repeat="header in filtered_memberships_headers" class="col-md-1"><strong>{{header}}</strong></div>
       </div>
       <div ng-repeat="membership in filtered_memberships" class="row show-grid">
-        <div class="col-md-2" ng-repeat="field in membership track by $index">{{field}}</div>
+        <div class="col-md-1" ng-repeat="field in membership track by $index">{{field}}</div>
       </div>
     </div>
 
