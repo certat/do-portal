@@ -277,7 +277,7 @@ angular
           }
         }
       });
-    $urlRouterProvider.otherwise('/organization_list');
+    $urlRouterProvider.otherwise('/login');
   })
   .config(['notificationsConfigProvider', function(notificationsConfigProvider) {
     // auto hide
