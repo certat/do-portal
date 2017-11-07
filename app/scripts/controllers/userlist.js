@@ -124,10 +124,6 @@ angular.module('cpApp')
               $scope.roles         = result.shift();
               $scope.organizations = _array2hash(result.shift());
 
-              // populates the dropdown list in user_export
-              $scope.export_types = angular.copy($scope.roles);
-              $scope.export_types.push({ display_name: 'all', id: '0' });
-
               $scope.memberships.forEach(function(m) {
                 var u = $scope.users[m.user_id];
                 if (!u.hasOwnProperty('memberships')) {
@@ -144,6 +140,11 @@ angular.module('cpApp')
               Object.keys($scope.users).forEach(function(id){
                 $scope.users[id].organizations = $scope.users[id].organizations.join(', ');
               });
+
+              // populates the dropdown list in user_export
+              $scope.export_types = angular.copy($scope.roles);
+              $scope.export_types.push({ display_name: 'all', id: '0' });
+              $scope.membership_role_id = 0;
             }
         );
     };
