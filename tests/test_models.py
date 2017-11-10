@@ -81,6 +81,8 @@ def test_create_user():
     assert admin.may_handle_organization(certorg) is False, \
         'verbund admin may not handle cert org'
     assert admin.may_handle_organization(org) is True
+
+
     role = MembershipRole.query.filter_by(name='CISO').first()
     with pytest.raises(AttributeError):
         oxu = OrganizationMembership(
@@ -112,6 +114,11 @@ def test_create_user():
     assert oxu.id > 0, 'OrganizationMembership written'
     assert len(admin.get_users()) == 4, 'Verbund Admin now has 4 users'
     App.user = newuser
+
+def test_create_user_with_duplicate_email():
+    newuser = User(name=App.username)
+    with pytest.raises(AttributeError):
+         newuser.email = 'test@bla.com'
 
 
 def test_login():
