@@ -284,7 +284,7 @@ angular
     notificationsConfigProvider.setAutoHide(true);
 
     // delay before hide
-    notificationsConfigProvider.setHideDelay(1000);
+    notificationsConfigProvider.setHideDelay(3000);
 
     // support HTML
     notificationsConfigProvider.setAcceptHTML(false);
@@ -293,7 +293,7 @@ angular
     notificationsConfigProvider.setAutoHideAnimation('fadeOutNotifications');
 
     // delay between animation and removing the nofitication
-    notificationsConfigProvider.setAutoHideAnimationDelay(1000);
+    notificationsConfigProvider.setAutoHideAnimationDelay(1200);
   }])
   .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     //cfpLoadingBarProvider.includeSpinner = true;
