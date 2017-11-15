@@ -32,7 +32,7 @@ angular.module('cpApp')
     $scope.lost_password = function () {
       Auth.lost_password({email: $scope.email})
                 .then(function(resp){
-                    notifications.showSuccess(resp);
+                    notifications.showSuccess(resp.data.message);
                   }, function(err){
                     notifications.showError(err.data.message);
                   });
