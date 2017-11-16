@@ -162,7 +162,7 @@ def addsampledata():
     db.session.commit()
 
     user = User(name='testadmin', email='testadmin@domain.tld',
-                password='changeme', role=adm)
+                password='11charRngem%', role=adm)
     db.session.add(user)
     db.session.commit()
     click.echo('Done')

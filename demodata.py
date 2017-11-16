@@ -56,7 +56,7 @@ def add():
     cert_user = User(
         name = "cert master user",
     )
-    cert_user.password = 'bla'
+    cert_user.password = 'iAasdas588'
     db.session.add(cert_user)
 
     cert_user4cert = OrganizationMembership(
@@ -82,7 +82,7 @@ def add():
     evn_user = User(
         name = "evn master user"
     )
-    evn_user.password = 'bla'
+    evn_user.password = 'iAasdas588'
 
     OrganizationMembership(
         email = 'master@evn.at',
@@ -101,7 +101,7 @@ def add():
     evn_strom_user = User(
         name = "evn strom user",
     )
-    evn_strom_user.password = 'bla'
+    evn_strom_user.password = 'iAasdas588'
     db.session.add(evn_strom_user)
 
     evnstrom_orguser = OrganizationMembership(
