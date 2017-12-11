@@ -72,43 +72,43 @@ def add():
     click.echo('Done User id: ' + str(cert_user.id))
     click.echo('adding sub org')
 
-    evn = Organization(
-        abbreviation="EVN",
-        full_name="EVN Dach",
+    eorg = Organization(
+        abbreviation="E-Org",
+        full_name="E-Org Dach",
         parent_org = cert
     )
-    # db.session.add(evn)
+    # db.session.add(eorg)
 
-    evn_user = User(
-        name = "evn master user"
+    eorg_user = User(
+        name = "eorg master user"
     )
-    evn_user.password = 'iAasdas588'
+    eorg_user.password = 'iAasdas588'
 
     OrganizationMembership(
-        email = 'master@evn.at',
+        email = 'master@eorg.at',
         zip = '5678',
-        organization = evn,
-        user = evn_user
+        organization = eorg,
+        user = eorg_user
     )
 
-    evn_strom = Organization(
-        abbreviation="EVN Strom",
-        full_name="EVN Strom",
-        parent_org = evn
+    eorg_electricity = Organization(
+        abbreviation="E-Org Strom",
+        full_name="E-Org Strom",
+        parent_org = eorg
     )
-    db.session.add(evn_strom)
+    db.session.add(eorg_electricity)
 
-    evn_strom_user = User(
-        name = "evn strom user",
+    eorg_electricity_user = User(
+        name = "eorg electricity user",
     )
-    evn_strom_user.password = 'iAasdas588'
-    db.session.add(evn_strom_user)
+    eorg_electricity_user.password = 'iAasdas588'
+    db.session.add(eorg_electricity_user)
 
-    evnstrom_orguser = OrganizationMembership(
-        email = 'strom@evn.at',
+    eorgelectricity_orguser = OrganizationMembership(
+        email = 'electricity@eorg.at',
         zip = '5678',
-        organization = evn_strom,
-        user = evn_strom_user
+        organization = eorg_electricity,
+        user = eorg_electricity_user
     )
     db.session.commit()
 
@@ -144,7 +144,7 @@ def print():
    #click.echo(u.org_ids)
 
    click.echo('**** organization_memberships ******')
-   oms = User.query.filter_by(name = 'Verbund Admin').first().get_organization_memberships()
+   oms = User.query.filter_by(name = 'EnergyOrg Admin').first().get_organization_memberships()
    if (oms):
      for oxu in oms:
        click.echo('%s %s %s' %
@@ -160,14 +160,14 @@ def print():
        i += 1
 
    click.echo('**** permission checks ******')
-   evn_user = User.query.filter_by(name = 'EVN User').first()
-   evnmaster = User.query.filter_by(name = 'evnmaster').first()
-   click.echo("evnmaster for EVN %s \nEVN for evnmaster %s" %
-        (evnmaster.may_handle_user(evn_user), evn_user.may_handle_user(evnmaster)))
-   click.echo("cert for EVN %s \nEVN for cert %s" %
-        (u.may_handle_user(evn_user), evn_user.may_handle_user(u)))
-   click.echo("cert for evnmaster %s \nevnmaster for cert %s" %
-        (u.may_handle_user(evnmaster), evnmaster.may_handle_user(u)))
+   eorg_user = User.query.filter_by(name = 'E-Org User').first()
+   eorgmaster = User.query.filter_by(name = 'eorgmaster').first()
+   click.echo("eorgmaster for E-Org %s \nE-Org for eorgmaster %s" %
+        (eorgmaster.may_handle_user(eorg_user), eorg_user.may_handle_user(eorgmaster)))
+   click.echo("cert for E-Org %s \nE-Org for cert %s" %
+        (u.may_handle_user(eorg_user), eorg_user.may_handle_user(u)))
+   click.echo("cert for eorgmaster %s \neorgmaster for cert %s" %
+        (u.may_handle_user(eorgmaster), eorgmaster.may_handle_user(u)))
 
 
    click.echo('**** user.get_userss ******')
@@ -175,8 +175,8 @@ def print():
    for user in users:
       click.echo("%s" % (user.name))
 
-   click.echo('**** user.get_users(evnmaster) ******')
-   users = evnmaster.get_users()
+   click.echo('**** user.get_users(eorgmaster) ******')
+   users = eorgmaster.get_users()
    for user in users:
       click.echo("%s" % (user.name))
 

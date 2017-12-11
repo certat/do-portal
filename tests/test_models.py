@@ -12,7 +12,7 @@ class App:
     def user(self):
         return self.__user
 
-    username = 'Testuser under Verbund Admin'
+    username = 'Testuser under EnergyOrg Admin'
 
 
 def test_countries_inserted():
@@ -58,7 +58,7 @@ def test_create_user():
     + try to
     """
 
-    admin = User.query.filter_by(name="Verbund Admin").first()
+    admin = User.query.filter_by(name="EnergyOrg Admin").first()
     assert len(admin.user_memberships) == 1
     org = admin.get_organizations().first()
 
@@ -79,7 +79,7 @@ def test_create_user():
     db.session.commit()
     assert newuser.id > 0
     assert admin.may_handle_organization(certorg) is False, \
-        'verbund admin may not handle cert org'
+        'energyorg admin may not handle cert org'
     assert admin.may_handle_organization(org) is True
 
 
@@ -112,7 +112,7 @@ def test_create_user():
     )
     db.session.commit()
     assert oxu.id > 0, 'OrganizationMembership written'
-    assert len(admin.get_users()) == 4, 'Verbund Admin now has 4 users'
+    assert len(admin.get_users()) == 4, 'EnergyOrg Admin now has 4 users'
     App.user = newuser
 
 def test_create_user_with_duplicate_email():
@@ -122,32 +122,32 @@ def test_create_user_with_duplicate_email():
 
 
 def test_login():
-    # verbundciso is not allowed to login
-    (verbundciso, auth) = User.authenticate('cisouser@verbund.at', 'bla')
+    # energyorgciso is not allowed to login
+    (energyorgciso, auth) = User.authenticate('cisouser@energyorg.at', 'bla')
     assert auth is False
 
-    (admin, auth) = User.authenticate('admin@verbund.at', 'blaBla12$')
+    (admin, auth) = User.authenticate('admin@energyorg.at', 'blaBla12$')
     assert auth is True
 
-    new_password = User.reset_password_send_email('admin@verbund.at')
-    (admin, auth) = User.authenticate('admin@verbund.at', new_password)
+    new_password = User.reset_password_send_email('admin@energyorg.at')
+    (admin, auth) = User.authenticate('admin@energyorg.at', new_password)
     assert auth is True
 
     new_password2 = 'B12blibli%'
     admin.password = new_password2
-    (admin, auth) = User.authenticate('admin@verbund.at', new_password2)
+    (admin, auth) = User.authenticate('admin@energyorg.at', new_password2)
     assert auth is True
 
-    # admin@verbund has 4 contacts via organization_memberships
+    # admin@energyorg has 4 contacts via organization_memberships
     assert admin.get_organization_memberships().count() == 4
 
     # full_names =
     #     list(map(lambda org: org.full_name, admin.get_organizations()))
     full_names = [org.full_name for org in admin.get_organizations()]
     full_names.sort()
-    assert full_names == ['verbund', 'verbund-gas',
-                          'verbund-strom', 'verbund-strom-leitung'],\
-        'correct list of orgs for verbund'
+    assert full_names == ['energyorg', 'energyorg-electricity',\
+                          'energyorg-electricity-transmission', 'energyorg-gas'], \
+        'correct list of orgs for energyorg'
 
 
 def test_delete_membership():
@@ -183,8 +183,8 @@ def test_delete_user():
     assert App.user.deleted == 1
     assert App.user.ts_deleted
     db.session.commit()
-    admin = User.query.filter_by(name="Verbund Admin").first()
-    assert len(admin.get_users()) == 3, 'Verbund Admin now has 3 users'
+    admin = User.query.filter_by(name="EnergyOrg Admin").first()
+    assert len(admin.get_users()) == 3, 'EnergyOrg Admin now has 3 users'
     i = 0
     for um in App.user.user_memberships:
         i += 1
@@ -196,10 +196,10 @@ def test_delete_user():
 
 # https://domainis.univie.ac.at/mantis/view.php?id=4071
 def test_read_org_with_more_admins():
-    admin = User.query.filter_by(name="EVN Gas Admin").first()
+    admin = User.query.filter_by(name="E-Org Gas Admin").first()
     # oms4user = admin.get_organization_memberships()
     # Organization.query.get_or_404(org_id)
     orgs = admin.get_organizations()
     assert [o.full_name for o in orgs] == \
-        ['evn-gas', 'evn-strom'], 'correct orgs'
+        ['eorg-electricity', 'eorg-gas'], 'correct orgs'
     assert len([o.id for o in orgs]) == 2, 'OrgAdmin for 2 orgs'

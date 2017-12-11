@@ -127,7 +127,7 @@ class testdata:
       #print(u.org_ids)
 
       print('**** organization_memberships ******')
-      oms = User.query.filter_by(name = 'Verbund Admin').first().get_organization_memberships()
+      oms = User.query.filter_by(name = 'EnergyOrg Admin').first().get_organization_memberships()
       if (oms):
         for oxu in oms:
           print('%s %s %s' %
@@ -142,14 +142,14 @@ class testdata:
           i += 1
 
       print('**** permission checks ******')
-      evn_user = User.query.filter_by(name = 'EVN User').first()
-      evnmaster = User.query.filter_by(name = 'evnmaster').first()
-      print("evnmaster for EVN %s \nEVN for evnmaster %s" %
-           (evnmaster.may_handle_user(evn_user), evn_user.may_handle_user(evnmaster)))
-      print("cert for EVN %s \nEVN for cert %s" %
-           (u.may_handle_user(evn_user), evn_user.may_handle_user(u)))
-      print("cert for evnmaster %s \nevnmaster for cert %s" %
-           (u.may_handle_user(evnmaster), evnmaster.may_handle_user(u)))
+      eorg_user = User.query.filter_by(name = 'E-Org User').first()
+      eorgmaster = User.query.filter_by(name = 'eorgmaster').first()
+      print("eorgmaster for E-Org %s \nE-Org for eorgmaster %s" %
+           (eorgmaster.may_handle_user(eorg_user), eorg_user.may_handle_user(eorgmaster)))
+      print("cert for E-Org %s \nE-Org for cert %s" %
+           (u.may_handle_user(eorg_user), eorg_user.may_handle_user(u)))
+      print("cert for eorgmaster %s \neorgmaster for cert %s" %
+           (u.may_handle_user(eorgmaster), eorgmaster.may_handle_user(u)))
 
 
       print('**** user.get_userss ******')
@@ -157,8 +157,8 @@ class testdata:
       for user in users:
          print("%s" % (user.name))
 
-      print('**** user.get_users(evnmaster) ******')
-      users = evnmaster.get_users()
+      print('**** user.get_users(eorgmaster) ******')
+      users = eorgmaster.get_users()
       for user in users:
          print("%s" % (user.name))
 

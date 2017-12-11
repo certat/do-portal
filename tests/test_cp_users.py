@@ -52,39 +52,39 @@ def test_return_certmaster_orgs(client):
     assert_msg(rv, key='organizations')
     got = list(rv.json.values())
     got_abbreviations = [i['abbreviation'] for i in got[0]]
-    expect_abbreviations = ['cert', 'evn', 'evn-gas', 'evn-strom',
-                            'verbund', 'verbund-gas', 'verbund-strom',
-                            'verbund-strom-leitung']
+    expect_abbreviations = ['cert', 'eorg', 'eorg-gas', 'eorg-electricity',
+                            'energyorg', 'energyorg-gas', 'energyorg-electricity',
+                            'energyorg-electricity-transmission']
     assert set(got_abbreviations) == set(expect_abbreviations)
 
 
-def test_return_verbund_admin_orgs(client):
-    client.api_user = find_user_by_name('Verbund Admin')
+def test_return_energyorg_admin_orgs(client):
+    client.api_user = find_user_by_name('EnergyOrg Admin')
     rv = client.get(url_for('cp.get_cp_organizations'))
     assert_msg(rv, key='organizations')
     got = list(rv.json.values())
     got_abbreviations = [i['abbreviation'] for i in got[0]]
-    expect_abbreviations = ['verbund', 'verbund-gas', 'verbund-strom',
-                            'verbund-strom-leitung']
+    expect_abbreviations = ['energyorg', 'energyorg-gas', 'energyorg-electricity',
+                            'energyorg-electricity-transmission']
     assert set(got_abbreviations) == set(expect_abbreviations)
 
 
-def test_return_verbund_ciso_orgs(client):
-    client.api_user = find_user_by_name('Verbund CISO')
+def test_return_energyorg_ciso_orgs(client):
+    client.api_user = find_user_by_name('EnergyOrg CISO')
     rv = client.get(url_for('cp.get_cp_organizations'))
     assert rv.status_code == 200
     assert len(rv.json['organizations']) == 0, 'no organizations'
 
 
 def test_delete_self_fails(client):
-    client.api_user = find_user_by_name('Verbund CISO')
+    client.api_user = find_user_by_name('EnergyOrg CISO')
     rv = client.delete(
         url_for('cp.delete_cp_user', user_id=client.api_user.id))
     assert rv.status_code == 403
 
 
 def test_delete_user_higher_up_fails(client):
-    client.api_user = find_user_by_name('Verbund CISO')
+    client.api_user = find_user_by_name('EnergyOrg CISO')
     certmaster_user = find_user_by_name('certmaster')
     rv = client.delete(
         url_for('cp.delete_cp_user', user_id=certmaster_user.id))
@@ -93,14 +93,14 @@ def test_delete_user_higher_up_fails(client):
 
 def test_delete_managed_user_works(client):
     client.api_user = find_user_by_name('certmaster')
-    verbund_ciso_user = find_user_by_name('Verbund CISO')
+    energyorg_ciso_user = find_user_by_name('EnergyOrg CISO')
 
     rv = client.get(url_for('cp.get_cp_organization_memberships'))
     got = list(rv.json.values())
     membership_ids_before = [i['id'] for i in got[0]]
 
     rv = client.delete(
-        url_for('cp.delete_cp_user', user_id=verbund_ciso_user.id))
+        url_for('cp.delete_cp_user', user_id=energyorg_ciso_user.id))
     assert rv.status_code == 200
 
     rv = client.get(url_for('cp.get_cp_organization_memberships'))
