@@ -5,6 +5,7 @@ import binascii
 import hashlib
 import random
 import csv
+import yaml
 from urllib.error import HTTPError
 from mailmanclient import MailmanConnectionError, Client
 import onetimepass
@@ -1267,25 +1268,26 @@ class MembershipRole(Model, SerializerMixin):
 
     @staticmethod
     def __insert_defaults():
-        roles = [
-          ['Primary contact',               'Ansprechpartner Primaer'],
-          ['OrgAdmin',                      'Administrator Organisation'],
-          ['Proxy contact',                 'Ansprechpartner Stellvertreter'],
-          ['SinglePointOfContact',          'Single Point of Contact (SPoC)'],
-          ['24/7',                          '24/7'],
-          ['Crisis squad',                  'Krisenstab'],
-          ['ContactICSSecurityTechnical',   'ICS Security Technik'],
-          ['ContactICSSecurityOrganisation','ICS Security Organisation'],
-          ['ContactITSecurityTechnical',    'IT Security Technik'],
-          ['ContactITSecurityOrganisation', 'IT Security Organisation'],
-          ['tech-c',                        'Domain Technical Contact (tech-c)'],
-          ['abuse-c',                       'Domain Abuse Contact (abuse-c)'],
-          ['billing-c',                     'Domain Billing Kontakt (billing-c)'],
-          ['admin-c',                       'Domain Administativer Kontakt (admin-c)'],
-          ['CISO',                          'CISO'],
-          ['private',                       'Privat'],
-          ['aecSMSalerting',                'AEC SMS Alarmierung'],
+        # this role has to exist
+        roles = [['OrgAdmin', 'Administrator Organisation']]
+        default_roles = [
+           ['tech-c', 'Domain Technical Contact (tech-c)'],
+           ['abuse-c', 'Domain Abuse Contact (abuse-c)'],
+           ['billing-c', 'Domain Billing Contact (billing-c)'],
+           ['admin-c', 'Domain Administrative Contact (admin-c)'],
+           ['CISO', 'CISO'],
+           ['private', 'Private'],
         ]
+
+        try:
+            stream = open('install/roles.yaml')
+            data_loaded = yaml.load(stream)
+            for role in data_loaded:
+                roles.append([role['name'], role['display_name']])
+        except IOError:
+            for role in default_roles:
+                roles.append(role)
+
         for r in roles:
             role = MembershipRole.query.filter_by(name=r[0]).first()
 
