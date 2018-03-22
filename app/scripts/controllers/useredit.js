@@ -32,13 +32,13 @@ angular.module('cpApp')
       }
     };
   })
-  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Country, Membership, Auth, GridData, notifications, $stateParams, $state, $q, FileReader, uibDateParser) {
+  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Country, Membership, Auth, GridData, notifications, $stateParams, $state, $q, FileReader) {
 
     var loadUser = function() {
       if (!$stateParams.id) { return {}; }
       return User.query({'id': $stateParams.id}).$promise
                 .then(function(resp){
-                    if (resp.birthdate) { resp.birthdate = new Date(resp.birthdate) }
+                    if (resp.birthdate) { resp.birthdate = new Date(resp.birthdate); }
                     return resp;
                   }, function(err){
                     notifications.showError(err.data.message);
@@ -114,7 +114,7 @@ angular.module('cpApp')
 
       // sms alert mobile validation
       if (m.sms_alerting && !m.mobile) {
-        notifications.showError("mobile number is required if SMS Alerting is activated.");
+        notifications.showError('mobile number is required if SMS Alerting is activated.');
         return;
       }
 
@@ -141,7 +141,7 @@ angular.module('cpApp')
       var data = { user: $scope.user, organization_membership: $scope.memberships[0] };
       User.create({}, data, function(resp){
         $state.go('user_edit', {id: resp.user.id});
-        notifications.showSuccess("User created.");
+        notifications.showSuccess('User created.');
       }, function(error){
         notifications.showError(error.data);
       });
@@ -158,7 +158,7 @@ angular.module('cpApp')
     };
 
     $scope.delete_user = function(){
-      if( window.confirm("Do you really want to delete this user?") ) {
+      if( window.confirm('Do you really want to delete this user?') ) {
         User.delete({'id':$scope.user.id}, function(resp){
           $state.go('user_list');
           notifications.showSuccess(resp);
@@ -169,7 +169,7 @@ angular.module('cpApp')
     };
 
     $scope.delete_membership = function(m_id, index){
-      if( window.confirm("Do you really want to delete this membership?") ) {
+      if( window.confirm('Do you really want to delete this membership?') ) {
 
         if (!m_id) {
           $scope.memberships.splice(index, 1);
@@ -178,10 +178,10 @@ angular.module('cpApp')
           // only delete if at least one membership exists on the server
           var count = 0;
           $scope.memberships.forEach(function(m) {
-            if (m.id) { count++ }
+            if (m.id) { count++; }
           });
           if (count < 2) {
-            notifications.showError("Cannot delete membership. A user needs at least 1 membership!");
+            notifications.showError('Cannot delete membership. A user needs at least 1 membership!');
             return;
           }
 
@@ -197,9 +197,9 @@ angular.module('cpApp')
       }
     };
 
-    $scope.add_membership = function(){ $scope.memberships.push({ user_id: $scope.user.id }) };
+    $scope.add_membership = function(){ $scope.memberships.push({ user_id: $scope.user.id }); };
 
-    loadParallel().catch( function(err) { notifications.showError(err) });
+    loadParallel().catch( function(err) { notifications.showError(err); });
 
     // adds an inputfile to the membership.
     // example: <input type="file" cp-file-select data-key="smime">
@@ -225,7 +225,7 @@ angular.module('cpApp')
     };
 
     $scope.deleteFile = function(obj, key) {
-      if (window.confirm("Do you really want to delete this file?")) {
+      if (window.confirm('Do you really want to delete this file?')) {
         obj[key]             = '';
         obj[key+'_filename'] = '';
       }
@@ -237,7 +237,7 @@ angular.module('cpApp')
         showWeeks: false,
       },
       popup: { opened: false },
-      open: function() { $scope.birthdate.popup.opened = true }
+      open: function() { $scope.birthdate.popup.opened = true; }
     };
 
   });

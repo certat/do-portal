@@ -86,8 +86,8 @@ angular.module('cpApp')
             .then( function( result ) {
               $scope.users    = _array2hash(result.shift());
               $scope.roles    = _array2hash(result.shift());
-              var memberships = result.shift().filter(function(m){return m.organization_id == $stateParams.id});
-              memberships.forEach(function(m){ m.country = m.country ? m.country.name : '' });
+              var memberships = result.shift().filter(function(m){return m.organization_id === $stateParams.id;});
+              memberships.forEach(function(m){ m.country = m.country ? m.country.name : ''; });
               $scope.memberships = memberships;
 
               $scope.org = result.shift();
@@ -106,7 +106,7 @@ angular.module('cpApp')
     }
 
     if ($stateParams.id) {
-      loadParallel().catch( function(err) { notifications.showError(err) });
+      loadParallel().catch( function(err) { notifications.showError(err); });
     }
     else {
       $scope.org = {};
@@ -121,7 +121,7 @@ angular.module('cpApp')
     $scope.create_organization = function(){
       Organization.create({}, $scope.org, function(resp){
         $state.go('organizations', {id: resp.organization.id});
-        notifications.showSuccess("Organization created.");
+        notifications.showSuccess('Organization created.');
       }, function(error){
         notifications.showError(error.data);
       });
@@ -136,7 +136,7 @@ angular.module('cpApp')
     };
 
     $scope.delete_organization = function(){
-      if( window.confirm("Do you really want to delete this organization?") ) {
+      if( window.confirm('Do you really want to delete this organization?') ) {
         Organization.delete({'id':$scope.org.id}, function(resp){
           $state.go('organization_list');
           notifications.showSuccess(resp);

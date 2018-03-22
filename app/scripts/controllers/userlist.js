@@ -68,13 +68,13 @@ angular.module('cpApp')
                   );
                 });
               });
-            };
+            }
             return memberships;
           }
 
           scope.filtered_memberships_headers = scope.get_filtered_membership_headers();
           scope.filtered_memberships = filter_memberships(v);
-        })
+        });
       }
     };
   })
@@ -164,7 +164,7 @@ angular.module('cpApp')
     };
 
     $scope.arr2text = function(arr) {
-      if (!arr) return '';
+      if (!arr) { return ''; }
       var res = '';
       arr.forEach(function(i) {
         res = res + i.join() + '\n';

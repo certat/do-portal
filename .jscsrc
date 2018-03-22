@@ -1,5 +1,4 @@
 {
-  "requireCamelCaseOrUpperCaseIdentifiers": "ignoreProperties",
   "requireCapitalizedConstructors": true,
   "requireParenthesesAroundIIFE": true,
   "validateQuoteMarks": {"mark": "'", "escape": true}
