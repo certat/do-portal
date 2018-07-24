@@ -18,7 +18,14 @@ angular.module('cpApp')
           $state.go('organization_list');
         }
       }, function(err){
-        notifications.showError(err.data.message);
+        var msg = 'error';
+        if (err.data && err.data.message) {
+            msg = err.data.message;
+        }
+        else if ( err.xhrStatus && err.xhrStatus === 'error' ) {
+            msg = 'ajax error';
+        }
+        notifications.showError(msg);
       });
     };
     $scope.verifyTOTP = function(){

@@ -27,12 +27,7 @@ angular.module('cpApp')
     return {
       login: function (credentials) {
         return $http.post(config.apiConfig.authUrl + '/login', credentials)
-          .then(cacheSession, function(err){
-            return err;
-          })
-          .catch(function(exc){
-            console.log(exc);
-          });
+          .then(cacheSession);
       },
       logout: function () {
         return $http.get(config.apiConfig.authUrl + '/logout')
