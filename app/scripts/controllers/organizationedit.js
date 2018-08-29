@@ -72,7 +72,7 @@ angular.module('cpApp')
             .then( function( result ) {
               $scope.users    = _array2hash(result.shift());
               $scope.roles    = _array2hash(result.shift());
-              var memberships = result.shift().filter(function(m){return m.organization_id === $stateParams.id;});
+              var memberships = result.shift().filter(function(m){return m.organization_id === parseInt($stateParams.id);});
               memberships.forEach(function(m){ m.country = m.country ? m.country.name : ''; });
               $scope.memberships = memberships;
 
