@@ -133,32 +133,6 @@ angular
           }
         }
       })
-      .state('vulnerabilities', {
-        url: '/vulnerabilities',
-        views: {
-          header: {
-            templateUrl: 'views/header.html',
-            controller: 'HeaderCtrl'
-          },
-          content: {
-            templateUrl: 'views/vulnerabilities.html',
-            controller: 'VulnerabilitiesCtrl'
-          }
-        }
-      })
-      .state('typosquats', {
-        url: '/typosquats',
-        views: {
-          header: {
-            templateUrl: 'views/header.html',
-            controller: 'HeaderCtrl'
-          },
-          content: {
-            templateUrl: 'views/typosquats.html',
-            controller: 'TyposquatsCtrl'
-          }
-        }
-      })
       .state('account', {
         url: '/account',
         views: {
@@ -168,71 +142,6 @@ angular
           },
           content: {
             template: '<cp-my-account></cp-my-account>'
-          }
-        }
-      })
-      .state('deliverables', {
-        url: '/deliverables',
-        views: {
-          header: {
-            templateUrl: 'views/header.html',
-            controller: 'HeaderCtrl'
-          },
-          content: {
-            templateUrl: 'views/deliverables.html',
-            controller: 'DeliverablesCtrl'
-          }
-        }
-      })
-      .state('samples', {
-        url: '/samples',
-        views: {
-          header: {
-            templateUrl: 'views/header.html',
-            controller: 'HeaderCtrl'
-          },
-          content: {
-            templateUrl: 'views/samples.html',
-            controller: 'SamplesCtrl'
-          }
-        }
-      })
-      .state('sample-submit', {
-        url: '/samples/submit',
-        views: {
-          header: {
-            templateUrl: 'views/header.html',
-            controller: 'HeaderCtrl'
-          },
-          content: {
-            templateUrl: 'views/sample-submit.html',
-            controller: 'SamplesSubmitCtrl'
-          }
-        }
-      })
-      .state('url-submit', {
-        url: '/samples/submit-url',
-        views: {
-          header: {
-            templateUrl: 'views/header.html',
-            controller: 'HeaderCtrl'
-          },
-          content: {
-            templateUrl: 'views/url-submit.html',
-            controller: 'URLsSubmitCtrl'
-          }
-        }
-      })
-      .state('nessus-scan', {
-        url: '/scans/nessus',
-        views: {
-          header: {
-            templateUrl: 'views/header.html',
-            controller: 'HeaderCtrl'
-          },
-          content: {
-            templateUrl: 'views/nessus.html',
-            controller: 'NessusCtrl'
           }
         }
       })
@@ -261,19 +170,6 @@ angular
           content: {
             templateUrl: 'views/multiav-all-reports.html',
             controller: 'MultiAVAllReportsController'
-          }
-        }
-      })
-      .state('investigation', {
-        url: '/investigation/:room',
-        views: {
-          header: {
-            templateUrl: 'views/header.html',
-            controller: 'HeaderCtrl'
-          },
-          content: {
-            templateUrl: 'views/investigation.html',
-            controller: 'InvestigationCtrl'
           }
         }
       });
