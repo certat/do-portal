@@ -26,14 +26,21 @@ angular.module('cpApp')
         return $q.reject(rejection);
       },
       'responseError': function(rejection){
-        if(rejection.status === 401){
-          if(rejection.data.validator === 'signature'){
-            //$cookies.remove('rm');
-          }
-          $location.path('/login');
-          notifications.showError('Please log in to continue');
-          return $q.reject(rejection);
+        if (rejection.data && rejection.data.message) {
+            notifications.showError(rejection.data.message);
         }
+        else if (rejection.statusText) {
+            notifications.showError(rejection.statusText);
+        }
+        else {
+            //console.log(rejection);
+            notifications.showError('Unknown Response Error');
+        }
+
+        if(rejection.status === 401){
+          $location.path('/login');
+        }
+
         return $q.reject(rejection);
       }
     };

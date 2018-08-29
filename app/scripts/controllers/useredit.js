@@ -40,27 +40,21 @@ angular.module('cpApp')
                 .then(function(resp){
                     if (resp.birthdate) { resp.birthdate = new Date(resp.birthdate); }
                     return resp;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadRoles = function(){
       return Membership.roles().$promise
                 .then(function(resp){
                     return resp.membership_roles;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadOrgs = function(){
       return Organization.query_list().$promise
                 .then(function(resp){
                     return resp.organizations;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadMemberships = function(){
@@ -68,18 +62,14 @@ angular.module('cpApp')
       return User.memberships({'id': $stateParams.id}).$promise
                 .then(function(resp){
                     return resp.memberships;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadCountries = function(){
       return Country.query_list().$promise
                 .then(function(resp){
                     return resp.countries;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadParallel = function() {
@@ -122,17 +112,13 @@ angular.module('cpApp')
         emptyToNull(m);
         Membership.update({'id':m.id}, m, function(resp) {
           notifications.showSuccess(resp);
-        }, function(error){
-          notifications.showError(error.data);
-        });
+        }, function(){});
       }
       else {
         Membership.create({}, m, function(resp) {
           m.id = resp.organization_membership.id;
           notifications.showSuccess(resp);
-        }, function(error){
-          notifications.showError(error.data);
-        });
+        }, function(){});
       }
     };
 
@@ -142,9 +128,7 @@ angular.module('cpApp')
       User.create({}, data, function(resp){
         $state.go('user_edit', {id: resp.user.id});
         notifications.showSuccess('User created.');
-      }, function(error){
-        notifications.showError(error.data);
-      });
+      }, function(){});
     };
 
     $scope.update_user = function(){
@@ -152,9 +136,7 @@ angular.module('cpApp')
       _handle_upload_field(u,'picture');
       User.update({'id':u.id}, u, function(resp){
         notifications.showSuccess(resp);
-      }, function(error){
-        notifications.showError(error.data);
-      });
+      }, function(){});
     };
 
     $scope.delete_user = function(){
@@ -162,9 +144,7 @@ angular.module('cpApp')
         User.delete({'id':$scope.user.id}, function(resp){
           $state.go('user_list');
           notifications.showSuccess(resp);
-        }, function(error){
-          notifications.showError(error.data);
-        });
+        }, function(){});
       }
     };
 
@@ -189,9 +169,7 @@ angular.module('cpApp')
               function(resp){
                 notifications.showSuccess(resp);
                 $scope.memberships.splice(index, 1);
-              }, function(error){
-                notifications.showError(error.data);
-              });
+              }, function(){});
 
         }
       }
@@ -199,7 +177,7 @@ angular.module('cpApp')
 
     $scope.add_membership = function(){ $scope.memberships.push({ user_id: $scope.user.id }); };
 
-    loadParallel().catch( function(err) { notifications.showError(err); });
+    loadParallel();
 
     // adds an inputfile to the membership.
     // example: <input type="file" cp-file-select data-key="smime">

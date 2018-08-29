@@ -84,36 +84,28 @@ angular.module('cpApp')
       return User.query_list().$promise
                 .then(function(resp){
                     return resp.users;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadMemberships = function(){
       return Membership.query().$promise
                 .then(function(resp){
                     return resp.organization_memberships;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadRoles = function(){
       return Membership.roles().$promise
                 .then(function(resp){
                     return resp.membership_roles;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadOrganizations = function(){
       return Organization.query_list().$promise
                 .then(function(resp){
                     return resp.organizations;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadParallel = function() {

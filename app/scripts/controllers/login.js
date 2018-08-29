@@ -17,22 +17,11 @@ angular.module('cpApp')
         }else{
           $state.go('organization_list');
         }
-      }, function(err){
-        var msg = 'error';
-        if (err.data && err.data.message) {
-            msg = err.data.message;
-        }
-        else if ( err.xhrStatus && err.xhrStatus === 'error' ) {
-            msg = 'ajax error';
-        }
-        notifications.showError(msg);
-      });
+      }, function(){});
     };
     $scope.verifyTOTP = function(){
       Auth.post($scope.credentials, 'verify-totp').then(function(){
         $state.go('organization_list');
-      }, function(err){
-        notifications.showError(err.data.message);
       });
     };
 
@@ -40,8 +29,6 @@ angular.module('cpApp')
       Auth.lost_password({email: $scope.email})
                 .then(function(resp){
                     notifications.showSuccess(resp.data.message);
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
   });

@@ -38,27 +38,21 @@ angular.module('cpApp')
       return User.query_list().$promise
                 .then(function(resp){
                     return resp.users;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadRoles = function(){
       return Membership.roles().$promise
                 .then(function(resp){
                     return resp.membership_roles;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadMemberships = function(){
       return Membership.query().$promise
                 .then(function(resp){
                     return resp.organization_memberships;
-                  }, function(err){
-                    notifications.showError(err.data.message);
-                  });
+                  }, function(){});
     };
 
     var loadOrganization = function(org_id) {
@@ -71,9 +65,7 @@ angular.module('cpApp')
                     });
                 });
                 return resp;
-            }, function(err){
-              notifications.showError(err.data.message);
-            });
+            }, function(){});
     };
 
     function _array2hash(arr) {
@@ -106,33 +98,26 @@ angular.module('cpApp')
     }
 
     if ($stateParams.id) {
-      loadParallel().catch( function(err) { notifications.showError(err); });
+      loadParallel();
     }
     else {
       $scope.org = {};
       Organization.query_list().$promise.then(function(resp){
         $scope.orgs = resp.organizations;
-      }, function(err){
-        console.log(err);
-        notifications.showError(err.data.message);
-      });
+      }, function(){});
     }
 
     $scope.create_organization = function(){
       Organization.create({}, $scope.org, function(resp){
         $state.go('organizations', {id: resp.organization.id});
         notifications.showSuccess('Organization created.');
-      }, function(error){
-        notifications.showError(error.data);
-      });
+      }, function(){});
     };
 
     $scope.update_organization = function(){
       Organization.update({'id':$scope.org.id}, $scope.org, function(resp){
         notifications.showSuccess(resp);
-      }, function(error){
-        notifications.showError(error.data);
-      });
+      }, function(){});
     };
 
     $scope.delete_organization = function(){
@@ -140,9 +125,7 @@ angular.module('cpApp')
         Organization.delete({'id':$scope.org.id}, function(resp){
           $state.go('organization_list');
           notifications.showSuccess(resp);
-        }, function(error){
-          notifications.showError(error.data);
-        });
+        }, function(){});
       }
     };
   });
