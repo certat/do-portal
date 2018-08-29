@@ -126,23 +126,28 @@ def delete():
 @cli.command()
 def print():
    """output sample data"""
+   # u = User.query.filter_by(name="Rich burgendlaender").first()
    u = User.query.filter_by(name="certmaster").first()
    click.echo(u.name + str(u.id))
+   '''
    for uo in u.user_memberships:
        click.echo(uo.email)
        click.echo(uo)
        click.echo(uo.organization.full_name)
        for co in uo.organization.child_organizations:
           click.echo(co.full_name)
+   '''
 
    click.echo('**** organization_memberships ******')
    for oxu in u.get_organization_memberships():
+       click.echo('%s %s' % (oxu.email, oxu.organization.full_name))
+       orgs = oxu.organization.child_orgs
+       for o in orgs:
+           click.echo(' from child org: %s %s' % (o.id, o.full_name))
 
-       click.echo('%s %s' %
-           (oxu.email, oxu.organization.full_name))
 
    #click.echo(u.org_ids)
-
+'''
    click.echo('**** organization_memberships ******')
    oms = User.query.filter_by(name = 'EnergyOrg Admin').first().get_organization_memberships()
    if (oms):
@@ -179,7 +184,7 @@ def print():
    users = eorgmaster.get_users()
    for user in users:
       click.echo("%s" % (user.name))
-
+'''
 
 if __name__ == '__main__':
     cli()

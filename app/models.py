@@ -10,7 +10,8 @@ from urllib.error import HTTPError
 from mailmanclient import MailmanConnectionError, Client
 import onetimepass
 from app import db, login_manager, config
-from sqlalchemy import desc, event
+from sqlalchemy import desc, event, text
+from sqlalchemy.orm import aliased
 from sqlalchemy.dialects import postgres
 from flask_sqlalchemy import BaseQuery
 from flask import current_app, request
@@ -25,6 +26,7 @@ from validate_email import validate_email
 from app.utils.mail import send_email
 import phonenumbers
 import time
+from pprint import pprint
 
 #: we don't have an app context yet,
 #: we need to load the configuration from the config module
@@ -451,6 +453,16 @@ class User(UserMixin, Model, SerializerMixin):
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
 
+    _role_cache = {}
+    def get_role_by_name(self, role_name):
+        if role_name in self._role_cache:
+            return self._role_cache[role_name]
+        else:
+            role = MembershipRole.query.filter_by(name = role_name).first()
+            self._role_cache[role_name] = role
+            return role
+
+
     def may_handle_user(self, user):
         """checks if the user object it is called on
            (which MUST be an OrgAdmin)
@@ -480,14 +492,36 @@ class User(UserMixin, Model, SerializerMixin):
             return True
         return False
 
+    _tree_cache = {};
 
     def _org_tree_iterator(self, org_id):
+        if org_id in self._tree_cache:
+           self._tree_cache[org_id] += 1
+        else:
+           self._tree_cache[org_id] = 1
+
         sub_orgs = Organization.query.filter_by(parent_org_id = org_id)
         for sub_org in sub_orgs:
            # print(sub_org.full_name + str(sub_org.id))
            self._orgs.append(sub_org.organization_memberships)
            self._org_ids.append(sub_org.id)
            self._org_tree_iterator(sub_org.id)
+
+
+    def _org_tree(self, org_id):
+        results = db.engine.execute(
+                text("""with recursive sub_orgs as (select id, abbreviation, full_name, display_name, deleted, parent_org_id from organizations
+                   where id = :b_parent_org_id
+                   union
+                   select o.id, o.abbreviation, o.full_name, o.display_name, o.deleted, o.parent_org_id from organizations o
+                   join sub_orgs s ON s.id = o.parent_org_id)
+                   select * from sub_orgs
+                """), {'b_parent_org_id': org_id});
+
+        for row in results:
+            self._org_ids.append(row[0])
+
+
 
     def get_organization_memberships(self):
         """ returns a list of OrganizationMembership records"""
@@ -496,7 +530,7 @@ class User(UserMixin, Model, SerializerMixin):
             in the org tree """
         # Or = self.user_memberships.membership_role.filter(MembershipRole.name == 'OrgAdmin' )
         # there must be a better way to write this
-        admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
+        admin_role = self.get_role_by_name('OrgAdmin')
         # orgs_admin = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).first() #.filter(MembershipRole.name == 'OrgAdmin' )
 #        orgs_admin = OrganizationMembership.query.filter(OrganizationMembership.use = self, membership_role_id = admin_role.id).first()
 
@@ -511,9 +545,17 @@ class User(UserMixin, Model, SerializerMixin):
 
         # find all orgs where the org.id is the parent_org_id recursivly
         #  for org in orgs_admin:
+        ### old implementation ####
         for oa in orgs_admins:
-            self._org_tree_iterator(oa.organization_id)
+           # self._org_tree_iterator(oa.organization_id)
+           self._org_tree(oa.organization_id)
+        ### end old ###
+        # orgs_list = [org.organization.child_orgs for org in orgs_admins]
+        # org_ids = []
+        # for org in orgs_admins:
+        #   org_ids.extend( [o.id  for o in org.organization.child_orgs] )
         return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids))
+        # return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(org_ids))
 
     def get_organizations(self):
         """returns a list of Organization records"""
@@ -791,6 +833,11 @@ class Organization(Model, SerializerMixin):
     parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     child_organizations = db.relationship('Organization')
     parent_org = db.relationship('Organization', remote_side=[id])
+    child_orgs = db.relationship('Organization',
+            # backref=db.backref('parent', remote_side=[id])
+            lazy="joined",
+            join_depth=5
+            )
 
     organization_memberships = db.relationship(
         'OrganizationMembership',
