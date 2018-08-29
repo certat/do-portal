@@ -58,12 +58,6 @@ angular.module('cpApp')
     var loadOrganization = function(org_id) {
       return Organization.query({'id': org_id}).$promise
             .then(function(resp){
-                $scope.fuzzed = [];
-                angular.forEach(resp.fqdns, function(val){
-                    GridData('fqdns').query({'id': val}, function(resp){
-                        $scope.fuzzed[val] = resp.typosquats;
-                    });
-                });
                 return resp;
             }, function(){});
     };
