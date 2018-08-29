@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name cpApp.controller:UsereditctrlCtrl
+ * @name cpApp.controller:UsereditCtrl
  * @description
- * # UsereditctrlCtrl
+ * # UsereditCtrl
  * Controller of the cpApp
  */
 angular.module('cpApp')

@@ -1,23 +1,23 @@
 'use strict';
 
-describe('Controller: OrganizationeditctrlCtrl', function () {
+describe('Controller: OrganizationeditCtrl', function () {
 
   // load the controller's module
   beforeEach(module('cpApp'));
 
-  var OrganizationeditctrlCtrl,
+  var OrganizationeditCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    OrganizationeditctrlCtrl = $controller('OrganizationeditctrlCtrl', {
+    OrganizationeditCtrl = $controller('OrganizationeditCtrl', {
       $scope: scope
       // place here mocked dependencies
     });
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    //expect(OrganizationeditctrlCtrl.awesomeThings.length).toBe(3);
+    //expect(OrganizationeditCtrl.awesomeThings.length).toBe(3);
   });
 });

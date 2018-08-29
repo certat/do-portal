@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name cpApp.controller:OrganizationeditctrlCtrl
+ * @name cpApp.controller:OrganizationeditCtrl
  * @description
- * # OrganizationeditctrlCtrl
+ * # OrganizationeditCtrl
  * Controller of the cpApp
  */
 angular.module('cpApp')

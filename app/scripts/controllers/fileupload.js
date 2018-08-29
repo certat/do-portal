@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name cpApp.controller:FileuploadctrlCtrl
+ * @name cpApp.controller:FileuploadCtrl
  * @description
- * # FileuploadctrlCtrl
+ * # FileuploadCtrl
  * Controller of the cpApp
  */
 angular.module('cpApp')

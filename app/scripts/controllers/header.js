@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name cpApp.controller:HeaderctrlCtrl
+ * @name cpApp.controller:HeaderCtrl
  * @description
- * # HeaderctrlCtrl
+ * # HeaderCtrl
  * Controller of the cpApp
  */
 angular.module('cpApp')

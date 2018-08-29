@@ -1,23 +1,23 @@
 'use strict';
 
-describe('Controller: PasswdctrlCtrl', function () {
+describe('Controller: PasswdCtrl', function () {
 
   // load the controller's module
   beforeEach(module('cpApp'));
 
-  var PasswdctrlCtrl,
+  var PasswdCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    PasswdctrlCtrl = $controller('PasswdctrlCtrl', {
+    PasswdCtrl = $controller('PasswdCtrl', {
       $scope: scope
       // place here mocked dependencies
     });
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    //expect(PasswdctrlCtrl.awesomeThings.length).toBe(3);
+    //expect(PasswdCtrl.awesomeThings.length).toBe(3);
   });
 });
