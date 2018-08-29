@@ -14,7 +14,8 @@ angular.module('cpApp')
       link: function postLink(scope) {
         scope.authUrl = config.apiConfig.authUrl;
         scope.credentials = {};
-        Auth.getAccountInfo().then(function(resp){
+
+        Auth.get('account').then(function(resp){
           scope.account = resp.data;
           // dont show API key in 'My Account > Details'
           delete scope.account.api_key;
