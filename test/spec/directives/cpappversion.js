@@ -15,6 +15,6 @@ describe('Directive: cpAppVersion', function () {
   it('should make hidden element visible', inject(function ($compile) {
     element = angular.element('<cp-app-version></cp-app-version>');
     element = $compile(element)(scope);
-    expect(element.text()).toBe('0.4.0');
+    expect(element.text()).toMatch(/\d+\.\d+\.\d+/);
   }));
 });
