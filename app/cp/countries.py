@@ -1,5 +1,6 @@
 from flask import g, request
 from flask_jsonschema import validate
+from app.core import ApiResponse
 from app import db
 from app.models import Country
 from app.api.decorators import json_response
@@ -7,7 +8,6 @@ from . import cp
 
 
 @cp.route('/countries', methods=['GET'])
-@json_response
 def get_cp_countries():
     """Return countries
 
@@ -70,11 +70,10 @@ def get_cp_countries():
         SHOULD NOT be repeated.
     """
     countries = Country.query.all()
-    return {'countries': [c.serialize() for c in countries]}
+    return ApiResponse({'countries': [c.serialize() for c in countries]})
 
 
 @cp.route('/countries/<int:country_id>', methods=['GET'])
-@json_response
 def get_cp_country(country_id):
     """Return country identified by ``country_id``
 
@@ -120,4 +119,4 @@ def get_cp_country(country_id):
         SHOULD NOT be repeated.
     """
     c = Country.query.get_or_404(country_id)
-    return c.serialize()
+    return ApiResponse(c.serialize())

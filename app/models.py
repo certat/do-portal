@@ -26,7 +26,7 @@ from validate_email import validate_email
 from app.utils.mail import send_email
 import phonenumbers
 import time
-from pprint import pprint
+# from pprint import pprint
 
 #: we don't have an app context yet,
 #: we need to load the configuration from the config module
@@ -549,13 +549,7 @@ class User(UserMixin, Model, SerializerMixin):
         for oa in orgs_admins:
            # self._org_tree_iterator(oa.organization_id)
            self._org_tree(oa.organization_id)
-        ### end old ###
-        # orgs_list = [org.organization.child_orgs for org in orgs_admins]
-        # org_ids = []
-        # for org in orgs_admins:
-        #   org_ids.extend( [o.id  for o in org.organization.child_orgs] )
         return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids))
-        # return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(org_ids))
 
     def get_organizations(self):
         """returns a list of Organization records"""
@@ -1498,18 +1492,18 @@ def load_token(token):
     # server side and not rely on the users cookie to exipre.
 
     max_age = current_app.config['REMEMBER_COOKIE_DURATION'].total_seconds()
-    print("*****",  max_age)
+    # print("*****",  max_age)
     # Decrypt the Security Token, data = [username, hashpass, id]
     s = URLSafeTimedSerializer(
         current_app.config['SECRET_KEY'],
         salt='user-auth',
         signer_kwargs=dict(key_derivation='hmac',
                            digest_method=hashlib.sha256))
-    from pprint import pprint
+    # from pprint import pprint
     try:
         (data, timestamp) = s.loads(token, max_age=max_age, return_timestamp=True)
-        pprint(data)
-        pprint(timestamp)
+        # pprint(data)
+        # pprint(timestamp)
     except (BadTimeSignature, SignatureExpired):
         return None
 

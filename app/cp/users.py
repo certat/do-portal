@@ -1,5 +1,6 @@
 from flask import g, request, abort, url_for
 from flask_jsonschema import validate
+from app.core import ApiResponse
 from app import db
 from app.models import User, OrganizationMembership, Organization, MembershipRole
 from app.api.decorators import json_response
@@ -7,7 +8,6 @@ from . import cp
 
 
 @cp.route('/users', methods=['GET'])
-@json_response
 def get_cp_users():
     """Return current_user's users
 
@@ -70,11 +70,10 @@ def get_cp_users():
         SHOULD NOT be repeated.
     """
     users = g.user.get_users()
-    return {'users': [u.serialize() for u in users]}
+    return ApiResponse({'users': [u.serialize() for u in users]})
 
 
 @cp.route('/users/<int:user_id>', methods=['GET'])
-@json_response
 def get_cp_user(user_id):
     """Return user identified by ``user_id``
 
@@ -132,10 +131,9 @@ def get_cp_user(user_id):
     user = User.query.get_or_404(user_id)
     if not g.user.may_handle_user(user):
         abort(403)
-    return user.serialize()
+    return ApiResponse(user.serialize())
 
 @cp.route('/users/<int:user_id>/memberships', methods=['GET'])
-@json_response
 def get_cp_users_memberships(user_id):
     """Return user identified by ``user_id``
 
@@ -228,7 +226,7 @@ def get_cp_users_memberships(user_id):
     if not g.user.may_handle_user(user):
         abort(403)
     memberships = user.get_memberships()
-    return {'memberships': [m.serialize() for m in memberships]}
+    return ApiResponse({'memberships': [m.serialize() for m in memberships]})
 
 
 @cp.route('/users', methods=['POST'])

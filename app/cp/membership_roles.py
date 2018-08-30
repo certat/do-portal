@@ -1,5 +1,6 @@
 from flask import g, request
 from flask_jsonschema import validate
+from app.core import ApiResponse
 from app import db
 from app.models import MembershipRole
 from app.api.decorators import json_response
@@ -7,7 +8,6 @@ from . import cp
 
 
 @cp.route('/membership_roles', methods=['GET'])
-@json_response
 def get_cp_membership_roles():
     """Return membership roles
 
@@ -70,11 +70,10 @@ def get_cp_membership_roles():
         SHOULD NOT be repeated.
     """
     roles = MembershipRole.query.all()
-    return {'membership_roles': [r.serialize() for r in roles]}
+    return ApiResponse({'membership_roles': [r.serialize() for r in roles]})
 
 
 @cp.route('/membership_roles/<int:role_id>', methods=['GET'])
-@json_response
 def get_cp_membership_role(role_id):
     """Return membership role identified by ``role_id``
 
@@ -120,4 +119,4 @@ def get_cp_membership_role(role_id):
         SHOULD NOT be repeated.
     """
     r = MembershipRole.query.get_or_404(role_id)
-    return r.serialize()
+    return ApiResponse(r.serialize())

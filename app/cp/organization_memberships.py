@@ -1,5 +1,6 @@
 from flask import g, request, abort, url_for
 from flask_jsonschema import validate
+from app.core import ApiResponse
 from app import db
 from app.models import OrganizationMembership, Organization, User
 from app.api.decorators import json_response
@@ -7,7 +8,6 @@ from . import cp
 
 
 @cp.route('/organization_memberships', methods=['GET'])
-@json_response
 def get_cp_organization_memberships():
     """Return current_user's organization memberships
 
@@ -75,13 +75,10 @@ def get_cp_organization_memberships():
         SHOULD NOT be repeated.
     """
     memberships = g.user.get_organization_memberships()
-    # memberships = [ m for m in memberships if m.deleted != 1 ]
-    return {'organization_memberships': [m.serialize(exclude=('coc', 'pgp_key', 'smime')) for m in memberships]}
-    # return {'organization_memberships': [m.serialize() for m in memberships]}
+    return ApiResponse({'organization_memberships': [m.serialize(exclude=('coc', 'pgp_key', 'smime')) for m in memberships]})
 
 
 @cp.route('/organization_memberships/<int:membership_id>', methods=['GET'])
-@json_response
 def get_cp_organization_membership(membership_id):
     """Return organization membership identified by ``membership_id``
 
@@ -152,7 +149,7 @@ def get_cp_organization_membership(membership_id):
     """
     membership = OrganizationMembership.query.get_or_404(membership_id)
     check_membership_permissions(membership)
-    return membership.serialize()
+    return ApiResponse(membership.serialize())
 
 @cp.route('/organization_memberships', methods=['POST'])
 @validate('organization_memberships', 'add_cp_organization_membership')
