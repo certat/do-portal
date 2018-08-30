@@ -571,9 +571,12 @@ class User(UserMixin, Model, SerializerMixin):
                 ud[om.user.id] = 1
         return users
 
-    def get_memberships(self):
+    def get_memberships(self, membership_id = None):
         """returns all memeberships for user"""
-        return self.user_memberships
+        if membership_id:
+            return self.user_memberships_dyn.filter_by(id = membership_id).first()
+        else:
+            return self.user_memberships
 
 class Permission:
     """Permissions pseudo-model. Uses 8 bits to assign permissions.
