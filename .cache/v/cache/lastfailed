@@ -1,1 +1,5 @@
-{}
+{
+  "tests/test_cp_organizations.py::test_delete_org": true,
+  "tests/test_cp_organizations.py::test_return_orgs": true,
+  "tests/test_cp_organizations.py::test_update_org": true
+}

@@ -193,6 +193,8 @@ def get_cp_organization(org_id):
         SHOULD NOT be repeated.
     """
     o = Organization.query.get_or_404(org_id)
+    if not g.user.may_handle_organization(o):
+        abort(403)
     return ApiResponse(o.serialize())
 
 
