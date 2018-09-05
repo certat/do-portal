@@ -208,6 +208,17 @@ angular.module('cpApp')
         obj[key+'_filename'] = '';
       }
     };
+    $scope.downloadFile = function(m, key, ev) {
+        // update membership object with more details
+        if(!m[key]) {
+            ev.stopPropagation();
+            User.membership({'id':$scope.user.id, mid:m.id}, function(resp) {
+                m[key] = resp[key];
+                ev.target.href = m[key];
+                ev.target.click();
+            }, function(){});
+        }
+    };
 
     $scope.birthdate = {
       options: {

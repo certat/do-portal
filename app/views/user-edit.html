@@ -215,12 +215,12 @@
       <div class="row show-grid">
         <div class="col-xs-2">S/MIME</div>
         <div class="col-xs-10">
-          <div ng-hide="m.smime">
+          <div ng-hide="m.smime_filename">
             <input type="file" data-key="smime" class="form-control" cp-file-select>
           </div>
-          <div ng-show="m.smime">
+          <div ng-show="m.smime_filename">
             <a class="btn btn-sm btn-default" ng-click="deleteFile(m,'smime')" title="Delete S/MIME">Delete</button>
-            <a class="btn btn-sm btn-default" href="{{m.smime}}" download="{{m.smime_filename}}">Download </a>
+            <a class="btn btn-sm btn-default" ng-click="downloadFile(m, 'smime', $event)" download="{{m.smime_filename}}">Download </a>
             {{m.smime_filename}}
           </div>
         </div>
@@ -229,12 +229,12 @@
       <div class="row show-grid">
         <div class="col-xs-2">Code of Conduct</div>
         <div class="col-xs-10">
-          <div ng-hide="m.coc">
+          <div ng-hide="m.coc_filename">
             <input type="file" data-key="coc" class="form-control" cp-file-select>
           </div>
-          <div ng-show="m.coc">
+          <div ng-show="m.coc_filename">
             <a class="btn btn-sm btn-default" ng-click="deleteFile(m,'coc')" title="Delete Code of Conduct">Delete</button>
-            <a class="btn btn-sm btn-default" href="{{m.coc}}" download="{{m.coc_filename}}">Download </a>
+            <a class="btn btn-sm btn-default" ng-click="downloadFile(m, 'coc', $event)" download="{{m.coc_filename}}">Download </a>
             {{m.coc_filename}}
           </div>
         </div>

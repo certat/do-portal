@@ -43,5 +43,11 @@ angular.module('cpApp')
         isArray: false,
         withCredentials: true
       },
+      membership: {
+        url: config.apiConfig.webServiceUrl+'/users/:id/memberships/:mid',
+        method: 'GET',
+        isArray: false,
+        withCredentials: true
+      },
     });
   });
