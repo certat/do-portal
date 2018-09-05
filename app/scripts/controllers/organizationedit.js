@@ -77,12 +77,6 @@ angular.module('cpApp')
               $scope.memberships = memberships;
 
               $scope.org = result.shift();
-              if ($scope.org.parent_org_id) {
-                loadOrganization($scope.org.parent_org_id)
-                  .then(function(resp) {
-                    $scope.parent_org = resp;
-                  });
-              }
             }
         );
     };

@@ -8,9 +8,8 @@
   </div>
 
   <div class="panel-body">
-    <div>Parent Organization Abbreviation: {{parent_org.abbreviation}}</div>
-    <div>Abbreviation: {{org.abbreviation}}</div>
     <div>Name: {{org.full_name}}</div>
+    <div>Abbreviation: {{org.abbreviation}}</div>
   </div>
 </div>
 
@@ -22,12 +21,6 @@
 
   <div class="panel-body">
 
-    <div ng-show="parent_org" class="row show-grid">
-      <div class="col-xs-2">Parent Organization</div>
-      <div class="col-xs-10">
-        <input disabled type="text" class="form-control input-sm" ng-model="parent_org.abbreviation">
-      </div>
-    </div>
     <div ng-hide="org.id" class="row show-grid">
       <div class="col-xs-2">Parent Organization *</div>
       <div class="col-xs-10">
