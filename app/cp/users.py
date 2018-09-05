@@ -226,8 +226,7 @@ def get_cp_users_memberships(user_id):
     if not g.user.may_handle_user(user):
         abort(403)
     memberships = user.get_memberships()
-    ## XXX only activate with frontend changes ### return ApiResponse({'memberships': [m.serialize(exclude=('coc', 'pgp_key', 'smime')) for m in memberships]})
-    return ApiResponse({'memberships': [m.serialize() for m in memberships]})
+    return ApiResponse({'memberships': [m.serialize(exclude=('coc', 'smime')) for m in memberships]})
 
 
 @cp.route('/users/<int:user_id>/memberships/<int:membership_id>', methods=['GET'])
