@@ -75,6 +75,7 @@ def get_cp_organization_memberships():
         SHOULD NOT be repeated.
     """
     memberships = g.user.get_organization_memberships()
+    memberships = [ m for m in memberships if m.deleted != 1 ]
     return ApiResponse({'organization_memberships': [m.serialize(exclude=('coc', 'pgp_key', 'smime')) for m in memberships]})
 
 

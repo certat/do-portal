@@ -535,7 +535,8 @@ class User(UserMixin, Model, SerializerMixin):
 #        orgs_admin = OrganizationMembership.query.filter(OrganizationMembership.use = self, membership_role_id = admin_role.id).first()
 
 
-        orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).all()
+#        orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).all()
+        orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id, deleted = 0).all()
 
         if (not orgs_admins):
            return []
@@ -549,7 +550,7 @@ class User(UserMixin, Model, SerializerMixin):
         for oa in orgs_admins:
            # self._org_tree_iterator(oa.organization_id)
            self._org_tree(oa.organization_id)
-        return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids))
+        return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids)).filter(OrganizationMembership.deleted == 0)
 
     def get_organizations(self):
         """returns a list of Organization records"""
@@ -574,9 +575,9 @@ class User(UserMixin, Model, SerializerMixin):
     def get_memberships(self, membership_id = None):
         """returns all memeberships for user"""
         if membership_id:
-            return self.user_memberships_dyn.filter_by(id = membership_id).first()
+            return self.user_memberships_dyn.filter_by(id = membership_id, deleted = 0).first()
         else:
-            return self.user_memberships
+            return self.user_memberships_dyn.filter_by(deleted = 0)
 
 class Permission:
     """Permissions pseudo-model. Uses 8 bits to assign permissions.
