@@ -236,7 +236,7 @@ def get_cp_users_memberships_by_id(user_id, membership_id):
     user = User.query.get_or_404(user_id)
     if not g.user.may_handle_user(user):
         abort(403)
-    membership = user.get_memberships(membership_id)
+    memberships = user.get_memberships(membership_id)
     return ApiResponse(memberships)
 
 
