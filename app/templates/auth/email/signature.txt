@@ -1,0 +1,7 @@
+--
+// Austrian Energy CERT - https://www.energy-cert.at/
+// T: +43 1 5056416 92
+// Eine Initiative of the Austrian
+// electricity and gas industry and
+// nic.at GmbH, commercial register number 172568b, LG Salzburg
+
