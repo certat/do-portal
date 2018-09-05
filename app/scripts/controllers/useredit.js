@@ -209,16 +209,27 @@ angular.module('cpApp')
       }
     };
     $scope.downloadFile = function(m, key, ev) {
-        // update membership object with more details
+        ev.stopPropagation();
         if(!m[key]) {
-            ev.stopPropagation();
             User.membership({'id':$scope.user.id, mid:m.id}, function(resp) {
                 m[key] = resp[key];
-                ev.target.href = m[key];
-                ev.target.click();
+                startDownload(m[key], m[key+'_filename']);
             }, function(){});
         }
+        else {
+            startDownload(m[key], m[key+'_filename']);
+        }
     };
+    function startDownload(href, filename) {
+        var dl = document.createElement('a');
+        dl.setAttribute('href', href);
+        dl.setAttribute('download', filename);
+        dl.setAttribute('visibility', 'hidden');
+        dl.setAttribute('display', 'none');
+        // Append to page, wont work in FF otherwise
+        document.body.appendChild(dl);
+        dl.click();
+    }
 
     $scope.birthdate = {
       options: {
