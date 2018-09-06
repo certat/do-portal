@@ -14,6 +14,11 @@ function _array2hash(arr) {
     arr.forEach(function(i) { hash[i.id] = i; });
     return hash;
 }
+function _hash2array(hash, sortkey) {
+    return Object.values(hash).sort(
+        function(a,b){return a[sortkey].toUpperCase() > b[sortkey].toUpperCase();}
+    );
+}
 
 angular.module('cpApp')
   // if the dropdown value of membership-role-id in user-export
@@ -131,10 +136,10 @@ angular.module('cpApp')
               });
 
               //flattening
-              $scope.users = Object.values($scope.users);
+              $scope.users = _hash2array($scope.users, 'name');
               $scope.users.forEach(function(u) {
                   if (u.hasOwnProperty('organizations')) {
-                    u.organizations = Object.values(u.organizations);
+                    u.organizations = _hash2array(u.organizations, 'full_name');
                   }
               });
               // END flattening
