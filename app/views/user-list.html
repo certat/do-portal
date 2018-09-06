@@ -14,9 +14,7 @@
     <tbody>
       <tr ng-repeat="user in users">
         <td><a class="btn btn-small btn-default" ui-sref="user_edit({id: user.id})">Edit</a></td>
-        <td>
-          <label>{{user.name}}</label>
-        </td>
+        <td>{{user.name}}</td>
         <td>
          <div ng-repeat="o in user.organizations">
            <a ui-sref="organizations({id: o.id})">{{o.full_name}}</a>
