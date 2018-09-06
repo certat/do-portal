@@ -16,7 +16,8 @@ function _array2hash(arr) {
 }
 
 angular.module('cpApp')
-  // helps with watching the value in the view scope
+  // if the dropdown value of membership-role-id in user-export
+  // changes the displayed values in the table change aswell
   .directive('watchModel', function() {
     return {
       require: 'ngModel',
@@ -126,12 +127,10 @@ angular.module('cpApp')
                 if (!u.hasOwnProperty('organizations')) {
                   u.organizations = [];
                 }
-                u.organizations.push($scope.organizations[m.organization_id].full_name);
+                u.organizations.push($scope.organizations[m.organization_id]);
               });
 
-              Object.keys($scope.users).forEach(function(id){
-                $scope.users[id].organizations = $scope.users[id].organizations.join(', ');
-              });
+              $scope.users = Object.values($scope.users); // flattening
 
               // populates the dropdown list in user_export
               $scope.export_types = angular.copy($scope.roles);

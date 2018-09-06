@@ -14,7 +14,9 @@
           <label>{{user.name}}</label>
         </div>
         <div class="col-xs-8">
-          <span>{{user.organizations}}</span>
+          <div ng-repeat="o in user.organizations">
+            <a ui-sref="organizations({id: o.id})">{{o.full_name}}</a>
+          </div>
         </div>
       </div>
     </div>
