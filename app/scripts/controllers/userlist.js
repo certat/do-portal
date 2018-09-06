@@ -127,10 +127,17 @@ angular.module('cpApp')
                 if (!u.hasOwnProperty('organizations')) {
                   u.organizations = [];
                 }
-                u.organizations.push($scope.organizations[m.organization_id]);
+                u.organizations[m.organization_id] = $scope.organizations[m.organization_id];
               });
 
-              $scope.users = Object.values($scope.users); // flattening
+              //flattening
+              $scope.users = Object.values($scope.users);
+              $scope.users.forEach(function(u) {
+                  if (u.hasOwnProperty('organizations')) {
+                    u.organizations = Object.values(u.organizations);
+                  }
+              });
+              // END flattening
 
               // populates the dropdown list in user_export
               $scope.export_types = angular.copy($scope.roles);
