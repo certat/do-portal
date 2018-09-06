@@ -3,23 +3,28 @@
     <h3 class="panel-title">Contacts</h3>
   </div>
   <div class="panel-body">
-    <div ng-repeat="user in users">
-      <div class="row show-grid">
-        <div class="col-xs-1">
-          <a class="btn btn-small btn-default" ui-sref="user_edit({id: user.id})">
-            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-          </a>
-        </div>
-        <div class="col-xs-3">
+    <table class="display table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+      <th>Edit</th>
+      <th>Contact</th>
+      <th>Organizations</th>
+      <tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="user in users">
+        <td><a class="btn btn-small btn-default" ui-sref="user_edit({id: user.id})">Edit</a></td>
+        <td>
           <label>{{user.name}}</label>
-        </div>
-        <div class="col-xs-8">
-          <div ng-repeat="o in user.organizations">
-            <a ui-sref="organizations({id: o.id})">{{o.full_name}}</a>
+        </td>
+        <td>
+         <div ng-repeat="o in user.organizations">
+           <a ui-sref="organizations({id: o.id})">{{o.full_name}}</a>
           </div>
-        </div>
-      </div>
-    </div>
+        </td>
+      </tr>
+    </tbody>
+    </table>
   </div>
   <div class="panel-footer">
     <a class="btn btn-small btn-default" ui-sref="user_create">
