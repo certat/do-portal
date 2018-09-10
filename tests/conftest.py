@@ -74,7 +74,6 @@ def db(request, app):
     TestClient.test_user.organization_id = Organization.query.filter_by(abbreviation='cert').first().id
     app.test_client_class = TestClient
     app.response_class = TestResponse
-
     _db.session.commit()
 
 
@@ -82,7 +81,7 @@ def db(request, app):
 def session(request, monkeypatch):
     """Prevent the session from closing"""
     # Roll back at the end of every test
-    request.addfinalizer(_db.session.remove)
+    # request.addfinalizer(_db.session.remove)
 
     # Prevent the session from closing (make it a no-op) and
     # committing (redirect to flush() instead)
