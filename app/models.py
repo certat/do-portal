@@ -278,12 +278,14 @@ class User(UserMixin, Model, SerializerMixin):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
+        '''
         if self.email in current_app.config['ADMINS']:
             self.role = Role.query.filter_by(permissions=0xff).first()
         if self.role is None:
             self.role = Role.query.filter_by(default=True).first()
         if self.id is None:
             self.otp_secret = base64.b32encode(os.urandom(10)).decode('utf-8')
+        '''
 
     def get_totp_uri(self):
         return 'otpauth://totp/{0}?secret={1}&issuer=CERT-EU' \
@@ -714,6 +716,7 @@ class ContactEmail(Model, SerializerMixin):
         'Organization',
         backref=db.backref(
             'contact_emails',
+            lazy='joined',
             cascade='all, delete-orphan'
         )
     )
@@ -849,6 +852,7 @@ class Organization(Model, SerializerMixin):
     )
     ip_ranges_ = db.relationship(
         'IpRange',
+        lazy='joined',
         cascade='all, delete-orphan',
         primaryjoin="and_(IpRange.organization_id == Organization.id, "
                     "IpRange.deleted == 0)",
@@ -860,6 +864,7 @@ class Organization(Model, SerializerMixin):
     )
     abuse_emails_ = db.relationship(
         "Email", secondary=lambda: emails_organizations,
+        lazy='joined',
         secondaryjoin=db.and_(
             Email.id == emails_organizations.c.email_id,
             Email.deleted == 0)
@@ -876,6 +881,7 @@ class Organization(Model, SerializerMixin):
 
     asns_ = db.relationship(
         'Asn',
+        lazy='joined',
         cascade='all, delete-orphan',
         primaryjoin="and_(Asn.organization_id == Organization.id,"
                     "Asn.deleted == 0)"
@@ -885,7 +891,10 @@ class Organization(Model, SerializerMixin):
         'asn',
         creator=lambda asn: Asn(asn=asn)
     )
-    fqdns_ = db.relationship('Fqdn', cascade='all, delete-orphan')
+    fqdns_ = db.relationship('Fqdn',
+        lazy='joined',
+        cascade='all, delete-orphan')
+
     fqdns = association_proxy(
         'fqdns_',
         'fqdn',
