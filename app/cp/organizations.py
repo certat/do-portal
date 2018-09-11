@@ -5,7 +5,6 @@ from app import db
 from app.models import Organization, Permission, ContactEmail, Email
 from app.api.decorators import permission_required
 # from app.models import Organization, ContactEmail, Email
-from app.api.decorators import json_response
 from . import cp
 
 
@@ -14,7 +13,6 @@ from . import cp
 def get_cp_organizations():
     """Return current_user's organization
 ## obviously a new method to check permissions and create a json_response
-## @json_response
 ## def get_cp_organizations():
 ## >>>>>>> topic-postgres
 
@@ -103,7 +101,6 @@ def get_cp_organizations():
 
 
 @cp.route('/organizations/<int:org_id>', methods=['GET'])
-# @json_response
 def get_cp_organization(org_id):
     """Return organization identified by ``org_id``
 
@@ -211,7 +208,6 @@ def update_cp_organization():
 
 @cp.route('/organizations', methods=['POST'])
 @validate('organizations', 'add_cp_organization')
-@json_response
 def add_cp_organization():
     """Add new organization
     When adding a new organization only the full name and abbreviation are
@@ -334,15 +330,14 @@ def add_cp_organization():
 
     db.session.add(o)
     db.session.commit()
-    return {'organization': o.serialize(),
+    return ApiResponse({'organization': o.serialize(),
             'message': 'Organization added'}, 201, \
-           {'Location': url_for('cp.get_cp_organization', org_id=o.id)}
+           {'Location': url_for('cp.get_cp_organization', org_id=o.id)})
 
 
 @cp.route('/organizations/<int:org_id>', methods=['PUT'])
 @validate('organizations', 'update_cp_organization')
 # @permission_required(Permission.ORGADMIN)
-# @json_response
 def update_cp_organization(org_id):
     """Update organization details
 
@@ -469,7 +464,6 @@ def update_cp_organization(org_id):
 
 
 @cp.route('/organizations/<int:org_id>', methods=['DELETE'])
-@json_response
 def delete_cp_organization(org_id):
     """Delete organization
 
@@ -512,4 +506,4 @@ def delete_cp_organization(org_id):
     o.mark_as_deleted()
     db.session.add(o)
     db.session.commit()
-    return {'message': 'Organization deleted'}
+    return ApiResponse({'message': 'Organization deleted'})
