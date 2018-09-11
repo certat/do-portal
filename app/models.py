@@ -11,7 +11,7 @@ from mailmanclient import MailmanConnectionError, Client
 import onetimepass
 from app import db, login_manager, config
 from sqlalchemy import desc, event, text
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import aliased, deferred
 from sqlalchemy.dialects import postgres
 from flask_sqlalchemy import BaseQuery
 from flask import current_app, request
@@ -1387,10 +1387,10 @@ class OrganizationMembership(Model, SerializerMixin):
     ts_deleted = db.Column(db.DateTime)
     pgp_key_id = db.Column(db.String(255))
     pgp_key_fingerprint = db.Column(db.String(255))
-    pgp_key = db.Column(db.Text)
-    smime = db.Column(db.Text)
+    pgp_key = deferred(db.Column(db.Text))
+    smime = deferred(db.Column(db.Text))
     smime_filename = db.Column(db.String(255))
-    coc = db.Column(db.Text)
+    coc = deferred(db.Column(db.Text))
     coc_filename = db.Column(db.String(255))
     _sms_alerting = db.Column('sms_alerting', db.Integer, default=0)
 
