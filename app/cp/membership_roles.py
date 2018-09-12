@@ -3,7 +3,6 @@ from flask_jsonschema import validate
 from app.core import ApiResponse
 from app import db
 from app.models import MembershipRole
-from app.api.decorators import json_response
 from . import cp
 
 

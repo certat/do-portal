@@ -3,7 +3,6 @@ from flask_jsonschema import validate
 from app.core import ApiResponse
 from app import db
 from app.models import User, OrganizationMembership, Organization, MembershipRole
-from app.api.decorators import json_response
 from . import cp
 
 
@@ -242,7 +241,6 @@ def get_cp_users_memberships_by_id(user_id, membership_id):
 
 @cp.route('/users', methods=['POST'])
 @validate('users', 'add_cp_user')
-@json_response
 def add_cp_user():
     """Add new user
 
@@ -332,7 +330,7 @@ def add_cp_user():
     try:
         user = User.fromdict(request.json['user'])
     except AttributeError as ae:
-        return {'message': 'Attribute error. Invalid email, phone or mobile?' + str(ae) ,}, 422, {}
+        return ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?' + str(ae) ,}, 422, {})
 
     membership = OrganizationMembership.fromdict(
                     request.json['organization_membership'])
@@ -351,15 +349,14 @@ def add_cp_user():
     membership.user_id = user.id
     db.session.add(membership)
     db.session.commit()
-    return {'user': user.serialize(),
+    return ApiResponse({'user': user.serialize(),
             'organization_membership': membership.serialize(),
             'message': 'User added'}, 201, \
-           {'Location': url_for('cp.get_cp_user', user_id=user.id)}
+           {'Location': url_for('cp.get_cp_user', user_id=user.id)})
 
 
 @cp.route('/users/<int:user_id>', methods=['PUT'])
 @validate('users', 'update_cp_user')
-@json_response
 def update_cp_user(user_id):
     """Update user details
 
@@ -428,7 +425,7 @@ def update_cp_user(user_id):
     try:
         user.from_json(request.json)
     except AttributeError:
-        return {'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {}
+        return ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {})
 
     try:
         if 'password' in request.json:
@@ -436,12 +433,11 @@ def update_cp_user(user_id):
             db.session.add(user)
             db.session.commit()
     except AttributeError as ae:
-        return {'message': str(ae)}, 422, {}
-    return {'message': 'User saved'}
+        return ApiResponse({'message': str(ae)}, 422, {})
+    return ApiResponse({'message': 'User saved'})
 
 
 @cp.route('/users/<int:user_id>', methods=['DELETE'])
-@json_response
 def delete_cp_user(user_id):
     """Delete user
 
@@ -487,4 +483,4 @@ def delete_cp_user(user_id):
 
     db.session.add(user)
     db.session.commit()
-    return {'message': 'User deleted'}
+    return ApiResponse({'message': 'User deleted'})

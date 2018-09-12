@@ -3,7 +3,6 @@ from flask_jsonschema import validate
 from app.core import ApiResponse
 from app import db
 from app.models import OrganizationMembership, Organization, User
-from app.api.decorators import json_response
 from . import cp
 
 
@@ -154,7 +153,6 @@ def get_cp_organization_membership(membership_id):
 
 @cp.route('/organization_memberships', methods=['POST'])
 @validate('organization_memberships', 'add_cp_organization_membership')
-@json_response
 def add_cp_organization_membership():
     """Add new organization membership
 
@@ -243,20 +241,19 @@ def add_cp_organization_membership():
     try:
         membership = OrganizationMembership.fromdict(request.json)
     except AttributeError:
-        return {'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {}
+        return  ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {})
 
     check_membership_permissions(membership)
     db.session.add(membership)
     db.session.commit()
-    return {'organization_membership': membership.serialize(),
+    return  ApiResponse({'organization_membership': membership.serialize(),
             'message': 'Organization membership added'}, 201, \
            {'Location': url_for('cp.get_cp_organization_membership',
-                                membership_id=membership.id)}
+                                membership_id=membership.id)})
 
 
 @cp.route('/organization_memberships/<int:membership_id>', methods=['PUT'])
 @validate('organization_memberships', 'update_cp_organization_membership')
-@json_response
 def update_cp_organization_membership(membership_id):
     """Update organization membership details
 
@@ -343,15 +340,14 @@ def update_cp_organization_membership(membership_id):
     try:
         membership.from_json(request.json)
     except AttributeError:
-        return {'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {}
+        return  ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {})
 
     db.session.add(membership)
     db.session.commit()
-    return {'message': 'Organization membership saved'}
+    return  ApiResponse({'message': 'Organization membership saved'})
 
 
 @cp.route('/organization_memberships/<int:membership_id>', methods=['DELETE'])
-@json_response
 def delete_cp_organization_membership(membership_id):
     """Delete organization membership
 
@@ -390,7 +386,7 @@ def delete_cp_organization_membership(membership_id):
     membership.mark_as_deleted()
     db.session.add(membership)
     db.session.commit()
-    return {'message': 'Organization membership deleted'}
+    return  ApiResponse({'message': 'Organization membership deleted'})
 
 
 def check_membership_permissions(membership):

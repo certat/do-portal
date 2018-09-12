@@ -9,13 +9,8 @@ from . import cp
 
 
 @cp.route('/organizations', methods=['GET'])
-# XXX @permission_required(Permission.ORGADMIN)
 def get_cp_organizations():
     """Return current_user's organization
-## obviously a new method to check permissions and create a json_response
-## def get_cp_organizations():
-## >>>>>>> topic-postgres
-
     **Example request**:
 
     .. sourcecode:: http
