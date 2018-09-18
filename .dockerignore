@@ -1,0 +1,10 @@
+src
+Dockerfile
+docker-composer.yml
+node_modules
+bower_components
+dist
+__pycache__
+logs
+bin
+docker-volumes
