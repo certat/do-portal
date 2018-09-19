@@ -27,6 +27,17 @@ def test_create_user(client):
     assert rv_membership['email'] == 'orgmail@someorg.at'
 
 
+def test_update_user(client):
+    client.api_user = find_user_by_name('certmaster')
+    user_id = User.query.filter_by(_email='mylogin@mydomain.at').first().id
+    rv = client.put(
+         url_for('cp.update_cp_user', user_id=user_id),
+         json=dict(email='mylogin@mydomain.at',
+                   name='Max Muster',
+                   password='Bla12345%')
+         )
+
+
 def test_create_user_with_invalid_email(client):
     client.api_user = find_user_by_name('certmaster')
     org_id = client.api_user.get_organizations().first().id
