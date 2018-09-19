@@ -1482,7 +1482,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@login_manager.token_loader
+# @login_manager.token_loader
 def load_token(token):
     """
     Flask-Login token_loader callback.

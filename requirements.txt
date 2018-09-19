@@ -23,7 +23,7 @@ Flask-DebugToolbar==0.10.0
 -e git+https://github.com/ics/Flask-GnuPG#egg=Flask-GnuPG
 Flask-JsonSchema==0.1.1
 flask-ldap3-login==0.9.10
-Flask-Login==0.3.2
+Flask-Login
 Flask-Mail==0.9.1
 Flask-Migrate==2.0.0
 Flask-Principal==0.4.0
