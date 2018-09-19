@@ -1484,6 +1484,7 @@ def load_user(user_id):
 
 
 # @login_manager.token_loader
+'''
 def load_token(token):
     """
     Flask-Login token_loader callback.
@@ -1533,7 +1534,7 @@ def load_token(token):
     if user and data[1] == user._password:
         return user
     return None
-
+'''
 
 @login_manager.request_loader
 def load_user_from_request(request):
