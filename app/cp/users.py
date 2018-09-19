@@ -425,7 +425,7 @@ def update_cp_user(user_id):
     try:
         user.from_json(request.json)
     except AttributeError:
-        return ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {})
+        return ApiResponse({'message': 'Attribute update error. Invalid email, phone or mobile?',}, 422, {})
 
     try:
         if 'password' in request.json:

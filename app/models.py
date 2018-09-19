@@ -322,7 +322,7 @@ class User(UserMixin, Model, SerializerMixin):
     def email(self, email):
         if not validate_email(email):
             raise AttributeError(email, 'seems not to be valid')
-        user = User.query.filter_by(_email=email).first()
+        user = User.query.filter_by(_email=email).filter(self.id != id).first()
         if user:
             raise AttributeError(email, 'duplicate email')
         self._email = email
