@@ -310,6 +310,7 @@ class User(UserMixin, Model, SerializerMixin):
         self._password = generate_password_hash(
             password, method='pbkdf2:sha512:100001', salt_length=32
         )
+        self.reset_password_send_email(self.email)
 
     def check_password(self, password):
         return check_password_hash(self._password, password)
@@ -348,10 +349,17 @@ class User(UserMixin, Model, SerializerMixin):
             orgs = user.get_organization_memberships()
             if orgs == []:
                 return False
-            password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii')+'aB1$'
-            user.password = password
-            send_email('energy-cert account', [user.email],
-                   'auth/email/ec_reset_password', user=user, new_password=password)
+            # password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii')+'aB1$'
+            # user.password = password
+            token=user.generate_reset_token()
+            current_app.logger.debug('debug token', token)
+            current_app.logger.info('info token', token)
+            print(token)
+
+            send_email('reset password', [user.email],
+                   'auth/email/ec_reset_password', user=user,
+                   token=token)
+
             db.session.add(user)
             db.session.commit()
             return password
@@ -1464,11 +1472,15 @@ def org_mem_listerner(mapper, connection, org_mem):
         # print(org_mem.membership_role.name,  org_mem.email)
         password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii') + 'Ba1%'
         org_mem.user.password = password
+        token=org_mem.user.generate_reset_token()
+        current_app.log.debug(token)
         send_email('energy-cert account', [org_mem.user.email],
-               'auth/email/ec_activate_account', org_mem=org_mem, new_password=password)
+               'auth/email/ec_activate_account', org_mem=org_mem,
+               token=token)
 
 
 event.listen(OrganizationMembership, 'after_insert', org_mem_listerner, retval=True, propagate=True)
+
 
 @login_manager.user_loader
 def load_user(user_id):

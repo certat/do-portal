@@ -234,12 +234,11 @@ class DevelConfig(Config):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'devkey'
     WTF_CSRF_ENABLED = False
     WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY') or 'devkey'
-    SQLALCHEMY_DATABASE_URI = ''
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class TestingConfig(Config):
-    # DEBUG = True
+    DEBUG = True
     TESTING = True
     SERVER_NAME = 'localhost'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'do-testing'
