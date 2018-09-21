@@ -351,8 +351,8 @@ class User(UserMixin, Model, SerializerMixin):
             orgs = user.get_organization_memberships()
             if orgs == []:
                 return False
-            password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii')+'aB1$'
-            user.password = password
+            # password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii')+'aB1$'
+            # user.password = password
             token=user.generate_reset_token()
             current_app.logger.debug('debug token', token)
             current_app.logger.info('info token', token)
