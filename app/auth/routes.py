@@ -556,7 +556,7 @@ def set_password(token):
     s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
     try:
         s.loads(token)
-    except BadSignature:
+    except BadSignaturei:
         flash('Signature expired.')
         return redirect(url_for('main.index'))
     form = SetPasswordForm()
