@@ -255,7 +255,7 @@ class User(UserMixin, Model, SerializerMixin):
     ts_deleted = db.Column(db.DateTime)
     otp_secret = db.Column(db.String(16))
     otp_enabled = db.Column(db.Boolean, default=False, nullable=False)
-    picture = db.Column(db.Text)
+    picture = deferred(db.Column(db.Text))
     picture_filename = db.Column(db.String(255))
     birthdate = db.Column(db.Date)
     title = db.Column(db.String(255))

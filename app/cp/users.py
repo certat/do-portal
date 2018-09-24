@@ -69,7 +69,7 @@ def get_cp_users():
         SHOULD NOT be repeated.
     """
     users = g.user.get_users()
-    return ApiResponse({'users': [u.serialize() for u in users]})
+    return ApiResponse({'users': [u.serialize(exclude=('picture')) for u in users]})
 
 
 @cp.route('/users/<int:user_id>', methods=['GET'])
