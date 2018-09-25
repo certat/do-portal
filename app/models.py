@@ -349,19 +349,18 @@ class User(UserMixin, Model, SerializerMixin):
             orgs = user.get_organization_memberships()
             if orgs == []:
                 return False
-            # password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii')+'aB1$'
-            # user.password = password
+            password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii')+'aB1$'
+            # user._password = password
             token=user.generate_reset_token()
             current_app.logger.debug('debug token', token)
             current_app.logger.info('info token', token)
-            print(token)
 
             send_email('reset password', [user.email],
                    'auth/email/ec_reset_password', user=user,
                    token=token)
 
-            db.session.add(user)
-            db.session.commit()
+            # db.session.add(user)
+            # db.session.commit()
             return password
         return False
 
