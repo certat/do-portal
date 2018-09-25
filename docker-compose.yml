@@ -1,0 +1,16 @@
+version: '3'
+services:
+    db:
+        image: postgres:9.6-alpine
+        container_name: cert_db
+        environment:
+            POSTGRES_USER: do_portal
+            POSTGRES_PASSWORD: do_portal
+            POSTGRES_DB: do_portal
+        volumes:
+            - ./docker-volumes/pg_data:/var/lib/postgresql/data
+    do-portal:
+        container_name: do-portal
+        build: .
+        ports:
+            - "5001:5001"
