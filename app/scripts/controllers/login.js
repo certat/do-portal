@@ -8,7 +8,7 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('LoginCtrl', function ($scope, $location, $state, Auth, notifications) {
+  .controller('LoginCtrl', function ($scope, $location, $state, $stateParams, Auth, notifications) {
     $scope.credentials = {email: '', password: ''};
     $scope.login = function () {
       Auth.login($scope.credentials).then(function (response) {
@@ -30,5 +30,12 @@ angular.module('cpApp')
                 .then(function(resp){
                     notifications.showSuccess(resp.data.message);
                   }, function(){});
+    };
+
+    if ($stateParams.token) {
+        $scope.token = $stateParams.token;
+    }
+    $scope.activate_account = function() {
+        Auth.activate_account($scope.token, $scope.password);
     };
   });

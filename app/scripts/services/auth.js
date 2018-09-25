@@ -44,6 +44,12 @@ angular.module('cpApp')
       get: function(endpoint){
         return $http.get(config.apiConfig.authUrl + '/' + endpoint);
       },
+      activate_account: function(token, password) {
+          return $http.post(
+              config.apiConfig.authUrl + '/activate-account',
+              {'token':token, 'password':password}
+          );
+      },
       registerCPAccount: function(userInfo){
         console.log('Deprecated! Use Auth.' + this.post.name + '("register")');
         return this.post(userInfo, 'register');
