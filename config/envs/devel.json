@@ -1,5 +1,5 @@
 {
   "version": "0.7.0",
-  "webServiceUrl": "http://127.0.0.1:5001/cp/1.0",
-  "authUrl": "http://127.0.0.1:5001/auth"
+  "webServiceUrl": "http://localhost:5001/cp/1.0",
+  "authUrl": "http://localhost:5001/auth"
 }
