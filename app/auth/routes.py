@@ -540,7 +540,7 @@ def lost_password():
     return {'message': 'Password restore email sent'}, 200, {}
 
 
-@auth.route('/activate-account', methods=['POST'])
+@auth.route('/activate-account/<token>', methods=['GET', 'POST'])
 def set_password(token):
     """Set initial customer password. The template for this route contains
     bootstrap.css, bootstrap-theme.css and main.css.
@@ -556,7 +556,7 @@ def set_password(token):
     s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
     try:
         s.loads(token)
-    except BadSignature:
+    except BadSignaturei:
         flash('Signature expired.')
         return redirect(url_for('main.index'))
     form = SetPasswordForm()
