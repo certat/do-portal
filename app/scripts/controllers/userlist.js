@@ -92,7 +92,7 @@ angular.module('cpApp')
                   );
                 });
               });
-              $scope.gridOptions.data = angular.copy(memberships);
+              $scope.gridOptions.data = memberships;
             }
         );
     };
@@ -101,10 +101,12 @@ angular.module('cpApp')
 
     $scope.gridOptions = {
         enableFiltering: true,
-        excludeProperties: ['comment']
-    };
-
-    $scope.download_csv = function() {
+        enableGridMenu: true,
+        exporterMenuPdf: false,
+        exporterMenuExcel: false,
+        exporterMenuVisibleData: false, 
+        exporterCsvFilename: 'users.csv',
+        onRegisterApi: function(gridApi) { $scope.gridApi = gridApi; },
     };
 
   });
