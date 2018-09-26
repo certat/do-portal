@@ -1,5 +1,4 @@
 <div class="clearfix">
-    <a role="button" class="btn btn-sm pull-right" ng-class="{'btn-success':text, 'btn-default':!text}" ng-click="text=!text">text</a>
     <a role="button" class="btn btn-sm pull-right btn-default" ng-click="download_csv()">Download CSV</a>
 </div><br/>
 
@@ -8,22 +7,6 @@
     <h3 class="panel-title">Contacts</h3>
   </div>
   <div class="panel-body">
-    <div class="row show-grid">
-      <div class="col-xs-offset-8 col-xs-4">
-        <select watch-model convert-to-number positive-integer class="form-control input-sm" ng-model="membership_role_id">
-          <option ng-repeat="role in export_types" value="{{role.id}}">{{role.display_name}}</option>
-        </select>
-      </div>
-    </div>
-
-    <textarea rows="20" ng-show="text" readonly class="form-control">{{addHeader(arr2text(filtered_memberships))}}</textarea>
-
-    <table ng-show="!text" class="table table-striped table-condensed">
-      <th ng-repeat="header in filtered_memberships_headers">{{header}}</th>
-      <tr ng-repeat="membership in filtered_memberships">
-        <td ng-repeat="field in membership track by $index">{{field}}</td>
-      </tr>
-    </table>
-
+    <div ui-grid="gridOptions"></div>
   </div>
 </div>
