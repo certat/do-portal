@@ -104,7 +104,7 @@ angular.module('cpApp')
         enableGridMenu: true,
         exporterMenuPdf: false,
         exporterMenuExcel: false,
-        exporterMenuVisibleData: false, 
+        exporterMenuVisibleData: false,
         exporterCsvFilename: 'users.csv',
         onRegisterApi: function(gridApi) { $scope.gridApi = gridApi; },
     };
