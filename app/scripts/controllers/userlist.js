@@ -79,6 +79,7 @@ angular.module('cpApp')
               users_arr.forEach(function(u) {
                 u.memberships.forEach(function(m) {
                   memberships.push({
+                     id: u.id,
                      name: u.name,
                      organization: $scope.organizations[m.organization_id].full_name,
                      role: roles[m.membership_role_id].display_name,
@@ -107,6 +108,20 @@ angular.module('cpApp')
         exporterMenuVisibleData: false,
         exporterCsvFilename: 'users.csv',
         onRegisterApi: function(gridApi) { $scope.gridApi = gridApi; },
+        columnDefs: [
+          { field: 'id',
+            displayName: 'edit',
+            cellTemplate: '<div class="ui-grid-cell-contents"><a ui-sref="user_edit({id:row.entity.id})">edit</a></div>',
+          },
+          { field: 'name' },
+          { field: 'organization' },
+          { field: 'role' },
+          { field: 'email' },
+          { field: 'phone' },
+          { field: 'mobile' },
+          { field: 'street' },
+          { field: 'zip' },
+          { field: 'city' },
+        ],
     };
-
   });
