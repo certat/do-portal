@@ -105,11 +105,12 @@ angular.module('cpApp')
         enableGridMenu: true,
         exporterMenuPdf: false,
         exporterMenuExcel: false,
-        exporterMenuVisibleData: false,
         exporterCsvFilename: 'users.csv',
         columnDefs: [
           { field: 'id',
             displayName: 'edit',
+            enableFiltering: false,
+            enableSorting: false,
             cellTemplate: '<div class="ui-grid-cell-contents"><a ui-sref="user_edit({id:row.entity.id})">edit</a></div>',
           },
           { field: 'name' },
