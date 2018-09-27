@@ -114,6 +114,7 @@ angular.module('cpApp')
            name: 'role',
            filter: {
                    type: uiGridConstants.filter.SELECT,
+                   condition: uiGridConstants.filter.EXACT,
                    selectOptions: []
            }
     };
