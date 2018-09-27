@@ -107,7 +107,6 @@ angular.module('cpApp')
         exporterMenuExcel: false,
         exporterMenuVisibleData: false,
         exporterCsvFilename: 'users.csv',
-        onRegisterApi: function(gridApi) { $scope.gridApi = gridApi; },
         columnDefs: [
           { field: 'id',
             displayName: 'edit',
