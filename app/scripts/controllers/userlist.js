@@ -16,7 +16,7 @@ function _array2hash(arr) {
 }
 
 angular.module('cpApp')
-  .controller('UserListCtrl', function ($scope, $filter, $uibModal, User, Membership, Organization, Auth, GridData, notifications, $q) {
+  .controller('UserListCtrl', function ($scope, $filter, $uibModal, User, Membership, Organization, Auth, GridData, notifications, $q, uiGridConstants) {
 
     var loadUsers = function() {
       return User.query_list().$promise
@@ -94,11 +94,29 @@ angular.module('cpApp')
                 });
               });
               $scope.gridOptions.data = memberships;
+              var roleOptions = [];
+              $scope.roles.forEach(function(r){
+                roleOptions.push({value: r.display_name, label: r.display_name});
+              });
+              $scope.roleColumnDef.filter.selectOptions = roleOptions.sort(function(a,b){
+		var nameA = a.label.toUpperCase();
+		var nameB = b.label.toUpperCase();
+		if (nameA < nameB) { return -1; }
+		if (nameA > nameB) { return 1; }
+		return 0;
+              });
             }
         );
     };
 
     loadParallel();
+    $scope.roleColumnDef = {
+           name: 'role',
+           filter: {
+                   type: uiGridConstants.filter.SELECT,
+                   selectOptions: []
+           }
+    };
 
     $scope.gridOptions = {
         enableFiltering: true,
@@ -112,7 +130,7 @@ angular.module('cpApp')
             cellTemplate: '<div class="ui-grid-cell-contents"><a ui-sref="user_edit({id:row.entity.id})">{{row.entity.name}}</a></div>',
           },
           { field: 'organization' },
-          { field: 'role' },
+          $scope.roleColumnDef,
           { field: 'email' },
           { field: 'phone' },
           { field: 'mobile' },
