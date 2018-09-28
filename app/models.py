@@ -965,9 +965,12 @@ class Organization(Model, SerializerMixin):
         org.group_id = 1
         return org
 
+    # organization.mark_as_deleted
     def mark_as_deleted(self):
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
+        for um in self.organization_memberships:
+            um.mark_as_deleted(delete_last_membership = True)
 
     # STUB
     def has_child_organizations(self):
