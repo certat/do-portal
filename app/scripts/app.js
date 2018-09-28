@@ -100,19 +100,6 @@ angular
           }
         }
       })
-      .state('user_export', {
-        url: '/user_export',
-        views: {
-          header: {
-            templateUrl: 'views/header.html',
-            controller: 'HeaderCtrl'
-          },
-          content: {
-            templateUrl: 'views/user-export.html',
-            controller: 'UserListCtrl'
-          }
-        }
-      })
       .state('user_list', {
         url: '/user_list',
         views: {
