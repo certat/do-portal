@@ -48,5 +48,4 @@ angular.module('cpApp')
         delete x.Children;
       });
     }
-
   });

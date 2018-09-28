@@ -65,37 +65,12 @@
   </div>
 </div>
 
-<div ng-show="org.id && memberships.length" class="panel panel-primary">
+<div ng-show="org.id && gridOptions.data.length" class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">Memberships</h3>
   </div>
   <div class="panel-body">
-    <table id="membershiptable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
-    <thead>
-      <tr>
-      <th>Edit</th>
-      <th>Rolle Name</th>
-      <th>User Name</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th>City</th>
-      <th>Country</th>
-      <th>Street</th>
-      <th>Zip</th>
-      <th>Comment</th>
-      <tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="m in memberships">
-        <td><a class="btn btn-small btn-default" ui-sref="user_edit({id: m.user_id})">Edit</a></td>
-        <td>{{roles[m.membership_role_id].display_name}}</td>
-        <td>{{users[m.user_id]['name'] }}</td>
-        <td ng-repeat="type in ['email','phone','city','country','street','zip','comment']">
-          {{ m[type] }}
-        </td>
-    </div>
-    </tbody>
-    </table>
+    <div ui-grid="gridOptions" ui-grid-exporter ui-grid-resize-columns ui-grid-auto-resize></div>
   </div>
 </div>
 

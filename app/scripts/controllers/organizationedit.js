@@ -32,7 +32,7 @@ angular.module('cpApp')
       }
     };
   })
-  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notifications, $stateParams, $q, $state) {
+  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notifications, $stateParams, $q, $state, uiGridConstants) {
 
     var loadUsers = function() {
       return User.query_list().$promise
@@ -67,16 +67,47 @@ angular.module('cpApp')
         arr.forEach(function(i) { hash[i.id] = i; });
         return hash;
     }
+    function get_role_options(roles) {
+        var roleOptions = [];
+        for(var role_name in roles) {
+          roleOptions.push({value: role_name, label: role_name});
+        }
+        return roleOptions.sort(function(a,b){
+	  var nameA = a.label.toUpperCase();
+	  var nameB = b.label.toUpperCase();
+	  if (nameA < nameB) { return -1; }
+	  if (nameA > nameB) { return 1; }
+	  return 0;
+        });
+    }
     var loadParallel = function() {
         return $q.all([ loadUsers(), loadRoles(), loadMemberships(), loadOrganization($stateParams.id) ])
             .then( function( result ) {
               $scope.users    = _array2hash(result.shift());
               $scope.roles    = _array2hash(result.shift());
               var memberships = result.shift().filter(function(m){return m.organization_id === parseInt($stateParams.id);});
-              memberships.forEach(function(m){ m.country = m.country ? m.country.name : ''; });
-              $scope.memberships = memberships;
+              var gridData = [];
+              var roles = {};
+              memberships.forEach(function(m){
+                  var role_name = $scope.roles[m.membership_role_id].display_name;
+                  roles[role_name] = 1;
+                  gridData.push({
+                      user_id: m.user_id,
+                      user: $scope.users[m.user_id].name,
+                      role: role_name,
+                      email: m.email,
+                      phone: m.phone,
+                      city: m.city,
+                      country: m.country ? m.country.name : '',
+                      street: m.street,
+                      zip: m.zip,
+                      comment: m.comment,
+                  });
+              });
 
               $scope.org = result.shift();
+              $scope.gridOptions.data = gridData;
+              $scope.roleColumnDef.filter.selectOptions = get_role_options(roles);
             }
         );
     };
@@ -87,6 +118,32 @@ angular.module('cpApp')
 
     if ($stateParams.id) {
       loadParallel();
+
+      $scope.roleColumnDef = {
+             name: 'role',
+             filter: {
+                     type: uiGridConstants.filter.SELECT,
+                     condition: uiGridConstants.filter.EXACT,
+                     selectOptions: []
+             }
+      };
+      $scope.gridOptions = {
+          enableFiltering: true,
+          columnDefs: [
+            { field: 'user_id', visible: false },
+            { field: 'user',
+              cellTemplate: '<div class="ui-grid-cell-contents"><a ui-sref="user_edit({id:row.entity.user_id})">{{row.entity.user}}</a></div>',
+            },
+            $scope.roleColumnDef,
+            { field: 'email' },
+            { field: 'phone' },
+            { field: 'city' },
+            { field: 'country' },
+            { field: 'street' },
+            { field: 'zip' },
+            { field: 'comment' },
+          ],
+      };
     }
     else {
       $scope.org = {};

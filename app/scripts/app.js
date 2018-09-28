@@ -12,7 +12,7 @@ angular
   .module('cpApp', ['ngAnimate', 'ngCookies', 'ngMessages', 'ngResource', 'ngSanitize',
     'ngTouch', 'ngCsv', 'ngFileUpload', 'ui.bootstrap', 'ui.select', 'uiSwitch', 'ui.router',
     'ngNotificationsBar', 'angular-loading-bar', 'services.config',
-    'ui.grid', 'ui.grid.exporter', 'ui.grid.resizeColumns'
+    'ui.grid', 'ui.grid.exporter', 'ui.grid.resizeColumns', 'ui.grid.autoResize'
   ])
   .config(function ($stateProvider) {
     $stateProvider
