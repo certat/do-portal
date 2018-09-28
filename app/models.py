@@ -321,6 +321,7 @@ class User(UserMixin, Model, SerializerMixin):
 
     @email.setter
     def email(self, email):
+        email = email.lower()
         if not validate_email(email):
             raise AttributeError(email, 'seems not to be valid')
         user = User.query.filter_by(_email=email).first()
@@ -1430,6 +1431,7 @@ class OrganizationMembership(Model, SerializerMixin):
 
     @email.setter
     def email(self, email):
+        email = email.lower()
         if not validate_email(email):
             db.session.rollback()
             raise AttributeError(email, 'seems not to be valid')
