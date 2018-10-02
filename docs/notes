@@ -1,0 +1,44 @@
+export FLASK_DEBUG=1
+# export DO_LOCAL_CONFIG=/home/mh/htdocs/do-portal/ip_config.cfg
+export DO_CONFIG=ipdevel
+
+python manage.py run -h 0.0.0.0 -p 8000
+
+python demodata.py  addyaml
+
+mögliches endpoints:
+do-portal/app/cp
+countries.py
+errors.py
+fqdns.py
+ipranges.py
+membership_roles.py
+organization_memberships.py
+organizations.py
+routes.py
+users.py
+vulnerabilities.py
+
+
+
+curl -H "Content-Type: application/json" -H "Accept: application/json" -H "API-Authorization: 1ae05c2103328c2955547ca1c6478cfe2d27e010d17fa5b7edb4b36a67c6108b" http://localhost:8000/cp/1.0/ipranges/7
+
+psql -p 5433 dp_ipdevel
+
+#export DO_LOCAL_CONFIG=/home/mh/htdocs/do-portal/ip_config.cfg
+
+
+mh@debian:~/htdocs/mintos/automate$ psql -p 5433 dp_ipdevel
+psql (9.6.6)
+Type "help" for help.
+
+
+
+dp_ipdevel=# select * from users;
+dp_ipdevel=# select name, api_key from users;
+             name              |                             api_key
+-------------------------------+------------------------------------------------------------------
+ certmaster                    | f77a27a3853331a8b918a3e83e04e0d70dacd8af076baf22f81d1f83aa97f206
+ eorgmaster                    | 339e0f4a648b85cbeb8299d85684f8efd02da2c28f244a10c6dea10a39dfd2c7
+ E-Org User                    | 1aa5fa556e73744464e12e5464542fde651382fd179a78eda401857b4ea89ab5
+
