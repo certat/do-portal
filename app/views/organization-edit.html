@@ -8,7 +8,7 @@
   </div>
 
   <div class="panel-body">
-    <div>Parent Organization: {{org.parent_org_abbreviation}}</div>
+    <div ng-show="org.parent_org_abbreviation">Parent Organization: {{org.parent_org_abbreviation}}</div>
     <div>Name: {{org.full_name}}</div>
     <div>Abbreviation: {{org.abbreviation}}</div>
   </div>
