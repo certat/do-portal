@@ -8,6 +8,7 @@
   </div>
 
   <div class="panel-body">
+    <div>Parent Organization: {{org.parent_org_abbreviation}}</div>
     <div>Name: {{org.full_name}}</div>
     <div>Abbreviation: {{org.abbreviation}}</div>
   </div>
@@ -27,6 +28,13 @@
         <select convert-to-number positive-integer class="form-control input-sm" required ng-model="org.parent_org_id">
           <option ng-repeat="organization in orgs" value="{{organization.id}}">{{organization.abbreviation}}</option>
         </select>
+      </div>
+    </div>
+
+    <div ng-show="org.id" class="row show-grid">
+      <div class="col-xs-2">Parent Organization</div>
+      <div class="col-xs-10">
+        <input disabled type="text" class="form-control input-sm" ng-model="org.parent_org_abbreviation">
       </div>
     </div>
 
