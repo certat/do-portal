@@ -1,14 +1,15 @@
 FROM debian:stretch-slim
 
 RUN    apt-get update \
-    && apt-get install -y \
+    && apt-get install -y --no-install-recommends \
        vim less tree ack \
        build-essential git \
        libssl-dev libxml2 libxml2-dev \
        ssdeep exiftool libfuzzy-dev \
        libffi-dev p7zip-full libncurses-dev \
        libxslt-dev lib32z1-dev libpq-dev \
-       python3-venv python3-dev python3-pip
+       python3-venv python3-dev python3-pip \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN useradd --create-home --home-dir /home/cert \
             --user-group --shell /bin/bash cert
