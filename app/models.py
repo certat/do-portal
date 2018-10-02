@@ -16,6 +16,7 @@ from sqlalchemy.dialects import postgres
 from flask_sqlalchemy import BaseQuery
 from flask import current_app, request
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
@@ -840,6 +841,14 @@ class Organization(Model, SerializerMixin):
     mail_times = db.Column(db.Integer, default=3600)
     ts_deleted = db.Column(db.DateTime)
     deleted = db.Column(db.Integer, default=0)
+
+
+    @hybrid_property
+    def parent_org_abbreviation(self):
+        if self.parent_org_id:
+            return Organization.query.get(self.parent_org_id).abbreviation
+        else:
+            return None
 
     parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     child_organizations = db.relationship('Organization')

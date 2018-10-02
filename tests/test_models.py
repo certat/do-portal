@@ -20,6 +20,11 @@ def test_countries_inserted():
     country = Country.query.filter_by(cc='AR').first()
     assert country.name == 'Argentina', 'Dont cry for me Argentina'
 
+def test_parent_org():
+    org = Organization.query.filter_by(abbreviation='eorg').first()
+    assert org.full_name == 'eorg'
+    assert org.parent_org_id == 1
+    assert org.parent_org_abbreviation == 'cert'
 
 def test_user_memberships():
     u = User.query.filter_by(name="certmaster").first()
@@ -66,6 +71,7 @@ def test_create_user():
     c = len(admin.get_users())
     assert c == 3, 'Verbung Admin has 3 users'
     certorg = Organization.query.filter_by(abbreviation='cert').first()
+
 
     newuser = User(name=App.username)
     with pytest.raises(AttributeError):
