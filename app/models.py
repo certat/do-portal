@@ -523,17 +523,16 @@ class User(UserMixin, Model, SerializerMixin):
 
     def _org_tree(self, org_id):
         results = db.engine.execute(
-                text("""with recursive sub_orgs as (select id, abbreviation, full_name, display_name, deleted, parent_org_id from organizations
+                text("""with recursive sub_orgs as (select id, abbreviation, full_name, display_name, deleted, parent_org_id, 'n/a'::text from organizations
                    where id = :b_parent_org_id
                    union
-                   select o.id, o.abbreviation, o.full_name, o.display_name, o.deleted, o.parent_org_id from organizations o
+                   select o.id, o.abbreviation, o.full_name, o.display_name, o.deleted, o.parent_org_id, s.abbreviation::text from organizations o
                    join sub_orgs s ON s.id = o.parent_org_id)
                    select * from sub_orgs
                 """), {'b_parent_org_id': org_id});
 
         for row in results:
             self._org_ids.append(row[0])
-
 
 
     def get_organization_memberships(self):
@@ -843,13 +842,35 @@ class Organization(Model, SerializerMixin):
     ts_deleted = db.Column(db.DateTime)
     deleted = db.Column(db.Integer, default=0)
 
+    # def __init__(self):
+    #     self.__parent_org_abbreviation = None
+
+    # too slow ...
+    _org_cache = {}
 
     @hybrid_property
     def parent_org_abbreviation(self):
         if self.parent_org_id:
-            return Organization.query.get(self.parent_org_id).abbreviation
+            if self.parent_org_id in self._org_cache:
+                return self._org_cache[self.parent_org_id]['abbreviation']
+            else:
+                abbr = Organization.query.get(self.parent_org_id).abbreviation
+                if not self.parent_org_id in self._org_cache:
+                    self._org_cache[self.parent_org_id] = {}
+                self._org_cache[self.parent_org_id]['abbreviation'] = abbr
+                return abbr
         else:
             return None
+
+    '''
+    @hybrid_property
+    def parent_org_abbreviation(self):
+        return self.__parent_org_abbreviation
+
+    @parent_org_abbreviation.setter
+    def parent_org_abbreviation(self, value):
+        self.__parent_org_abbreviation = value
+    '''
 
     parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     child_organizations = db.relationship('Organization')
