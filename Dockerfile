@@ -1,7 +1,7 @@
 FROM debian:stretch-slim
 
 RUN    apt-get update \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y \
        vim less tree ack \
        build-essential git \
        libssl-dev libxml2 libxml2-dev \
