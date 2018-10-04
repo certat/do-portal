@@ -161,7 +161,6 @@ angular.module('cpApp')
             if (m.id) { count++; }
           });
           if (count < 2) {
-            notify({classes:'notify-error', message: resp});
             notify({classes:'notify-error', message: 'Cannot delete membership. A user needs at least 1 membership!'});
             return;
           }
