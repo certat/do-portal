@@ -22,7 +22,6 @@
     "jsSHA": "^2.1.0",
     "strophe.js": "strophejs#^1.2.5",
     "angular-ui-grid": "^4.6.3",
-    "ng-notify": "^0.8.0",
     "angular-notify": "^2.5.1"
   },
   "devDependencies": {
