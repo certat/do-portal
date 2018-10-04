@@ -7,7 +7,7 @@
  * # cpMyAccount
  */
 angular.module('cpApp')
-  .directive('cpMyAccount', function (Auth, notifications, errorMapper, config) {
+  .directive('cpMyAccount', function (Auth, notify, errorMapper, config) {
     return {
       templateUrl: 'views/directives/cp-my-account.html',
       restrict: 'E',
@@ -24,7 +24,7 @@ angular.module('cpApp')
         scope.changePassword = function(){
           Auth.changePassword(scope.credentials).then(
             function(resp){
-              notifications.showSuccess(resp.data.message);
+              notify({classes: 'notify-success', message: resp.data.message});
             },
             function(){}
           );

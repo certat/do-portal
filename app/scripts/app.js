@@ -11,7 +11,7 @@
 angular
   .module('cpApp', ['ngAnimate', 'ngCookies', 'ngMessages', 'ngResource', 'ngSanitize',
     'ngTouch', 'ngCsv', 'ngFileUpload', 'ui.bootstrap', 'ui.select', 'uiSwitch', 'ui.router',
-    'ngNotificationsBar', 'angular-loading-bar', 'services.config',
+    'angular-loading-bar', 'services.config', 'cgNotify',
     'ui.grid', 'ui.grid.exporter', 'ui.grid.resizeColumns', 'ui.grid.autoResize'
   ])
   .config(function ($stateProvider) {
@@ -183,22 +183,6 @@ angular
   .config(['$urlRouterProvider', function($urlRouterProvider) {
     $urlRouterProvider.otherwise('/home');
   }])
-  .config(['notificationsConfigProvider', function(notificationsConfigProvider) {
-    // auto hide
-    notificationsConfigProvider.setAutoHide(true);
-
-    // delay before hide
-    notificationsConfigProvider.setHideDelay(3000);
-
-    // support HTML
-    notificationsConfigProvider.setAcceptHTML(false);
-
-    // Set an animation for hiding the notification
-    notificationsConfigProvider.setAutoHideAnimation('fadeOutNotifications');
-
-    // delay between animation and removing the nofitication
-    notificationsConfigProvider.setAutoHideAnimationDelay(1200);
-  }])
   .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     //cfpLoadingBarProvider.includeSpinner = true;
     cfpLoadingBarProvider.latencyThreshold = 250; //ms
@@ -207,9 +191,12 @@ angular
     $httpProvider.interceptors.push('authInterceptor');
     $httpProvider.defaults.withCredentials = true;
   }])
-  .run(function($rootScope){
+  .run(function($rootScope, notify){
     $rootScope.alerts = [];
     $rootScope.closeAlert = function(index){
       $rootScope.alerts.splice(index, 1);
     };
+    notify.config({
+        position: 'right',
+    });
   });

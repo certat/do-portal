@@ -155,3 +155,13 @@ body {
 select.ng-invalid.ng-touched, input.ng-invalid.ng-touched {
   border: 1px solid #ff8787;
 }
+.notify-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+.notify-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}

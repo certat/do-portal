@@ -16,7 +16,7 @@ function _array2hash(arr) {
 }
 
 angular.module('cpApp')
-  .controller('UserListCtrl', function ($scope, $filter, $uibModal, User, Membership, Organization, Auth, GridData, notifications, $q, uiGridConstants) {
+  .controller('UserListCtrl', function ($scope, $filter, $uibModal, User, Membership, Organization, Auth, GridData, $q, uiGridConstants) {
 
     var loadUsers = function() {
       return User.query_list().$promise

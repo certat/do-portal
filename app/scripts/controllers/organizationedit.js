@@ -32,7 +32,7 @@ angular.module('cpApp')
       }
     };
   })
-  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notifications, $stateParams, $q, $state, uiGridConstants) {
+  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notify, $stateParams, $q, $state, uiGridConstants) {
 
     var loadUsers = function() {
       return User.query_list().$promise
@@ -155,13 +155,13 @@ angular.module('cpApp')
     $scope.create_organization = function(){
       Organization.create({}, $scope.org, function(resp){
         $state.go('organizations', {id: resp.organization.id});
-        notifications.showSuccess('Organization created.');
+        notify({classes: 'notify-success', message: resp.message});
       }, function(){});
     };
 
     $scope.update_organization = function(){
       Organization.update({'id':$scope.org.id}, $scope.org, function(resp){
-        notifications.showSuccess(resp);
+        notify({classes: 'notify-success', message: resp});
       }, function(){});
     };
 
@@ -169,7 +169,7 @@ angular.module('cpApp')
       if( window.confirm('Do you really want to delete this organization?') ) {
         Organization.delete({'id':$scope.org.id}, function(resp){
           $state.go('organization_list');
-          notifications.showSuccess(resp);
+          notify({classes: 'notify-success', message: resp});
         }, function(){});
       }
     };

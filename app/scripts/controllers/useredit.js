@@ -32,7 +32,7 @@ angular.module('cpApp')
       }
     };
   })
-  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Country, Membership, Auth, GridData, notifications, $stateParams, $state, $q, FileReader) {
+  .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Country, Membership, Auth, GridData, notify, $stateParams, $state, $q, FileReader) {
 
     var loadUser = function() {
       if (!$stateParams.id) { return {}; }
@@ -104,20 +104,20 @@ angular.module('cpApp')
 
       // sms alert mobile validation
       if (m.sms_alerting && !m.mobile) {
-        notifications.showError('mobile number is required if SMS Alerting is activated.');
+        notify({classes:'notify-success', message: 'mobile number is required if SMS Alerting is activated.'});
         return;
       }
 
       if(m.id) {
         emptyToNull(m);
         Membership.update({'id':m.id}, m, function(resp) {
-          notifications.showSuccess(resp);
+          notify({classes:'notify-success', message: resp});
         }, function(){});
       }
       else {
         Membership.create({}, m, function(resp) {
           m.id = resp.organization_membership.id;
-          notifications.showSuccess(resp);
+          notify({classes:'notify-success', message: resp});
         }, function(){});
       }
     };
@@ -127,7 +127,7 @@ angular.module('cpApp')
       var data = { user: $scope.user, organization_membership: $scope.memberships[0] };
       User.create({}, data, function(resp){
         $state.go('user_edit', {id: resp.user.id});
-        notifications.showSuccess('User created.');
+        notify({classes:'notify-success', message: resp.message});
       }, function(){});
     };
 
@@ -135,7 +135,7 @@ angular.module('cpApp')
       var u = $scope.user;
       _handle_upload_field(u,'picture');
       User.update({'id':u.id}, u, function(resp){
-        notifications.showSuccess(resp);
+        notify({classes:'notify-success', message: resp});
       }, function(){});
     };
 
@@ -143,7 +143,7 @@ angular.module('cpApp')
       if( window.confirm('Do you really want to delete this user?') ) {
         User.delete({'id':$scope.user.id}, function(resp){
           $state.go('user_list');
-          notifications.showSuccess(resp);
+          notify({classes:'notify-success', message: resp});
         }, function(){});
       }
     };
@@ -161,13 +161,14 @@ angular.module('cpApp')
             if (m.id) { count++; }
           });
           if (count < 2) {
-            notifications.showError('Cannot delete membership. A user needs at least 1 membership!');
+            notify({classes:'notify-error', message: resp});
+            notify({classes:'notify-error', message: 'Cannot delete membership. A user needs at least 1 membership!'});
             return;
           }
 
           Membership.delete({'id':m_id},
               function(resp){
-                notifications.showSuccess(resp);
+                notify({classes:'notify-success', message: resp});
                 $scope.memberships.splice(index, 1);
               }, function(){});
 
@@ -190,7 +191,7 @@ angular.module('cpApp')
           if (key === 'picture') {
             obj = inputscope.user;
             if ( file.size > 1024*1024 ) {
-              notifications.showError('picture size exceeded 1MB');
+              notify({classes:'notify-error', message: 'picture size exceeded 1MB'});
               return;
             }
           }

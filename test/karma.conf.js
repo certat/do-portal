@@ -30,7 +30,7 @@ module.exports = function(config) {
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
-      'bower_components/ng-notifications-bar/src/ngNotificationsBar.js',
+      'bower_components/angular-notify/dist/angular-notify.js',
       'bower_components/angular-loading-bar/build/loading-bar.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-ui-select/dist/select.js',
