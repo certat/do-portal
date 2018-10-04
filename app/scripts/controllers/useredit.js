@@ -111,13 +111,13 @@ angular.module('cpApp')
       if(m.id) {
         emptyToNull(m);
         Membership.update({'id':m.id}, m, function(resp) {
-          notify({classes:'notify-success', message: resp});
+          notify({classes:'notify-success', message: resp.message});
         }, function(){});
       }
       else {
         Membership.create({}, m, function(resp) {
           m.id = resp.organization_membership.id;
-          notify({classes:'notify-success', message: resp});
+          notify({classes:'notify-success', message: resp.message});
         }, function(){});
       }
     };
@@ -135,7 +135,7 @@ angular.module('cpApp')
       var u = $scope.user;
       _handle_upload_field(u,'picture');
       User.update({'id':u.id}, u, function(resp){
-        notify({classes:'notify-success', message: resp});
+        notify({classes:'notify-success', message: resp.message});
       }, function(){});
     };
 
@@ -143,7 +143,7 @@ angular.module('cpApp')
       if( window.confirm('Do you really want to delete this user?') ) {
         User.delete({'id':$scope.user.id}, function(resp){
           $state.go('user_list');
-          notify({classes:'notify-success', message: resp});
+          notify({classes:'notify-success', message: resp.message});
         }, function(){});
       }
     };
@@ -167,7 +167,7 @@ angular.module('cpApp')
 
           Membership.delete({'id':m_id},
               function(resp){
-                notify({classes:'notify-success', message: resp});
+                notify({classes:'notify-success', message: resp.message});
                 $scope.memberships.splice(index, 1);
               }, function(){});
 
