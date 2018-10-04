@@ -9,10 +9,16 @@
  */
 angular.module('cpApp')
   .factory('authInterceptor', function ($q, $cookies, $location, notifications) {
-    // Service logic
-    // ...
+    function get_msg(rejection) {
+        var msg = 'Unknown Response Error';
+        if (rejection.data && rejection.data.message) {
+            msg = rejection.data.message;
+        }
+        else if (rejection.statusText) {
+            msg = rejection.statusText;
+        }
+    }
 
-    // Public API here
     return {
       'request': function(config){
         config.withCredentials = true;
@@ -26,16 +32,7 @@ angular.module('cpApp')
         return $q.reject(rejection);
       },
       'responseError': function(rejection){
-        if (rejection.data && rejection.data.message) {
-            notifications.showError(rejection.data.message);
-        }
-        else if (rejection.statusText) {
-            notifications.showError(rejection.statusText);
-        }
-        else {
-            //console.log(rejection);
-            notifications.showError('Unknown Response Error');
-        }
+        notifications.showError(get_msg(rejection));
 
         if(rejection.status === 401){
           $location.path('/login');
