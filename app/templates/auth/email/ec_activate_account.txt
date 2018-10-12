@@ -1,7 +1,8 @@
 Dear {{ org_mem.user.name }},
 
-just one more step to activate your account. Click on following button to activate it:
+just one more step to activate your account. Click on following link to activate it:
 {{webroot}}{{ url_for('auth.set_password', token=token) }}
+{{ config.GPG_HOME }}
 
 To contact us, please visit https://www.energy-cert.at {{ contact_url }}
 

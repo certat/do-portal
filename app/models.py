@@ -360,11 +360,11 @@ class User(UserMixin, Model, SerializerMixin):
 
             send_email('reset password', [user.email],
                    'auth/email/ec_reset_password', user=user,
-                   token=token)
+                   token=token.decode("utf-8"), email=email )
 
             db.session.add(user)
             db.session.commit()
-            return password
+            return token
         return False
 
     def get_auth_token(self, last_totp=None):

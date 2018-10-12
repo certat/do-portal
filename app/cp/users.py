@@ -430,6 +430,10 @@ def update_cp_user(user_id):
     try:
         if 'password' in request.json:
             user.password = request.json['password']
+            if user != g.user:
+                user.reset_password_send_email(user.email)
+            db.session.add(user)
+            db.session.commit()
     except AttributeError as ae:
         return ApiResponse({'message': str(ae)}, 422, {})
     db.session.add(user)

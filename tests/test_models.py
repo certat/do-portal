@@ -140,7 +140,7 @@ def test_login():
     assert auth is True
 
     new_password = User.reset_password_send_email('admin@energyorg.at')
-    (admin, auth) = User.authenticate('admin@energyorg.at', new_password)
+    (admin, auth) = User.authenticate('admin@energyorg.at', 'blaBla12$')
     assert auth is True
 
     new_password2 = 'B12blibli%'

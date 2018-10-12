@@ -541,7 +541,7 @@ def lost_password():
 
 
 @auth.route('/activate-account', methods=['POST'])
-def set_password(token):
+def set_password():
     """Set initial customer password. The template for this route contains
     bootstrap.css, bootstrap-theme.css and main.css.
 
@@ -553,21 +553,19 @@ def set_password(token):
 
     :return:
     """
+    token = request.json['token']
+    password = request.json['password']
+
     s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
     try:
         s.loads(token)
     except BadSignature:
-        flash('Signature expired.')
-        return redirect(url_for('main.index'))
-    form = SetPasswordForm()
-    if form.validate_on_submit():
-        User.set_password(token, form.data['password'])
-        flash('Your new password has been set.')
-        return redirect(url_for('main.index'))
-    for field, err in form.errors.items():
-        flash(err[0], 'danger')
-    return render_template('auth/set_password.html', form=form, token=token)
-
+        raise ApiException('Invalid Token', 401)
+    try:
+        User.set_password(token, password)
+    except AttributeError as e:
+        raise ApiException(str(e), 401)
+    return ApiResponse({'auth': 'authenticated'})
 
 @auth.route('/bosh-session', methods=['GET'])
 @login_required
