@@ -8,13 +8,14 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('LoginCtrl', function ($scope, $location, $state, $stateParams, Auth, notify) {
+  .controller('LoginCtrl', function ($scope, $location, $state, $stateParams, Auth, notify, $rootScope) {
     $scope.credentials = {email: '', password: ''};
     $scope.login = function () {
       Auth.login($scope.credentials).then(function (response) {
         if(response.headers('cp-totp-required') === 'True'){
           $state.go('two-factor');
         }else{
+          $rootScope.username = $scope.credentials.email;
           $state.go('organization_list');
         }
       }, function(){});
