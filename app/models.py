@@ -358,7 +358,8 @@ class User(UserMixin, Model, SerializerMixin):
             current_app.logger.info('info token', token)
             print(token)
 
-            send_email('reset password', [user.email],
+            send_email('Austrian Energy CERT - Kontaktdatenbank:
+Account-Aktivierung/Passwort-Reset', [user.email],
                    'auth/email/ec_reset_password', user=user,
                    token=token.decode("utf-8"), email=email )
 
