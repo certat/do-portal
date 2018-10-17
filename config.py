@@ -243,7 +243,7 @@ class TestingConfig(Config):
     SERVER_NAME = 'localhost'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'do-testing'
     WTF_CSRF_ENABLED = False
-    SQLALCHEMY_DATABASE_URI = 'postgresql://dope_test:dope_test@localhost:5432/dope_test'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://dope_test:dope_test@localhost:5433/dope_test'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BROKER_URL = ''
     CELERY_BACKEND = ''
