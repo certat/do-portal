@@ -8,7 +8,7 @@
  * Factory in the cpApp.
  */
 angular.module('cpApp')
-  .factory('Auth', function ($http, $cookies, $log, Session, config) {
+  .factory('Auth', function ($http, $cookies, $log, Session, config, $location) {
     // Service logic
     // ...
 
@@ -48,7 +48,7 @@ angular.module('cpApp')
           return $http.post(
               config.apiConfig.authUrl + '/activate-account',
               {'token':token, 'password':password}
-          );
+          ).then(function(){ $location.url('/login'); });
       },
       registerCPAccount: function(userInfo){
         console.log('Deprecated! Use Auth.' + this.post.name + '("register")');
