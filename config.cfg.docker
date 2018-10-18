@@ -6,7 +6,7 @@ from datetime import timedelta
 SECRET_KEY = "sB45#}\"So%TGY5jtq[^/uLq$}?4',`QdiKM_a3h*#/T9"
 SERVER_NAME = "localhost:5001"
 
-TESTING = True
+DEBUG = True
 
 REMEMBER_COOKIE_SECURE = False
 REMEMBER_COOKIE_HTTPONLY = True
