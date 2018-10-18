@@ -35,6 +35,11 @@ angular.module('cpApp')
 
     if ($stateParams.token) {
         $scope.token = $stateParams.token;
+        $scope.disable_token = 1;
+    }
+    if ($stateParams.email) {
+        $scope.email = $stateParams.email;
+        $scope.disable_email = 1;
     }
     $scope.activate_account = function() {
         Auth.activate_account($scope.token, $scope.password);

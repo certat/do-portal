@@ -35,7 +35,7 @@ angular
         }
       })
       .state('activate-account', {
-          url: '/activate-account?token',
+          url: '/activate-account?token&email',
         views: {
           content: {
             templateUrl: 'views/activate-account.html',
