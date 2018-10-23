@@ -22,7 +22,7 @@ from . import organizations, vulnerabilities, deliverable_files, fqdns  # noqa
 from . import membership_roles, countries, organization_memberships, users  # noqa
 from .analysis import av, static, vxstream, fireeye  # noqa
 from . import errors  # noqa
-
+from . import fody  # noqa
 
 app = Flask(__name__)
 app.config.from_envvar('DO_LOCAL_CONFIG')

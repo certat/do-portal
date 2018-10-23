@@ -1,0 +1,17 @@
+{
+  "get_cp_ripe_handle": {
+    "type": "object",
+    "properties": {
+      "ripe_org_hdl": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "organisation_automatic_id": {
+        "type": "int"
+      }
+    },
+    "required": ["ripe_org_hdl"]
+  }
+}
