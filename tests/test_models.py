@@ -26,10 +26,20 @@ def test_parent_org():
     assert org.parent_org_id == 1
     assert org.parent_org_abbreviation == 'cert'
 
+    org.abbreviation = 'eorg updated'
+    db.session.add(org)
+    db.session.commit()
+
+    assert org.abbreviation == 'eorg updated'
+
+
     org = Organization.query.filter_by(abbreviation='cert').first()
     assert org.abbreviation == 'cert'
     assert org.parent_org_id is None
     assert org.parent_org_abbreviation is None
+
+
+
 
 def test_user_memberships():
     u = User.query.filter_by(name="certmaster").first()
