@@ -1,9 +1,6 @@
-<div class="clearfix">
-    <a ng-show="org.id" role="button" class="btn btn-sm pull-right" ng-class="{'btn-success':edit, 'btn-default':!edit}" ng-click="edit=!edit">edit</a>
-</div><br/>
-
 <div ng-show="org.id && !edit" class="panel panel-primary">
   <div class="panel-heading">
+    <a ng-show="org.id" role="button" class="btn btn-xs pull-right btn-default" ng-click="edit=!edit">edit</a>
     <h3 class="panel-title">Organization details</h3>
   </div>
 
@@ -16,6 +13,7 @@
 
 <div ng-show="edit" class="panel panel-primary">
   <div class="panel-heading">
+    <a ng-show="org.id" role="button" class="btn btn-xs pull-right btn-success" ng-click="edit=!edit">edit</a>
     <h3 ng-show="org.id" class="panel-title">Edit organization details</h3>
     <h3 ng-show="!org.id" class="panel-title">Create organization</h3>
   </div>
@@ -75,6 +73,10 @@
 
 <div ng-if="org.id && gridOptions.data.length" class="panel panel-primary">
   <div class="panel-heading">
+    <a class="btn btn-xs btn-default pull-right" ui-sref="user_create">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      New Contact
+    </a>
     <h3 class="panel-title">Memberships</h3>
   </div>
   <div class="panel-body">
@@ -82,7 +84,3 @@
   </div>
 </div>
 
-<a class="btn btn-small btn-default" ui-sref="user_create">
-  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-  New Contact
-</a>
