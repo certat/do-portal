@@ -18,7 +18,7 @@
         <div class="col-xs-2">Picture</div>
 
         <div class="col-xs-10">
-          <input ng-hide="user.picture" type="file" data-key="picture" class="form-control" cp-file-select>
+          <input ng-hide="user.picture" type="file" data-key="picture" cp-file-select>
           <button ng-show="user.picture" ng-click="deleteFile(user,'picture')" title="Delete Picture">
             Delete {{user.picture_filename}}
           </button>
@@ -216,7 +216,7 @@
         <div class="col-xs-2">S/MIME</div>
         <div class="col-xs-10">
           <div ng-hide="m.smime_filename">
-            <input type="file" data-key="smime" class="form-control" cp-file-select>
+            <input type="file" data-key="smime" cp-file-select>
           </div>
           <div ng-show="m.smime_filename">
             <a class="btn btn-sm btn-default" ng-click="deleteFile(m,'smime')" title="Delete S/MIME">Delete</button>
@@ -230,7 +230,7 @@
         <div class="col-xs-2">Code of Conduct</div>
         <div class="col-xs-10">
           <div ng-hide="m.coc_filename">
-            <input type="file" data-key="coc" class="form-control" cp-file-select>
+            <input type="file" data-key="coc" cp-file-select>
           </div>
           <div ng-show="m.coc_filename">
             <a class="btn btn-sm btn-default" ng-click="deleteFile(m,'coc')" title="Delete Code of Conduct">Delete</button>
@@ -247,7 +247,7 @@
             Save
           </button>
           <button ng-show="user.id" ng-click="delete_membership(m.id, $index)" title="Remove this Membership"
-              type="submit" class="btn btn-default btn-small pull-right">
+              type="submit" class="btn btn-default btn-sm pull-right">
             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
             Delete
           </button>

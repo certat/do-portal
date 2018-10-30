@@ -36,6 +36,11 @@ angular.module('cpApp')
       delete: {
         method: 'DELETE',
         withCredentials: true
-      }
+      },
+      ripe_handle: {
+        url: config.apiConfig.webServiceUrl+'/ripe/handle/:handle',
+        method: 'GET',
+        isArray: false
+      },
     });
   });

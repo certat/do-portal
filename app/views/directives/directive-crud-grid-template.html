@@ -4,7 +4,7 @@
             <th ng-repeat="prop in properties">{{ prop | humanizeFilter }}</th>
             <th class="text-right">
                 <button ng-click="toggleAdd()" title="Add item"
-                        type="submit" class="btn btn-default btn-small">
+                        type="submit" class="btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>
             </th>
@@ -20,17 +20,17 @@
             </td>
             <td class="text-right">
                 <button ng-show="!o.active" ng-click="toggleEditMode(o)" title="Edit item"
-                        type="submit" class="btn btn-default btn-small">
+                        type="submit" class="btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 </button>
                 <button ng-show="o.active" ng-click="updateItem(o)" title="Update item"
-                        type="submit" class="btn btn-default btn-small">
+                        type="submit" class="btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
                 </button>
 
 
                 <button ng-click="deleteItem(o)" title="Remove this item"
-                        type="submit" class="btn btn-default btn-small">
+                        type="submit" class="btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </button>
             </td>
