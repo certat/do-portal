@@ -62,6 +62,18 @@ angular.module('cpApp')
             }, function(){});
     };
 
+//    var loadRipeHandles = function(ripe_handle_ids) {
+    var loadRipeHandles = function() {
+      return [{ 'name': 'AT&T Global Network Services Nederland B.V.', 'organisation_automatic_id': 1, 'ripe_org_hdl': 'ORG-AGNS1-RIPE' }];
+//      var ripe_handles = [];
+//      ripe_handle_ids.forEach(function(ripe_handle_id) {
+//          Organization.ripe_handle({'ripe_handle': ripe_handle_id}).$promise
+//            .then(function(resp){
+//                ripe_handles.push(resp);
+//            }, function(){});
+//      });
+    };
+
     function _array2hash(arr) {
         var hash = {};
         arr.forEach(function(i) { hash[i.id] = i; });
@@ -106,6 +118,8 @@ angular.module('cpApp')
               });
 
               $scope.org = result.shift();
+              $scope.org.ripe_handles = ['ORG-AGNS1-RIPE']; // TODO: delete this line
+              $scope.ripe_handles = loadRipeHandles($scope.org.ripe_handles);
               $scope.gridOptions.data = gridData;
               $scope.roleColumnDef.filter.selectOptions = get_role_options(roles);
             }
