@@ -20,16 +20,6 @@ def test_countries_inserted():
     country = Country.query.filter_by(cc='AR').first()
     assert country.name == 'Argentina', 'Dont cry for me Argentina'
 
-def test_parent_org():
-    org = Organization.query.filter_by(abbreviation='eorg').first()
-    assert org.full_name == 'eorg'
-    assert org.parent_org_id == 1
-    assert org.parent_org_abbreviation == 'cert'
-
-    org = Organization.query.filter_by(abbreviation='cert').first()
-    assert org.abbreviation == 'cert'
-    assert org.parent_org_id is None
-    assert org.parent_org_abbreviation is None
 
 def test_user_memberships():
     u = User.query.filter_by(name="certmaster").first()
@@ -76,7 +66,6 @@ def test_create_user():
     c = len(admin.get_users())
     assert c == 3, 'Verbung Admin has 3 users'
     certorg = Organization.query.filter_by(abbreviation='cert').first()
-
 
     newuser = User(name=App.username)
     with pytest.raises(AttributeError):
@@ -140,7 +129,7 @@ def test_login():
     assert auth is True
 
     new_password = User.reset_password_send_email('admin@energyorg.at')
-    (admin, auth) = User.authenticate('admin@energyorg.at', 'blaBla12$')
+    (admin, auth) = User.authenticate('admin@energyorg.at', new_password)
     assert auth is True
 
     new_password2 = 'B12blibli%'
@@ -214,17 +203,3 @@ def test_read_org_with_more_admins():
     assert [o.full_name for o in orgs] == \
         ['eorg-electricity', 'eorg-gas'], 'correct orgs'
     assert len([o.id for o in orgs]) == 2, 'OrgAdmin for 2 orgs'
-
-
-def test_delete_organisation():
-    admin = User.query.filter_by(name="E-Org Gas Admin").first()
-    org2delete = Organization.query.filter_by(full_name='eorg-gas').first()
-    assert admin.get_organization_memberships().count() == 5
-    assert org2delete.full_name == 'eorg-gas'
-    for om in admin.get_organization_memberships():
-        print(om.organization.full_name, om.membership_role.name)
-    org2delete.mark_as_deleted()
-    orgs = admin.get_organizations()
-    assert len([o.id for o in orgs]) == 1, 'OrgAdmin for 1 org'
-    assert admin.get_organization_memberships().count() == 2
-

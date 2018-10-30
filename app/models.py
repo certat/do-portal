@@ -27,6 +27,7 @@ from validate_email import validate_email
 from app.utils.mail import send_email
 import phonenumbers
 import time
+from app.fody_models import FodyOrganization
 # from pprint import pprint
 
 #: we don't have an app context yet,
@@ -697,6 +698,30 @@ class IpRange(Model, SerializerMixin):
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     ip_range = db.Column(db.String(255))
     deleted = db.Column(db.Integer, default=0)
+
+
+class FodyOrg_X_Organization(Model, SerializerMixin):
+    """Classless Inter-Domain Routing"""
+    __tablename__ = 'fodyorg_x_organization'
+    __public__ = ('id', 'organization_id', 'ripe_org_hdl')
+    query_class = FilteredQuery
+    id = db.Column(db.Integer, primary_key=True)
+    organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
+    # "soft" foreign key
+    _ripe_org_hdl = db.Column('ripe_org_hdl', db.String(255), unique=True)
+    deleted = db.Column(db.Integer, default=0)
+
+    @property
+    def ripe_org_hdl(self):
+        return self.ripe_org_hdl
+
+    # do not check for an error here, see
+    # https://docs.sqlalchemy.org/en/latest/orm/session_basics.html
+    # you have to handle it in the caller
+    @ripe_org_hdl.setter
+    def ripe_org_hdl(self, ripe_org_hdl):
+        fody_org = FodyOrganization(ripe_org_hdl = ripe_org_hdl)
+        self._ripe_org_hdl = fody_org.ripe_org_hdl
 
 
 class ContactEmail(Model, SerializerMixin):

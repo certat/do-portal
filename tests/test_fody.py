@@ -1,4 +1,5 @@
 from app.fody_models import FodyOrganization
+from app.models import Organization, FodyOrg_X_Organization
 from app import db
 import datetime
 import pytest
@@ -15,4 +16,10 @@ def test_fody_organization():
     with pytest.raises(AttributeError):
         fody_org = FodyOrganization(ripe_org_hdl = 'blablabla')
 
-
+def test_link_fody_org():
+    forg_x_org = FodyOrg_X_Organization();
+    certorg = Organization.query.filter_by(abbreviation='cert').first()
+    forg_x_org.organization_id = certorg.id
+    forg_x_org.ripe_org_hdl = 'ORG-AGNS1-RIPE'
+    db.session.add(forg_x_org)
+    db.session.commit()
