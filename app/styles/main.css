@@ -57,6 +57,7 @@ body {
 }
 .login-form, .activate-account-form {
   margin-top: 10em;
+  height: auto;
 }
 .dropdown-menu{
   font-size: 12px;
