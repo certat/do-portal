@@ -161,7 +161,7 @@ angular.module('cpApp')
 
     $scope.update_organization = function(){
       Organization.update({'id':$scope.org.id}, $scope.org, function(resp){
-        notify({classes: 'notify-success', message: resp});
+        notify({classes: 'notify-success', message: resp.message});
       }, function(){});
     };
 
@@ -169,7 +169,7 @@ angular.module('cpApp')
       if( window.confirm('Do you really want to delete this organization?') ) {
         Organization.delete({'id':$scope.org.id}, function(resp){
           $state.go('organization_list');
-          notify({classes: 'notify-success', message: resp});
+          notify({classes: 'notify-success', message: resp.message});
         }, function(){});
       }
     };
