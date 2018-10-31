@@ -20,6 +20,7 @@ angular.module('cpApp')
     };
     var uncacheSession = function (response) {
       Session.unset('auth');
+      $cookies.remove('username');
       return response;
     };
 

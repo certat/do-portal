@@ -191,8 +191,14 @@ angular
     $httpProvider.interceptors.push('authInterceptor');
     $httpProvider.defaults.withCredentials = true;
   }])
-  .run(function($rootScope, notify){
-    $rootScope.username = '';
+  .run(function($rootScope, notify, $cookies){
+    var username = $cookies.get('username');
+    if (username) {
+      $rootScope.username = username;
+    }
+    else {
+      $rootScope.username = '';
+    }
     $rootScope.alerts = [];
     $rootScope.closeAlert = function(index){
       $rootScope.alerts.splice(index, 1);
