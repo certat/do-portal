@@ -1,0 +1,42 @@
+fody.organisation_to_network_automatic
+           Table "fody.organisation_to_network_automatic"
+          Column           |            Type             | Modifiers
+---------------------------+-----------------------------+-----------
+ organisation_automatic_id | integer                     | not null
+ network_automatic_id      | integer                     | not null
+ import_source             | character varying(500)      | not null
+ import_time               | timestamp without time zone | not null
+
+fody.organisation_automatic
+                                                            Table "fody.organisation_automatic"
+          Column           |            Type             |                                            Modifiers
+---------------------------+-----------------------------+-------------------------------------------------------------------------------------------------
+ organisation_automatic_id | integer                     | not null default nextval('fody.organisation_automatic_organisation_automatic_id_seq'::regclass)
+ name                      | character varying(500)      | not null
+ sector_id                 | integer                     |
+ comment                   | text                        | not null default ''::text
+ ripe_org_hdl              | character varying(100)      | not null default ''::character varying
+ ti_handle                 | character varying(500)      | not null default ''::character varying
+ first_handle              | character varying(500)      | not null default ''::character varying
+ import_source             | character varying(500)      | not null
+ import_time               | timestamp without time zone | not null
+
+
+fody.network_automatic
+                                                       Table "fody.network_automatic"
+        Column        |            Type             |                                       Modifiers
+----------------------+-----------------------------+---------------------------------------------------------------------------------------
+ network_automatic_id | integer                     | not null default nextval('fody.network_automatic_network_automatic_id_seq'::regclass)
+ address              | cidr                        | not null
+ comment              | text                        | not null default ''::text
+ import_source        | character varying(500)      | not null
+ import_time          | timestamp without time zone | not null
+
+
+select ripe_org_hdl from
+          fody.organisation_automatic oa
+     join fody.organisation_to_network_automatic o2na
+       on oa.organisation_automatic_id = o2na.organisation_automatic_id
+    where ripe_org_hdl = 'ORG-AGNS1-RIPE'
+;
+

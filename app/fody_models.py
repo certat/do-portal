@@ -43,9 +43,10 @@ class FodyOrganization():
             select address
                    from fody.organisation_automatic oa
                    join fody.organisation_to_network_automatic o2na
-                     on oa.organisation_automatic_id = o2na.organisation_automatic_id
+                     on oa.organisation_automatic_id =
+                        o2na.organisation_automatic_id
                    join fody.network_automatic na
-                    on  o2na.network_automatic_id = na.network_automatic_id
+                     on o2na.network_automatic_id = na.network_automatic_id
                       where ripe_org_hdl = :b_ripe_org_hdl
             """
             ), {'b_ripe_org_hdl': self.ripe_org_hdl})

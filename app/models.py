@@ -711,9 +711,10 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
     _ripe_org_hdl = db.Column('ripe_org_hdl', db.String(255), unique=True)
     deleted = db.Column(db.Integer, default=0)
 
+
     @property
     def ripe_org_hdl(self):
-        return self.ripe_org_hdl
+        return self._ripe_org_hdl
 
     # do not check for an error here, see
     # https://docs.sqlalchemy.org/en/latest/orm/session_basics.html
@@ -845,7 +846,7 @@ class Organization(Model, SerializerMixin):
                   'ip_ranges', 'fqdns', 'asns', 'old_ID', 'is_sla',
                   'mail_template', 'mail_times', 'group_id', 'group',
                   'contact_emails', 'display_name', 'parent_org_id',
-                  'parent_org_abbreviation')
+                  'parent_org_abbreviation', 'ripe_organizations')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(
@@ -973,6 +974,27 @@ class Organization(Model, SerializerMixin):
     __mapper_args__ = {
         'order_by': abbreviation
     }
+
+    ripe_organizations = db.relationship(
+        'FodyOrg_X_Organization',
+        backref='fody_orgs_for_organization'
+    )
+
+    def upsert_ripe_handles(self, ripe_handles):
+        current_ripe_handles = [ro.ripe_org_hdl for ro in self.ripe_organizations]
+        for ripe_handle in ripe_handles:
+            if ripe_handle in current_ripe_handles:
+                current_ripe_handles.remove(ripe_handle)
+            else:
+                forg_x_org = FodyOrg_X_Organization();
+                forg_x_org.ripe_org_hdl = ripe_handle
+                self.ripe_organizations.append(forg_x_org)
+
+        for ripe_handle in current_ripe_handles:
+            forg_x_org = FodyOrg_X_Organization.query   \
+                .filter_by(_ripe_org_hdl = ripe_handle) \
+                .filter_by(organization_id = self.id).one()
+            self.ripe_organizations.remove(forg_x_org)
 
     @staticmethod
     def from_collab(customer):
@@ -1431,7 +1453,7 @@ class OrganizationMembership(Model, SerializerMixin):
     __public__ = ('id', 'user_id', 'organization_id', 'street', 'zip', 'city',
                   'country', 'comment', 'email', 'phone', 'mobile', 'membership_role_id',
                   'pgp_key_id', 'pgp_key_fingerprint', 'pgp_key', 'smime', 'country_id',
-                  'coc', 'coc_filename', 'smime_filename', 'sms_alerting')
+                  'coc', 'coc_filename', 'smime_filename', 'sms_alerting', )
 
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)

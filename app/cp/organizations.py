@@ -323,6 +323,12 @@ def add_cp_organization():
     except KeyError as ke:
         print('No contact emails provided: {}'.format(ke))
 
+    try:
+       ripe_handles = request.json.pop('ripe_handles')
+       o.upsert_ripe_handles(ripe_handles)
+    except KeyError:
+       None
+
     db.session.add(o)
     db.session.commit()
     return ApiResponse({'organization': o.serialize(),
@@ -430,7 +436,7 @@ def update_cp_organization(org_id):
         abort(403)
 
     untouchables_ = ['is_sla', 'mail_template', 'group_id', 'old_ID', 'group',
-                     'group_id']
+                     'group_id', 'parent_org_abbreviation']
     for k in untouchables_:
         request.json.pop(k, None)
 
@@ -451,6 +457,12 @@ def update_cp_organization(org_id):
                 email_=Email(email=e['email']),
                 fmb=fmb,
                 cp=cp))
+
+    try:
+       ripe_handles = request.json.pop('ripe_handles')
+       o.upsert_ripe_handles(ripe_handles)
+    except KeyError:
+       None
 
     db.session.add(o)
     db.session.commit()
