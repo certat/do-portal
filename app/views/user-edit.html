@@ -73,6 +73,15 @@
         </div>
       </div>
 
+      <div class="row show-grid">
+        <div class="col-xs-2">Organizations</div>
+        <div class="col-xs-10">
+          <div ng-repeat="m in memberships">
+              <a ui-sref="organizations({id: m.organization_id})">{{organizations[m.organization_id].display_name}}</a> ({{roles[m.membership_role_id].display_name}})
+          </div>
+        </div>
+      </div>
+
       <button ng-show="user.id" class="btn btn-default" ng-click="update_user()">
         <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
         Save
