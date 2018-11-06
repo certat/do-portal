@@ -14,8 +14,13 @@ def test_fody_organization():
     assert fody_org.name == 'AT&T Global Network Services Nederland B.V.', 'found name'
     assert '195.51.233.64/26' in fody_org.cidrs, 'found cidr'
     assert '195.51.215.0/25' in fody_org.cidrs, 'found cidr'
+    assert fody_org.asns == [], 'no asn'
     with pytest.raises(AttributeError):
         fody_org = FodyOrganization(ripe_org_hdl = 'blablabla')
+
+    fody_org2 = FodyOrganization(ripe_org_hdl = 'ORG-CAGF1-RIPE')
+    assert fody_org2.asns == ['12635', '15554', '25255'], 'no asn'
+
 
 def test_link_fody_org():
     forg_x_org = FodyOrg_X_Organization();

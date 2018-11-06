@@ -11,11 +11,13 @@ class FodyOrganization():
     __public__ = ('ripe_org_hdl',
                   'name',
                   'organisation_automatic_id',
-                  'cidrs')
+                  'cidrs',
+                  'asns')
+
+    cidrs = None
+    asns  = None
 
     def __init__(self, ripe_org_hdl):
-        self._cidrs = None
-
         results = db.engine.execute(
             text("""
             select ripe_org_hdl,
@@ -30,14 +32,16 @@ class FodyOrganization():
             self.ripe_org_hdl = row[0]
             self.name = row[1]
             self.organisation_automatic_id = row[2]
+            c = self._cidrs
+            a = self._asns
             return None
 
         raise AttributeError('no such handle')
 
     @property
-    def cidrs(self):
-        if self._cidrs:
-            return self._cidrs
+    def _cidrs(self):
+        if self.cidrs:
+            return self.cidrs
         results = db.engine.execute(
             text("""
             select address
@@ -51,6 +55,24 @@ class FodyOrganization():
             """
             ), {'b_ripe_org_hdl': self.ripe_org_hdl})
 
-        self._cidrs = [row[0] for row in results]
-        return self._cidrs;
+        self.cidrs = [row[0] for row in results]
+        return self.cidrs;
+
+    @property
+    def _asns(self):
+        if self.asns:
+            return self.asns
+        results = db.engine.execute(
+            text("""
+            select asn
+                   from fody.organisation_automatic oa
+                   join fody.organisation_to_asn_automatic o2aa
+                     on oa.organisation_automatic_id =
+                        o2aa.organisation_automatic_id
+                      where ripe_org_hdl = :b_ripe_org_hdl
+            """
+            ), {'b_ripe_org_hdl': self.ripe_org_hdl})
+
+        self.asns = [str(row[0]) for row in results]
+        return self.asns;
 
