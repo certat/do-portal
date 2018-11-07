@@ -72,12 +72,17 @@ angular.module('cpApp')
                   }, function(){});
     };
 
+    function _array2hash(arr) {
+        var hash = {};
+        arr.forEach(function(i) { hash[i.id] = i; });
+        return hash;
+    }
     var loadParallel = function() {
         return $q.all([ loadUser(), loadRoles(), loadOrgs(), loadCountries(), loadMemberships() ])
             .then( function( result ) {
               $scope.user          = result.shift();
-              $scope.roles         = result.shift();
-              $scope.organizations = result.shift();
+              $scope.roles         = _array2hash(result.shift());
+              $scope.organizations = _array2hash(result.shift());
               $scope.countries     = result.shift();
               $scope.memberships   = result.shift();
             }

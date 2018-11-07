@@ -103,7 +103,7 @@
         <div class="col-xs-2">Role *</div>
         <div class="col-xs-10">
           <select convert-to-number positive-integer class="form-control input-sm" required ng-model="m.membership_role_id">
-            <option ng-repeat="role in roles" value="{{role.id}}">{{role.display_name}}</option>
+            <option ng-repeat="(id, role) in roles" value="{{id}}">{{role.display_name}}</option>
           </select>
         </div>
       </div>
@@ -112,7 +112,7 @@
         <div class="col-xs-2">Organization *</div>
         <div class="col-xs-10">
           <select convert-to-number class="form-control input-sm" required positive-integer ng-model="m.organization_id">
-            <option ng-repeat="organization in organizations" value="{{organization.id}}">{{organization.abbreviation}}</option>
+            <option ng-repeat="(id, organization) in organizations" value="{{id}}">{{organization.abbreviation}}</option>
           </select>
         </div>
       </div>
