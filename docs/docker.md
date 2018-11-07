@@ -25,6 +25,15 @@ docker exec -i -t cert_db bash -c " \
      dropdb -U do_portal do_portal \
   && createdb -U do_portal -O do_portal do_portal"
 
+# create fody schema
+docker exec -e PGPASSWORD=do_portal -e PGHOST=cert_db -e PGUSER=do_portal -i -t do-portal bash -c " \
+     psql -c 'CREATE SCHEMA fody;' \
+  && psql -f install/contactdb.pgdump \
+  && psql -c 'grant select on all tables in schema fody to do_portal;' \
+  && psql -c 'grant select on all sequences in schema fody to do_portal;' \
+  && psql -c 'grant usage on schema fody to do_portal;' \
+  "
+
 docker exec -i -t do-portal bash -c " \
      source bin/activate \
   && echo misc/migrations clusterfuck \
