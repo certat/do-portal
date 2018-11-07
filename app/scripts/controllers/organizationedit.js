@@ -76,6 +76,20 @@ angular.module('cpApp')
                 resp.cidrs.forEach(function(cidr) {
                   $scope.ripe_details.cidrs.push({cidr: cidr, ripe_org_hdl: ripe_handle});
                 });
+                resp.abusecs.forEach(function(abusec) {
+                    $scope.gridOptions.data.push({
+                      user_id: '',
+                      user: '',
+                      role: 'Abuse-C Automatic',
+                      email: abusec,
+                      phone: '',
+                      city: '',
+                      country: '',
+                      street: '',
+                      zip: '',
+                      comment: 'RIPE handle: ' + ripe_handle,
+                    });
+                });
             }, function(){});
       });
     };
@@ -87,6 +101,7 @@ angular.module('cpApp')
     }
     function get_role_options(roles) {
         var roleOptions = [];
+        roleOptions.push({value: 'Abuse-C Automatic', label: 'Abuse-C Automatic'});
         for(var role_name in roles) {
           roleOptions.push({value: role_name, label: role_name});
         }
@@ -151,7 +166,7 @@ angular.module('cpApp')
           columnDefs: [
             { field: 'user_id', visible: false },
             { field: 'user',
-              cellTemplate: '<div class="ui-grid-cell-contents"><a ui-sref="user_edit({id:row.entity.user_id})">{{row.entity.user}}</a></div>',
+              cellTemplate: '<div class="ui-grid-cell-contents"><a ng-if="row.entity.user_id" ui-sref="user_edit({id:row.entity.user_id})">{{row.entity.user}}</a><span ng-if="!row.entity.user_id">{{row.entity.user}}</span></div>',
             },
             $scope.roleColumnDef,
             { field: 'email' },

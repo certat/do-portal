@@ -118,12 +118,12 @@
   </div>
 </div>
 
-<div ng-if="org.id && (ripe_details.asns.length || ripe_details.cidr.length)" class="panel panel-primary">
+<div ng-if="org.id && (ripe_details.asns.length || ripe_details.cidrs.length || ripe_details.abusecs.length)" class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">RIPE network objects</h3>
   </div>
   <div class="panel-body">
-    <p ng-if="ripe_details.asns.length">Autonomous systems</p>
+    <h3 ng-if="ripe_details.asns.length">Autonomous systems:</h3>
     <div ng-repeat="asn in ripe_details.asns">
       <div class="row show-grid">
           <div class="col-xs-10">
@@ -131,7 +131,7 @@
           </div>
       </div>
     </div>
-    <p ng-if="ripe_details.cidr.length">CIDRs</p>
+    <h3 ng-if="ripe_details.cidrs.length">CIDRs:</h3>
     <div ng-repeat="cidr in ripe_details.cidrs">
       <div class="row show-grid">
           <div class="col-xs-10">
