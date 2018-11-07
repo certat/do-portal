@@ -19,7 +19,8 @@ def test_fody_organization():
         fody_org = FodyOrganization(ripe_org_hdl = 'blablabla')
 
     fody_org2 = FodyOrganization(ripe_org_hdl = 'ORG-CAGF1-RIPE')
-    assert fody_org2.asns == ['12635', '15554', '25255'], 'no asn'
+    assert fody_org2.asns == ['12635', '15554', '25255'], 'asns'
+    assert fody_org2.abusecs == ['abuse@drei.com'], 'abuse contacts'
 
 
 def test_link_fody_org():

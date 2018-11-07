@@ -12,10 +12,12 @@ class FodyOrganization():
                   'name',
                   'organisation_automatic_id',
                   'cidrs',
-                  'asns')
+                  'asns',
+                  'abusecs')
 
-    cidrs = None
-    asns  = None
+    cidrs   = None
+    asns    = None
+    abusecs = None
 
     def __init__(self, ripe_org_hdl):
         results = db.engine.execute(
@@ -34,6 +36,7 @@ class FodyOrganization():
             self.organisation_automatic_id = row[2]
             c = self._cidrs
             a = self._asns
+            ac = self._abusecs
             return None
 
         raise AttributeError('no such handle')
@@ -75,4 +78,21 @@ class FodyOrganization():
 
         self.asns = [str(row[0]) for row in results]
         return self.asns;
+
+    @property
+    def _abusecs(self):
+        if self.abusecs:
+            return self.abusecs
+        results = db.engine.execute(
+            text("""
+            select email
+                   from fody.organisation_automatic oa
+                   join fody.contact_automatic ca
+                     on oa.organisation_automatic_id =
+                        ca.organisation_automatic_id
+                      where ripe_org_hdl = :b_ripe_org_hdl
+            """
+            ), {'b_ripe_org_hdl': self.ripe_org_hdl})
+
+        self.abusecs = [str(row[0]) for row in results]
 
