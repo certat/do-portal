@@ -48,4 +48,9 @@ def test_link_fody_org():
     current_ripe_handles = [ro.ripe_org_hdl for ro in certorg.ripe_organizations]
     assert current_ripe_handles == ['ORG-AAPA1-RIPE', 'ORG-CA1-RIPE']
 
+    certorg.upsert_ripe_handles([])
+    db.session.add(certorg)
+    db.session.commit()
+    # current_ripe_handles = [ro.ripe_org_hdl for ro in certorg.ripe_organizations]
+    assert certorg.ripe_handles == []
 

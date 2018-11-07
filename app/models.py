@@ -998,7 +998,9 @@ class Organization(Model, SerializerMixin):
             forg_x_org = FodyOrg_X_Organization.query   \
                 .filter_by(_ripe_org_hdl = ripe_handle) \
                 .filter_by(organization_id = self.id).one()
+            # forg_x_org.delete();
             self.ripe_organizations.remove(forg_x_org)
+            db.session.delete(forg_x_org)
 
     @staticmethod
     def from_collab(customer):
