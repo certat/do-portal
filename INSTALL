@@ -5,5 +5,6 @@ do_portal=> update alembic_version set version_num = '12ffc87fb64d';
 UPDATE 1
 
 source ~/do-portal/bin/activate
+export DO_LOCAL_CONFIG=/home/cp-server/do-portal/config.cfg
 python3 manage.py db upgrade
 
