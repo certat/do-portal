@@ -1,0 +1,9 @@
+to upgrade to the current version:
+
+in the database:
+do_portal=> update alembic_version set version_num = '12ffc87fb64d';
+UPDATE 1
+
+source ~/do-portal/bin/activate
+python3 manage.py db upgrade
+
