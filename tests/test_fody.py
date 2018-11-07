@@ -34,21 +34,21 @@ def test_link_fody_org():
     for ripe_org in certorg.ripe_organizations:
         assert ripe_org.ripe_org_hdl == 'ORG-AGNS1-RIPE'
 
-    certorg.upsert_ripe_handles(['ORG-AGNS1-RIPE', 'ORG-AAPA1-RIPE'])
+    certorg.ripe_handles = ['ORG-AGNS1-RIPE', 'ORG-AAPA1-RIPE']
     db.session.add(certorg)
     db.session.commit()
 
     current_ripe_handles = [ro.ripe_org_hdl for ro in certorg.ripe_organizations]
     assert current_ripe_handles == ['ORG-AGNS1-RIPE', 'ORG-AAPA1-RIPE']
 
-    certorg.upsert_ripe_handles(['ORG-AAPA1-RIPE', 'ORG-CA1-RIPE'])
+    certorg.ripe_handles = ['ORG-AAPA1-RIPE', 'ORG-CA1-RIPE']
     db.session.add(certorg)
     db.session.commit()
 
     current_ripe_handles = [ro.ripe_org_hdl for ro in certorg.ripe_organizations]
     assert current_ripe_handles == ['ORG-AAPA1-RIPE', 'ORG-CA1-RIPE']
 
-    certorg.upsert_ripe_handles([])
+    certorg.ripe_handles = []
     db.session.add(certorg)
     db.session.commit()
     # current_ripe_handles = [ro.ripe_org_hdl for ro in certorg.ripe_organizations]

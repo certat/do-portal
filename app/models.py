@@ -984,7 +984,8 @@ class Organization(Model, SerializerMixin):
         backref='fody_orgs_for_organization'
     )
 
-    def upsert_ripe_handles(self, ripe_handles):
+    @ripe_handles.setter
+    def ripe_handles(self, ripe_handles):
         current_ripe_handles = [ro.ripe_org_hdl for ro in self.ripe_organizations]
         for ripe_handle in ripe_handles:
             if ripe_handle in current_ripe_handles:

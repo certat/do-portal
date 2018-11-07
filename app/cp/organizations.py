@@ -325,7 +325,7 @@ def add_cp_organization():
 
     try:
        ripe_handles = request.json.pop('ripe_handles')
-       o.upsert_ripe_handles(ripe_handles)
+       o.ripe_handles = ripe_handles
     except KeyError:
        None
 
@@ -460,7 +460,7 @@ def update_cp_organization(org_id):
 
     try:
        ripe_handles = request.json.pop('ripe_handles')
-       o.upsert_ripe_handles(ripe_handles)
+       o.ripe_handles = ripe_handles
     except KeyError:
        None
 
