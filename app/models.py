@@ -846,7 +846,7 @@ class Organization(Model, SerializerMixin):
                   'ip_ranges', 'fqdns', 'asns', 'old_ID', 'is_sla',
                   'mail_template', 'mail_times', 'group_id', 'group',
                   'contact_emails', 'display_name', 'parent_org_id',
-                  'parent_org_abbreviation', 'ripe_organizations')
+                  'parent_org_abbreviation', 'ripe_handles')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(
@@ -897,6 +897,10 @@ class Organization(Model, SerializerMixin):
     def parent_org_abbreviation(self, value):
         self.__parent_org_abbreviation = value
     '''
+
+    @property
+    def ripe_handles(self):
+        return [ro.ripe_org_hdl for ro in self.ripe_organizations]
 
     parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     child_organizations = db.relationship('Organization')
