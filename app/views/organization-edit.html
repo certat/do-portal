@@ -53,21 +53,54 @@
       </div>
     </div>
 
+    <div class="row show-grid">
+      <div class="col-xs-2"></div>
+      <div class="col-xs-2">
+        <input type="text" class="form-control input-sm"
+            placeholder="RIPE handle" required
+            ng-model="new_ripe_handle">
+      </div>
+      <div class="col-xs-1">
+        <button class="btn btn-default btn-sm" ng-click="add_ripe_handle()">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          Add RIPE handle
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="panel-footer">
-    <button ng-show="org.id" class="btn btn-default" ng-click="update_organization()">
+    <button ng-show="org.id" class="btn btn-default btn-sm" ng-click="update_organization()">
       <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
       Save
     </button>
-    <button ng-show="org.id" class="btn btn-default pull-right" ng-click="delete_organization()">
+    <button ng-show="org.id" class="btn btn-default btn-sm pull-right" ng-click="delete_organization()">
       <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
       Delete
     </button>
-    <button ng-hide="org.id" class="btn btn-default" ng-click="create_organization()">
+    <button ng-hide="org.id" class="btn btn-default btn-sm" ng-click="create_organization()">
       <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
       Create
     </button>
+  </div>
+</div>
+
+<div ng-if="org.id && org.ripe_handles.length" class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">RIPE Handles</h3>
+  </div>
+  <div class="panel-body">
+    <div ng-repeat="ripe_handle in org.ripe_handles">
+      <div class="row show-grid">
+          <div class="col-xs-10">
+            {{ripe_handle}}
+	    <button ng-show="edit" class="btn btn-sm btn-default" ng-click="delete_ripe_handle(ripe_handle, $index)">
+	      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+	      remove
+	    </button>
+          </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -85,14 +118,25 @@
   </div>
 </div>
 
-<div ng-if="org.id && ripe_handles.length" class="panel panel-primary">
+<div ng-if="org.id && (ripe_details.asns.length || ripe_details.cidr.length)" class="panel panel-primary">
   <div class="panel-heading">
-    <h3 class="panel-title">RIPE Network Objects</h3>
+    <h3 class="panel-title">RIPE network objects</h3>
   </div>
   <div class="panel-body">
-    <div ng-repeat="ripe_handle in ripe_handles">
+    <p ng-if="ripe_details.asns.length">Autonomous systems</p>
+    <div ng-repeat="asn in ripe_details.asns">
       <div class="row show-grid">
-          <div class="col-xs-10">{{ripe_handle.name}}</div>
+          <div class="col-xs-10">
+            {{asn.asn}} ({{asn.ripe_org_hdl}})
+          </div>
+      </div>
+    </div>
+    <p ng-if="ripe_details.cidr.length">CIDRs</p>
+    <div ng-repeat="cidr in ripe_details.cidrs">
+      <div class="row show-grid">
+          <div class="col-xs-10">
+            {{cidr.cidr}} ({{cidr.ripe_org_hdl}})
+          </div>
       </div>
     </div>
   </div>

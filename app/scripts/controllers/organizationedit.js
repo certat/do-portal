@@ -62,16 +62,22 @@ angular.module('cpApp')
             }, function(){});
     };
 
-//    var loadRipeHandles = function(ripe_handle_ids) {
-    var loadRipeHandles = function() {
-      return [{ 'name': 'AT&T Global Network Services Nederland B.V.', 'organisation_automatic_id': 1, 'ripe_org_hdl': 'ORG-AGNS1-RIPE' }];
-//      var ripe_handles = [];
-//      ripe_handle_ids.forEach(function(ripe_handle_id) {
-//          Organization.ripe_handle({'ripe_handle': ripe_handle_id}).$promise
-//            .then(function(resp){
-//                ripe_handles.push(resp);
-//            }, function(){});
-//      });
+    var loadRipeDetails = function() {
+      $scope.ripe_details = {
+          asns:  [],
+          cidrs: [],
+      };
+      $scope.org.ripe_handles.forEach(function(ripe_handle) {
+          Organization.ripe_details({'handle': ripe_handle}).$promise
+            .then(function(resp){
+                resp.asns.forEach(function(asn) {
+                  $scope.ripe_details.asns.push({asn: asn, ripe_org_hdl: ripe_handle});
+                });
+                resp.cidrs.forEach(function(cidr) {
+                  $scope.ripe_details.cidrs.push({cidr: cidr, ripe_org_hdl: ripe_handle});
+                });
+            }, function(){});
+      });
     };
 
     function _array2hash(arr) {
@@ -118,10 +124,9 @@ angular.module('cpApp')
               });
 
               $scope.org = result.shift();
-              $scope.org.ripe_handles = ['ORG-AGNS1-RIPE']; // TODO: delete this line
-              $scope.ripe_handles = loadRipeHandles($scope.org.ripe_handles);
               $scope.gridOptions.data = gridData;
               $scope.roleColumnDef.filter.selectOptions = get_role_options(roles);
+              loadRipeDetails();
             }
         );
     };
@@ -173,9 +178,10 @@ angular.module('cpApp')
       }, function(){});
     };
 
-    $scope.update_organization = function(){
-      Organization.update({'id':$scope.org.id}, $scope.org, function(resp){
+    $scope.update_organization = function(success_cb){
+      return Organization.update({'id':$scope.org.id}, $scope.org, function(resp){
         notify({classes: 'notify-success', message: resp.message});
+        if (typeof success_cb === 'function') { success_cb(); }
       }, function(){});
     };
 
@@ -186,5 +192,37 @@ angular.module('cpApp')
           notify({classes: 'notify-success', message: resp.message});
         }, function(){});
       }
+    };
+    $scope.add_ripe_handle = function(){
+        if ($scope.org.hasOwnProperty('ripe_handles')) {
+          if ($scope.org.ripe_handles.includes($scope.new_ripe_handle)) {
+              notify({classes: 'notify-error', message: 'this RIPE handle already exists.'});
+              return;
+          }
+          $scope.org.ripe_handles.push($scope.new_ripe_handle);
+        }
+        else {
+            $scope.org.ripe_handles = [$scope.new_ripe_handle];
+        }
+        $scope.update_organization(function(){
+          notify({
+            classes: 'notify-success',
+            message: 'added new RIPE handle: ' + $scope.new_ripe_handle
+          });
+          $scope.new_ripe_handle = '';
+          loadParallel();
+        });
+    };
+    $scope.delete_ripe_handle = function(ripe_handle, index){
+        if( window.confirm('Do you really want to delete this RIPE handle? (' + ripe_handle + ')') ) {
+          $scope.org.ripe_handles.splice(index, 1);
+          $scope.update_organization(function(){
+            notify({
+              classes: 'notify-success',
+              message: 'deleted RIPE handle: ' + ripe_handle
+            });
+            loadParallel();
+          });
+        }
     };
   });

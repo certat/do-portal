@@ -152,6 +152,7 @@ angular.module('cpApp')
       if( window.confirm('Do you really want to delete this membership?') ) {
 
         if (!m_id) {
+          // membership not saved to backend yet
           $scope.memberships.splice(index, 1);
         }
         else {
