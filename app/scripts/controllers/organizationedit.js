@@ -193,11 +193,13 @@ angular.module('cpApp')
       }, function(){});
     };
 
-    $scope.update_organization = function(success_cb){
+    $scope.update_organization = function(success_cb, error_cb){
       return Organization.update({'id':$scope.org.id}, $scope.org, function(resp){
         notify({classes: 'notify-success', message: resp.message});
         if (typeof success_cb === 'function') { success_cb(); }
-      }, function(){});
+      }, function(){
+        if (typeof error_cb === 'function') { error_cb(); }
+      });
     };
 
     $scope.delete_organization = function(){
@@ -219,25 +221,35 @@ angular.module('cpApp')
         else {
             $scope.org.ripe_handles = [$scope.new_ripe_handle];
         }
-        $scope.update_organization(function(){
-          notify({
-            classes: 'notify-success',
-            message: 'added new RIPE handle: ' + $scope.new_ripe_handle
-          });
-          $scope.new_ripe_handle = '';
-          loadParallel();
-        });
+        $scope.update_organization(
+          function(){
+            notify({
+              classes: 'notify-success',
+              message: 'added new RIPE handle: ' + $scope.new_ripe_handle
+            });
+            $scope.new_ripe_handle = '';
+            loadParallel();
+          },
+          function() {
+            $scope.org.ripe_handles.splice(-1,1);
+          }
+        );
     };
     $scope.delete_ripe_handle = function(ripe_handle, index){
         if( window.confirm('Do you really want to delete this RIPE handle? (' + ripe_handle + ')') ) {
           $scope.org.ripe_handles.splice(index, 1);
-          $scope.update_organization(function(){
-            notify({
-              classes: 'notify-success',
-              message: 'deleted RIPE handle: ' + ripe_handle
-            });
-            loadParallel();
-          });
+          $scope.update_organization(
+            function(){
+              notify({
+                classes: 'notify-success',
+                message: 'deleted RIPE handle: ' + ripe_handle
+              });
+              loadParallel();
+            },
+            function() {
+              $scope.org.ripe_handles.splice(index, 0, ripe_handle);
+            }
+          );
         }
     };
   });
