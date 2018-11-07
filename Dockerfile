@@ -14,7 +14,7 @@ RUN    apt-get update \
 RUN useradd --create-home --home-dir /home/cert \
             --user-group --shell /bin/bash cert
 
-COPY --chown=cert:cert . /home/cert/do-portal
+COPY --chown=cert:cert requirements.txt /home/cert/do-portal/requirements.txt
 WORKDIR /home/cert
 USER cert
 
@@ -23,15 +23,15 @@ ENV LANG en_US.UTF-8
 ENV LC_ALL C.UTF-8
 ENV DO_LOCAL_CONFIG /home/cert/do-portal/config.cfg
 
-RUN pip3 install -U pip setuptools
 WORKDIR /home/cert/do-portal
 RUN python3 -m venv ~/do-portal
 
-RUN /bin/bash -c "source ./bin/activate && pip3 install -r requirements.txt"
+RUN /bin/bash -c "source ./bin/activate && pip install -U pip setuptools && pip install -r requirements.txt"
 
+COPY --chown=cert:cert . /home/cert/do-portal
 RUN mkdir logs
 RUN cp config.cfg.docker config.cfg
 
 EXPOSE 5001
 
-CMD /bin/bash -c "source ./bin/activate && python3 manage.py run -h 0.0.0.0 -p 5001"
+CMD /bin/bash -c "source ./bin/activate && python manage.py run -h 0.0.0.0 -p 5001"
