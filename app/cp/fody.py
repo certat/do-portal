@@ -12,4 +12,4 @@ def get_cp_ripe_handle(ripe_org_hdl):
         fody_org = FodyOrganization(ripe_org_hdl)
         return ApiResponse(fody_org.__dict__)
     except AttributeError as ae:
-        return ApiResponse({'message': str(ae) ,}, 422, {})
+        return ApiResponse({'message': str(ae) ,}, 404, {})

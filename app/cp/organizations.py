@@ -324,10 +324,12 @@ def add_cp_organization():
         print('No contact emails provided: {}'.format(ke))
 
     try:
-       ripe_handles = request.json.pop('ripe_handles')
-       o.ripe_handles = ripe_handles
+        ripe_handles = request.json.pop('ripe_handles')
+        o.ripe_handles = ripe_handles
     except KeyError:
-       None
+        None
+    except AttributeError as ae:
+        return ApiResponse({'message': str(ae) ,}, 404, {})
 
     db.session.add(o)
     db.session.commit()
@@ -442,6 +444,15 @@ def update_cp_organization(org_id):
 
     contact_emails = request.json.pop('contact_emails', [])
     abuse_emails = request.json.pop('abuse_emails', [])
+
+    try:
+        ripe_handles = request.json.pop('ripe_handles')
+        o.ripe_handles = ripe_handles
+    except KeyError:
+        None
+    except AttributeError as ae:
+        return ApiResponse({'message': str(ae) ,}, 404, {})
+
     o.from_json(request.json)
     o.contact_emails = []
     o.abuse_emails = []
@@ -457,12 +468,6 @@ def update_cp_organization(org_id):
                 email_=Email(email=e['email']),
                 fmb=fmb,
                 cp=cp))
-
-    try:
-       ripe_handles = request.json.pop('ripe_handles')
-       o.ripe_handles = ripe_handles
-    except KeyError:
-       None
 
     db.session.add(o)
     db.session.commit()
