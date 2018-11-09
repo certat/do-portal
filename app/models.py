@@ -903,7 +903,13 @@ class Organization(Model, SerializerMixin):
         return [ro.ripe_org_hdl for ro in self.ripe_organizations]
 
     parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
-    child_organizations = db.relationship('Organization')
+    child_organizations = db.relationship(
+        'Organization',
+        uselist=True,
+        primaryjoin="and_(foreign(Organization.id) == remote(Organization.parent_org_id), "
+                    "remote(Organization.deleted) == 0)",
+        )
+
     parent_org = db.relationship('Organization', remote_side=[id])
     child_orgs = db.relationship('Organization',
             # backref=db.backref('parent', remote_side=[id])
@@ -1053,6 +1059,8 @@ class Organization(Model, SerializerMixin):
 
     # organization.mark_as_deleted
     def mark_as_deleted(self):
+        if self.child_organizations:
+            raise AttributeError('Organisation cannot be deleted because it has child organisations')
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
         for um in self.organization_memberships:
