@@ -1,5 +1,6 @@
 from app.models import User, Organization, MembershipRole, \
     OrganizationMembership, Country
+from app.fody_models import FodyOrganization
 from app import db
 import datetime
 import pytest
@@ -221,3 +222,11 @@ def test_delete_organization_with_childs():
     with pytest.raises(AttributeError):
         eorg.mark_as_deleted()
 
+def test_organization_notification_settings():
+    eorg = Organization.query.filter_by(abbreviation='eorg').one()
+    eorg.ripe_handles = ['ORG-AGNS1-RIPE', 'ORG-AAPA1-RIPE']
+    db.session.add(eorg)
+    db.session.commit()
+
+    for eorg_ripe_org in eorg.ripe_organizations:
+        print(FodyOrganization(eorg_ripe_org.ripe_org_hdl).asns)

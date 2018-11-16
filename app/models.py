@@ -724,6 +724,21 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
         fody_org = FodyOrganization(ripe_org_hdl = ripe_org_hdl)
         self._ripe_org_hdl = fody_org.ripe_org_hdl
 
+class NotificationSetting(Model, SerializerMixin):
+    __tablename__ = 'notification_settings'
+    __public__ = ('delivery_protocol', 'delivery_format', 'notification_interval',
+                  'asn', 'cidr', 'ripe_org_hdl'  )
+
+    query_class = FilteredQuery
+
+    id = db.Column(db.Integer, primary_key=True)
+    organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
+    delivery_protocol = db.Column(db.Enum('Mail', 'REST API', 'AMQP', name='delivery_protocol_enum'), default='Mail')
+    delivery_format = db.Column(db.Enum('CSV', 'JSON', name='delivery_format_enum'), default='CSV')
+    ripe_org_hdl = db.Column('ripe_org_hdl', db.String(255))
+    asn = db.Column('asn', db.String(255), unique=True)
+    cidr = db.Column(postgres.CIDR)
+    deleted = db.Column(db.Integer, default=0)
 
 class ContactEmail(Model, SerializerMixin):
     """ContactEmail Association Object
@@ -988,6 +1003,11 @@ class Organization(Model, SerializerMixin):
     ripe_organizations = db.relationship(
         'FodyOrg_X_Organization',
         backref='fody_orgs_for_organization'
+    )
+
+    notification_settings = db.relationship(
+        'NotificationSetting',
+        backref='notification_settings_for_organization'
     )
 
     @ripe_handles.setter
