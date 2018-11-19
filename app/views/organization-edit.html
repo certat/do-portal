@@ -53,15 +53,14 @@
       </div>
     </div>
 
-    <div ng-if="org.id" class="row show-grid">
+    <div ng-show="org.id" class="row show-grid">
       <div class="col-xs-2"></div>
       <div class="col-xs-2">
         <input type="text" class="form-control input-sm"
-            placeholder="RIPE handle" required
-            ng-model="new_ripe_handle">
+            placeholder="RIPE handle" ng-model="new_ripe_handle">
       </div>
       <div class="col-xs-1">
-        <button class="btn btn-default btn-sm" ng-click="add_ripe_handle()">
+        <button class="btn btn-default btn-sm" ng-disabled="!new_ripe_handle" ng-click="add_ripe_handle()">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           Add RIPE handle
         </button>
