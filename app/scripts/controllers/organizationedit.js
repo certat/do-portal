@@ -72,9 +72,10 @@ angular.module('cpApp')
             .then(function(resp){
                 resp.asns.forEach(function(asn) {
                   $scope.ripe_details.asns.push({asn: asn, ripe_org_hdl: ripe_handle});
+                  $scope.ripe_details.asns.push({asn: asn, ripe_org_hdl: ripe_handle, delivery_protocol: 'API', delivery_format: 'CSV', notification_interval: 10});
                 });
                 resp.cidrs.forEach(function(cidr) {
-                  $scope.ripe_details.cidrs.push({cidr: cidr, ripe_org_hdl: ripe_handle});
+                  $scope.ripe_details.cidrs.push({cidr: cidr, ripe_org_hdl: ripe_handle, delivery_protocol: 'REST', delivery_format: 'JSON', notification_interval: 0});
                 });
                 resp.abusecs.forEach(function(abusec) {
                     $scope.gridOptions.data.push({
@@ -251,5 +252,9 @@ angular.module('cpApp')
             }
           );
         }
+    };
+    $scope.update_ripe_detail = function(item) {
+      delete item.dirty;
+      console.log(item);
     };
   });

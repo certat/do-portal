@@ -42,5 +42,9 @@ angular.module('cpApp')
         method: 'GET',
         isArray: false
       },
+      update_ripe_details: {
+        url: config.apiConfig.webServiceUrl+'/ripe/handle/:handle',
+        method: 'PUT',
+      },
     });
   });
