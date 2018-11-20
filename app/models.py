@@ -27,7 +27,7 @@ from validate_email import validate_email
 from app.utils.mail import send_email
 import phonenumbers
 import time
-from app.fody_models import FodyOrganization
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 # from pprint import pprint
 
 #: we don't have an app context yet,
@@ -701,16 +701,23 @@ class IpRange(Model, SerializerMixin):
 
 
 class FodyOrg_X_Organization(Model, SerializerMixin):
-    """Classless Inter-Domain Routing"""
     __tablename__ = 'fodyorg_x_organization'
-    __public__ = ('id', 'organization_id', 'ripe_org_hdl')
+    __public__ = ('id', 'organization_id', 'ripe_org_hdl', 'notification_settings')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     # "soft" foreign key
     _ripe_org_hdl = db.Column('ripe_org_hdl', db.String(255), unique=True)
     deleted = db.Column(db.Integer, default=0)
-
+    '''
+    _notification_settings = db.relationship('NotificationSetting',
+          primaryjoin = "and_(foreign(NotificationSetting.organization_id) == \
+                           FodyOrg_X_Organization.organization_id,"
+                        "foreign(NotificationSetting.ripe_org_hdl) == \
+                          FodyOrg_X_Organization._ripe_org_hdl)")
+    '''
+    fody_org = None
+    _notification_settings = None
 
     @property
     def ripe_org_hdl(self):
@@ -721,13 +728,66 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
     # you have to handle it in the caller
     @ripe_org_hdl.setter
     def ripe_org_hdl(self, ripe_org_hdl):
-        fody_org = FodyOrganization(ripe_org_hdl = ripe_org_hdl)
-        self._ripe_org_hdl = fody_org.ripe_org_hdl
+        self.fody_org = FodyOrganization(ripe_org_hdl = ripe_org_hdl)
+        self._ripe_org_hdl = self.fody_org.ripe_org_hdl
+
+    @property
+    def notification_settings(self):
+    #    return self._notification_settings
+
+        nss = NotificationSetting.query \
+                .filter_by(ripe_org_hdl=self.ripe_org_hdl,
+                           organization_id=self.organization_id ).all()
+
+        notification_settings = {}
+        for ns in nss:
+            key = ns.asn if ns.asn else ns.cidr
+            notification_settings[key] = \
+                  {'delivery_protocol':     ns.delivery_protocol,
+                   'delivery_format':       ns.delivery_format,
+                   'notification_interval': ns.notification_interval}
+
+        self._notification_settings = notification_settings
+        return self._notification_settings
+
+    def upsert_notification_setting(self,
+                               asn = None,
+                               cidr = None,
+                               delivery_protocol = 'Mail',
+                               delivery_format = 'CSV',
+                               notification_interval = 0):
+
+         if asn and asn not in self.fody_org.asns:
+             raise AttributeError('no such asn or not owned')
+
+         if cidr and cidr not in self.fody_org.cidrs:
+             raise AttributeError('no such cidr or not owned')
+
+         try:
+             ns = NotificationSetting.query \
+                    .filter_by(asn=asn, cidr=cidr,
+                               organization_id=self.organization_id,
+                               ripe_org_hdl=self.ripe_org_hdl) \
+                    .one()
+         except NoResultFound:
+             ns = NotificationSetting()
+             ns.asn = asn
+             ns.cidr = cidr
+             ns.organization_id = self.organization_id
+             ns.ripe_org_hdl = self.ripe_org_hdl
+
+         ns.delivery_protocol = delivery_protocol
+         ns.delivery_format = delivery_format,
+         ns.notification_interval = notification_interval
+         db.session.add(ns)
+         self._notification_settings
+
+
 
 class NotificationSetting(Model, SerializerMixin):
     __tablename__ = 'notification_settings'
     __public__ = ('delivery_protocol', 'delivery_format', 'notification_interval',
-                  'asn', 'cidr', 'ripe_org_hdl'  )
+                  'asn', 'cidr', 'ripe_org_hdl', 'organization_id'  )
 
     query_class = FilteredQuery
 
@@ -735,10 +795,108 @@ class NotificationSetting(Model, SerializerMixin):
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     delivery_protocol = db.Column(db.Enum('Mail', 'REST API', 'AMQP', name='delivery_protocol_enum'), default='Mail')
     delivery_format = db.Column(db.Enum('CSV', 'JSON', name='delivery_format_enum'), default='CSV')
+    notification_interval = db.Column(db.Integer, default=0)
     ripe_org_hdl = db.Column('ripe_org_hdl', db.String(255))
     asn = db.Column('asn', db.String(255), unique=True)
     cidr = db.Column(postgres.CIDR)
     deleted = db.Column(db.Integer, default=0)
+
+    # ripe_org_hdl = db.Column(db.Integer,
+    #               db.ForeignKey('fody.organisation_automatic.ripe_org_hdl'))
+
+
+
+class FodyOrganization():
+    # __tablename__ = 'fody.organisation_automatic'
+    __public__ = ('ripe_org_hdl',
+                  'name',
+                  'organisation_automatic_id',
+                  'cidrs',
+                  'asns',
+                  'abusecs'
+                  )
+
+    cidrs   = None
+    asns    = None
+    abusecs = None
+
+    def __init__(self, ripe_org_hdl):
+        results = db.engine.execute(
+            text("""
+            select ripe_org_hdl,
+                   name,
+                   organisation_automatic_id
+              from fody.organisation_automatic
+             where ripe_org_hdl = :b_ripe_org_hdl
+            """
+            ), {'b_ripe_org_hdl': ripe_org_hdl})
+
+        for row in results:
+            self.ripe_org_hdl = row[0]
+            self.name = row[1]
+            self.organisation_automatic_id = row[2]
+            c = self._cidrs
+            a = self._asns
+            ac = self._abusecs
+            return None
+
+        raise AttributeError('no such handle')
+
+    @property
+    def _cidrs(self):
+        if self.cidrs:
+            return self.cidrs
+        results = db.engine.execute(
+            text("""
+            select address
+                   from fody.organisation_automatic oa
+                   join fody.organisation_to_network_automatic o2na
+                     on oa.organisation_automatic_id =
+                        o2na.organisation_automatic_id
+                   join fody.network_automatic na
+                     on o2na.network_automatic_id = na.network_automatic_id
+                      where ripe_org_hdl = :b_ripe_org_hdl
+            """
+            ), {'b_ripe_org_hdl': self.ripe_org_hdl})
+
+        self.cidrs = [row[0] for row in results]
+        return self.cidrs;
+
+    @property
+    def _asns(self):
+        if self.asns:
+            return self.asns
+        results = db.engine.execute(
+            text("""
+            select asn
+                   from fody.organisation_automatic oa
+                   join fody.organisation_to_asn_automatic o2aa
+                     on oa.organisation_automatic_id =
+                        o2aa.organisation_automatic_id
+                      where ripe_org_hdl = :b_ripe_org_hdl
+            """
+            ), {'b_ripe_org_hdl': self.ripe_org_hdl})
+
+        self.asns = [str(row[0]) for row in results]
+        return self.asns;
+
+    @property
+    def _abusecs(self):
+        if self.abusecs:
+            return self.abusecs
+        results = db.engine.execute(
+            text("""
+            select email
+                   from fody.organisation_automatic oa
+                   join fody.contact_automatic ca
+                     on oa.organisation_automatic_id =
+                        ca.organisation_automatic_id
+                      where ripe_org_hdl = :b_ripe_org_hdl
+            """
+            ), {'b_ripe_org_hdl': self.ripe_org_hdl})
+
+        self.abusecs = [str(row[0]) for row in results]
+
 
 class ContactEmail(Model, SerializerMixin):
     """ContactEmail Association Object
@@ -861,7 +1019,8 @@ class Organization(Model, SerializerMixin):
                   'ip_ranges', 'fqdns', 'asns', 'old_ID', 'is_sla',
                   'mail_template', 'mail_times', 'group_id', 'group',
                   'contact_emails', 'display_name', 'parent_org_id',
-                  'parent_org_abbreviation', 'ripe_handles')
+                  'parent_org_abbreviation', 'ripe_handles',
+                  'notification_settings')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(
@@ -916,6 +1075,11 @@ class Organization(Model, SerializerMixin):
     @property
     def ripe_handles(self):
         return [ro.ripe_org_hdl for ro in self.ripe_organizations]
+
+
+    @property
+    def notification_settings(self):
+        return [ro.notification_settings for ro in self.ripe_organizations]
 
     parent_org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     child_organizations = db.relationship(
@@ -1028,6 +1192,8 @@ class Organization(Model, SerializerMixin):
             # forg_x_org.delete();
             self.ripe_organizations.remove(forg_x_org)
             db.session.delete(forg_x_org)
+
+
 
     @staticmethod
     def from_collab(customer):

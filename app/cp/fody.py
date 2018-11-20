@@ -2,7 +2,7 @@ from flask import g, request
 from flask_jsonschema import validate
 from app.core import ApiResponse
 from app import db
-from app.fody_models import FodyOrganization
+from app.models import FodyOrganization
 from . import cp
 
 
