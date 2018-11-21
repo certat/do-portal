@@ -80,13 +80,11 @@ def test_settings():
     forg_x_org.upsert_notification_setting(cidr = '94.245.192.0/18',
                                          notification_interval = 47)
     db.session.commit()
-    '''
     nss = NotificationSetting.query. \
            filter(NotificationSetting.ripe_org_hdl=='ORG-CAGF1-RIPE')
     for ns  in nss:
         print(ns.asn ,ns.cidr)
-    '''
-    # pprint(forg_x_org.notification_settings)
+    pprint(forg_x_org.notification_settings)
 
     assert forg_x_org.notification_settings['12635']['notification_interval'] == 4713
     assert forg_x_org.notification_settings['94.245.192.0/18']['notification_interval'] == 47

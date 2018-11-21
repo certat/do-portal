@@ -719,9 +719,13 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
     fody_org = None
     _notification_settings = None
 
+    def __init__(self):
+        self.fody_org = FodyOrganization(ripe_org_hdl = self.ripe_org_hdl)
+
     @property
     def ripe_org_hdl(self):
         return self._ripe_org_hdl
+
 
     # do not check for an error here, see
     # https://docs.sqlalchemy.org/en/latest/orm/session_basics.html
@@ -757,11 +761,15 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
                                delivery_format = 'CSV',
                                notification_interval = 0):
 
+         self.fody_org = FodyOrganization(ripe_org_hdl = self.ripe_org_hdl)
+         if not (asn or cidr):
+             raise AttributeError('either cidr or asn has to be set')
+
          if asn and asn not in self.fody_org.asns:
-             raise AttributeError('no such asn or not owned')
+             raise AttributeError('no such asn or not owned', asn, self.fody_org.asns)
 
          if cidr and cidr not in self.fody_org.cidrs:
-             raise AttributeError('no such cidr or not owned')
+             raise AttributeError('no such cidr or not owned', cidr)
 
          try:
              ns = NotificationSetting.query \
