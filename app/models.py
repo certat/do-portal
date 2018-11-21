@@ -741,13 +741,26 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
                            organization_id=self.organization_id ).all()
 
         notification_settings = {}
+        self.fody_org = FodyOrganization(ripe_org_hdl = self.ripe_org_hdl)
+
+        ns_dict = {}
         for ns in nss:
             key = ns.asn if ns.asn else ns.cidr
-            notification_settings[key] = \
+            ns_dict[key] = \
                   {'delivery_protocol':     ns.delivery_protocol,
                    'delivery_format':       ns.delivery_format,
                    'notification_interval': ns.notification_interval}
 
+        def get_ns_dict(k):
+            if k in ns_dict:
+                return ns_dict[k]
+            else:
+                return {}
+
+        notification_settings['asns'] = [{k: get_ns_dict(k)}  for k in self.fody_org.asns]
+        notification_settings['cidrs'] = [{k: get_ns_dict(k)}  for k in self.fody_org.cidrs]
+        notification_settings['abusec'] = self.fody_org.abusecs
+        notification_settings['name'] = self.fody_org.name
         self._notification_settings = notification_settings
         return self._notification_settings
 
