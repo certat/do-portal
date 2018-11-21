@@ -719,9 +719,6 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
     fody_org = None
     _notification_settings = None
 
-    def __init__(self):
-        self.fody_org = FodyOrganization(ripe_org_hdl = self.ripe_org_hdl)
-
     @property
     def ripe_org_hdl(self):
         return self._ripe_org_hdl
@@ -848,7 +845,7 @@ class FodyOrganization():
             ac = self._abusecs
             return None
 
-        raise AttributeError('no such handle')
+        raise AttributeError('no such handle', ripe_org_hdl)
 
     @property
     def _cidrs(self):
@@ -1027,8 +1024,8 @@ class Organization(Model, SerializerMixin):
                   'ip_ranges', 'fqdns', 'asns', 'old_ID', 'is_sla',
                   'mail_template', 'mail_times', 'group_id', 'group',
                   'contact_emails', 'display_name', 'parent_org_id',
-                  'parent_org_abbreviation', 'ripe_handles',
-                  'notification_settings')
+                  'parent_org_abbreviation', 'ripe_handles')
+                  # 'notification_settings')
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(
