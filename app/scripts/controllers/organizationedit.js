@@ -68,29 +68,32 @@ angular.module('cpApp')
           cidrs: [],
       };
       $scope.org.ripe_handles.forEach(function(ripe_handle) {
-          Organization.ripe_details({'handle': ripe_handle}).$promise
+          Organization.ripe_details({'org_id': $scope.org.id ,'ripe_handle': ripe_handle}).$promise
             .then(function(resp){
                 resp.asns.forEach(function(asn) {
-                  $scope.ripe_details.asns.push({asn: asn, ripe_org_hdl: ripe_handle});
-                  $scope.ripe_details.asns.push({asn: asn, ripe_org_hdl: ripe_handle, delivery_protocol: 'API', delivery_format: 'CSV', notification_interval: 10});
+                  asn.ripe_org_hdl = ripe_handle;
+                  $scope.ripe_details.asns.push(asn);
                 });
                 resp.cidrs.forEach(function(cidr) {
-                  $scope.ripe_details.cidrs.push({cidr: cidr, ripe_org_hdl: ripe_handle, delivery_protocol: 'REST', delivery_format: 'JSON', notification_interval: 0});
+                  cidr.ripe_org_hdl = ripe_handle;
+                  $scope.ripe_details.cidrs.push(cidr);
                 });
-                resp.abusecs.forEach(function(abusec) {
-                    $scope.gridOptions.data.push({
-                      user_id: '',
-                      user: '',
-                      role: 'Abuse-C Automatic',
-                      email: abusec,
-                      phone: '',
-                      city: '',
-                      country: '',
-                      street: '',
-                      zip: '',
-                      comment: 'RIPE handle: ' + ripe_handle,
-                    });
-                });
+                if (resp.abusecs) {
+                  resp.abusecs.forEach(function(abusec) {
+                      $scope.gridOptions.data.push({
+                        user_id: '',
+                        user: '',
+                        role: 'Abuse-C Automatic',
+                        email: abusec,
+                        phone: '',
+                        city: '',
+                        country: '',
+                        street: '',
+                        zip: '',
+                        comment: 'RIPE handle: ' + ripe_handle,
+                      });
+                  });
+                }
             }, function(){});
       });
     };
@@ -254,7 +257,17 @@ angular.module('cpApp')
         }
     };
     $scope.update_ripe_detail = function(item) {
-      delete item.dirty;
-      console.log(item);
+      var obj = angular.copy(item);
+      delete obj.dirty;
+      delete obj.ripe_org_hdl;
+      return Organization.update_ripe_detail(
+        {'org_id':$scope.org.id, 'ripe_handle': item.ripe_org_hdl}, obj,
+        function(resp){
+          delete item.dirty;
+          notify({classes: 'notify-success', message: resp.message});
+        },
+        function(){
+        }
+      );
     };
   });

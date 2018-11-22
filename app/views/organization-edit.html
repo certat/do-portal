@@ -124,67 +124,82 @@
   </div>
   <div class="panel-body">
     <h3 ng-if="ripe_details.asns.length">Autonomous systems:</h3>
-    <div ng-repeat="asn in ripe_details.asns">
+    <div ng-if="ripe_details.asns.length" class="row show-grid">
+      <div class="col-xs-2"><strong>CIDR</strong></div>
+      <div class="col-xs-2"><strong>RIPE Handle</strong></div>
+      <div class="col-xs-2"><strong>Protocol</strong></div>
+      <div class="col-xs-2"><strong>Format</strong></div>
+      <div class="col-xs-2"><strong>Interval [s]</strong></div>
+    </div>
+    <div ng-repeat="item in ripe_details.asns">
       <div class="row show-grid">
-        <div class="col-xs-2">{{asn.asn}}</div>
+        <div class="col-xs-2">{{item.asn}}</div>
 
-        <div class="col-xs-2">{{asn.ripe_org_hdl}}</div>
+        <div class="col-xs-2">{{item.ripe_org_hdl}}</div>
 
-        <div class="col-xs-2" ng-show="!edit">{{asn.delivery_protocol}}</div>
+        <div class="col-xs-2" ng-show="!edit">{{item.notification_setting.delivery_protocol}}</div>
         <div class="col-xs-2" ng-show="edit">
-          <select class="form-control input-sm" required ng-model="asn.delivery_protocol" ng-change="asn.dirty=true">
-            <option ng-repeat="proto in ['Mail', 'REST', 'API', 'AMQP']" ng-checked="proto === asn.delivery_protocol" value="{{proto}}">{{proto}}</option>
+          <select class="form-control input-sm" required ng-model="item.notification_setting.delivery_protocol" ng-change="item.dirty=true">
+            <option ng-repeat="proto in ['Mail', 'REST', 'API', 'AMQP']" ng-checked="proto === item.notification_setting.delivery_protocol" value="{{proto}}">{{proto}}</option>
           </select>
         </div>
 
-        <div class="col-xs-2" ng-show="!edit">{{asn.delivery_format}}</div>
+        <div class="col-xs-2" ng-show="!edit">{{item.notification_setting.delivery_format}}</div>
         <div class="col-xs-2" ng-show="edit">
-          <select class="form-control input-sm" required ng-model="asn.delivery_format" ng-change="asn.dirty=true">
-            <option ng-repeat="format in ['CSV', 'JSON']" ng-checked="format === asn.delivery_format" value="{{format}}">{{format}}</option>
+          <select class="form-control input-sm" required ng-model="item.notification_setting.delivery_format" ng-change="item.dirty=true">
+            <option ng-repeat="format in ['CSV', 'JSON']" ng-checked="format === item.notification_setting.delivery_format" value="{{format}}">{{format}}</option>
           </select>
         </div>
 
-        <div class="col-xs-2" ng-show="!edit">{{asn.notification_interval}}</div>
+        <div class="col-xs-2" ng-show="!edit">{{item.notification_setting.notification_interval}}</div>
         <div class="col-xs-2" ng-show="edit">
-          <input class="form-control input-sm" required ng-model="asn.notification_interval" ng-change="asn.dirty=true">
+          <input class="form-control input-sm" required ng-model="item.notification_setting.notification_interval" ng-change="item.dirty=true">
         </div>
 
         <div class="col-xs-2">
-          <button  ng-if="asn.dirty" class="btn btn-default btn-sm" ng-click="update_ripe_detail(asn)">
+          <button  ng-if="item.dirty" class="btn btn-default btn-sm" ng-click="update_ripe_detail(item)">
             <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
             Save
           </button>
         </div>
       </div>
     </div>
+
     <h3 ng-if="ripe_details.cidrs.length">CIDRs:</h3>
-    <div ng-repeat="cidr in ripe_details.cidrs">
+    <div ng-if="ripe_details.cidrs.length" class="row show-grid">
+      <div class="col-xs-2"><strong>CIDR</strong></div>
+      <div class="col-xs-2"><strong>RIPE Handle</strong></div>
+      <div class="col-xs-2"><strong>Protocol</strong></div>
+      <div class="col-xs-2"><strong>Format</strong></div>
+      <div class="col-xs-2"><strong>Interval [s]</strong></div>
+    </div>
+    <div ng-repeat="item in ripe_details.cidrs">
       <div class="row show-grid">
-        <div class="col-xs-2">{{cidr.cidr}}</div>
+        <div class="col-xs-2">{{item.cidr}}</div>
 
-        <div class="col-xs-2">{{cidr.ripe_org_hdl}}</div>
+        <div class="col-xs-2">{{item.ripe_org_hdl}}</div>
 
-        <div class="col-xs-2" ng-show="!edit">{{cidr.delivery_protocol}}</div>
+        <div class="col-xs-2" ng-show="!edit">{{item.notification_setting.delivery_protocol}}</div>
         <div class="col-xs-2" ng-show="edit">
-          <select class="form-control input-sm" required ng-model="cidr.delivery_protocol" ng-change="cidr.dirty=true">
-            <option ng-repeat="proto in ['Mail', 'REST', 'API', 'AMQP']" ng-checked="proto === cidr.delivery_protocol" value="{{proto}}">{{proto}}</option>
+          <select class="form-control input-sm" required ng-model="item.notification_setting.delivery_protocol" ng-change="item.dirty=true">
+            <option ng-repeat="proto in ['Mail', 'REST', 'API', 'AMQP']" ng-checked="proto === item.notification_setting.delivery_protocol" value="{{proto}}">{{proto}}</option>
           </select>
         </div>
 
-        <div class="col-xs-2" ng-show="!edit">{{cidr.delivery_format}}</div>
+        <div class="col-xs-2" ng-show="!edit">{{item.notification_setting.delivery_format}}</div>
         <div class="col-xs-2" ng-show="edit">
-          <select class="form-control input-sm" required ng-model="cidr.delivery_format" ng-change="cidr.dirty=true">
-            <option ng-repeat="format in ['CSV', 'JSON']" ng-checked="format === cidr.delivery_format" value="{{format}}">{{format}}</option>
+          <select class="form-control input-sm" required ng-model="item.notification_setting.delivery_format" ng-change="item.dirty=true">
+            <option ng-repeat="format in ['CSV', 'JSON']" ng-checked="format === item.notification_setting.delivery_format" value="{{format}}">{{format}}</option>
           </select>
         </div>
 
-        <div class="col-xs-2" ng-show="!edit">{{cidr.notification_interval}}</div>
+        <div class="col-xs-2" ng-show="!edit">{{item.notification_setting.notification_interval}}</div>
         <div class="col-xs-2" ng-show="edit">
-          <input class="form-control input-sm" required ng-model="cidr.notification_interval" ng-change="cidr.dirty=true">
+          <input class="form-control input-sm" required ng-model="item.notification_setting.notification_interval" ng-change="item.dirty=true">
         </div>
 
         <div class="col-xs-2">
-          <button  ng-if="cidr.dirty" class="btn btn-default btn-sm" ng-click="update_ripe_detail(cidr)">
+          <button  ng-if="item.dirty" class="btn btn-default btn-sm" ng-click="update_ripe_detail(item)">
             <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
             Save
           </button>

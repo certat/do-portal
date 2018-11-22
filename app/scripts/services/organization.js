@@ -38,12 +38,12 @@ angular.module('cpApp')
         withCredentials: true
       },
       ripe_details: {
-        url: config.apiConfig.webServiceUrl+'/ripe/handle/:handle',
+        url: config.apiConfig.webServiceUrl+'/ripe/settings/:org_id/:ripe_handle',
         method: 'GET',
         isArray: false
       },
-      update_ripe_details: {
-        url: config.apiConfig.webServiceUrl+'/ripe/handle/:handle',
+      update_ripe_detail: {
+        url: config.apiConfig.webServiceUrl+'/ripe/settings/:org_id/:ripe_handle',
         method: 'PUT',
       },
     });
