@@ -1,6 +1,6 @@
 from app.models import User, Organization, MembershipRole, \
     OrganizationMembership, Country
-from app.fody_models import FodyOrganization
+from app.models import FodyOrganization
 from app import db
 import datetime
 import pytest

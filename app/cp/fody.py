@@ -42,6 +42,7 @@ def set_cp_settings(ripe_org_hdl, org_id):
 
     try:
         setting = request.json
+
         forg_x_org.upsert_notification_setting(**setting)
         db.session.commit()
     except TypeError as e:

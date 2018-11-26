@@ -767,9 +767,11 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
     def upsert_notification_setting(self,
                                asn = None,
                                cidr = None,
+                               notification_setting = {},
                                delivery_protocol = 'Mail',
                                delivery_format = 'CSV',
                                notification_interval = 0):
+
 
          self.fody_org = FodyOrganization(ripe_org_hdl = self.ripe_org_hdl)
          if not (asn or cidr):
@@ -794,9 +796,9 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
              ns.organization_id = self.organization_id
              ns.ripe_org_hdl = self.ripe_org_hdl
 
-         ns.delivery_protocol = delivery_protocol
-         ns.delivery_format = delivery_format,
-         ns.notification_interval = notification_interval
+         ns.delivery_protocol = notification_setting['delivery_protocol'] if 'delivery_protocol' in notification_setting else delivery_protocol
+         ns.delivery_format = notification_setting['delivery_format'] if 'delivery_format'  in notification_setting else delivery_format
+         ns.notification_interval = notification_setting['notification_interval'] if 'notification_interval'  in notification_setting else notification_interval
          db.session.add(ns)
          self._notification_settings
 
