@@ -256,6 +256,18 @@ angular.module('cpApp')
           );
         }
     };
+    $scope.edit_ripe_detail = function(item) {
+        if (typeof item.notification_setting.delivery_protocol === 'undefined') {
+            item.notification_setting.delivery_protocol = 'Mail';
+        }
+        if (typeof item.notification_setting.delivery_format === 'undefined') {
+            item.notification_setting.delivery_format = 'CSV';
+        }
+        if (typeof item.notification_setting.notification_interval === 'undefined') {
+            item.notification_setting.notification_interval = 604800;
+        }
+        item.dirty = true;
+    };
     $scope.update_ripe_detail = function(item) {
       var obj = angular.copy(item);
       delete obj.dirty;
