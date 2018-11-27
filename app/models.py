@@ -280,6 +280,7 @@ class User(UserMixin, Model, SerializerMixin):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
+        self.api_key = self.generate_api_key()
         '''
         if self.email in current_app.config['ADMINS']:
             self.role = Role.query.filter_by(permissions=0xff).first()
@@ -1772,12 +1773,13 @@ class OrganizationMembership(Model, SerializerMixin):
 """ watch for insert on Org Memberships """
 def org_mem_listerner(mapper, connection, org_mem):
     if org_mem.membership_role and org_mem.membership_role.name == 'OrgAdmin':
+        # XXX org_mem.user.api_key = org_mem.user.generate_api_key()
         # print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
         # print(org_mem.membership_role.name,  org_mem.email)
         password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii') + 'Ba1%'
         org_mem.user.password = password
         token=org_mem.user.generate_reset_token()
-        current_app.log.debug(token)
+        # current_app.log.debug(token)
         send_email('energy-cert account', [org_mem.user.email],
                'auth/email/ec_activate_account', org_mem=org_mem,
                token=token)

@@ -109,10 +109,33 @@ def test_create_user():
         pgp_key='asdasasfasfasf',
         smime='asdasdasd',
         coc=b'asasda')
+    db.session.add(oxu)
     db.session.commit()
     assert oxu.id > 0, 'OrganizationMembership written'
     assert len(admin.get_users()) == 4, 'EnergyOrg Admin now has 4 users'
     App.user = newuser
+
+
+def test_create_orgadmin():
+    newuser = User(name='test_org admin ')
+    newuser.email = 'org_admin@bla.com'
+    newuser.password = 'blaBla123%'
+    newuser.birthdate = datetime.datetime.utcnow()
+    newuser.title = 'DDDr. hc. mult.'
+    newuser.origin = 'your mother'
+
+    org = Organization.query.filter_by(full_name = 'eorg').one()
+
+    admin_role = MembershipRole.query.filter_by(name='OrgAdmin').one()
+    oxu = OrganizationMembership(
+        organization=org,
+        user=newuser,
+        membership_role=admin_role)
+    db.session.add(oxu)
+    db.session.add(newuser)
+    db.session.commit()
+    assert newuser.api_key, 'api key is set'
+
 
 
 def test_create_user_with_duplicate_email():
