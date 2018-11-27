@@ -182,7 +182,7 @@
         <div class="col-xs-2" ng-show="!edit">{{item.notification_setting.delivery_protocol}}</div>
         <div class="col-xs-2" ng-show="edit">
           <select class="form-control input-sm" required ng-model="item.notification_setting.delivery_protocol" ng-change="item.dirty=true">
-            <option ng-repeat="proto in ['Mail', 'REST', 'API', 'AMQP']" ng-checked="proto === item.notification_setting.delivery_protocol" value="{{proto}}">{{proto}}</option>
+            <option ng-repeat="proto in ['Mail', 'REST API', 'AMQP']" ng-checked="proto === item.notification_setting.delivery_protocol" value="{{proto}}">{{proto}}</option>
           </select>
         </div>
 
