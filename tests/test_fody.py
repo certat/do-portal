@@ -1,5 +1,5 @@
 from app.models import Organization, FodyOrg_X_Organization, FodyOrganization
-from app.models import NotificationSetting
+from app.models import NotificationSetting, MembershipRole, User, OrganizationMembership
 from app import db
 import datetime
 import pytest
@@ -75,17 +75,93 @@ def test_settings():
 
     db.session.commit()
     forg_x_org.upsert_notification_setting(asn = '12635',
+
                                          notification_interval = 4713)
     db.session.commit()
     forg_x_org.upsert_notification_setting(cidr = '94.245.192.0/18',
-                                         notification_interval = 47)
+                                         notification_interval = 47,
+                                         delivery_format = 'JSON')
     db.session.commit()
     nss = NotificationSetting.query. \
            filter(NotificationSetting.ripe_org_hdl=='ORG-CAGF1-RIPE')
-    for ns  in nss:
-        print(ns.asn ,ns.cidr)
+    # for ns  in nss:
+    #     print(ns.asn ,ns.cidr)
     pprint(forg_x_org.notification_settings)
 
-#    assert forg_x_org.notification_settings['asns'][0]['12635']['notification_interval'] == 4713
-#    assert forg_x_org.notification_settings['cidrs'][0]['notification_interval'] == 47
+def test_contact_abusec():
+    # https://github.com/certat/do-portal/wiki
+    # GET /api/v1/contact?netblock=1.2.3.0/24
+    # Get the direct abuse_c which holds the netblock 1.2.3.0/24 and only this abuse_c
+
+    # cidr has settings, no local abusec
+    cidr = '94.245.192.0/18'
+    notification = NotificationSetting.contact_for_netblock(cidr)
+    assert notification['abusecs'][0] == 'abuse@drei.com', 'abusec from ripe'
+    assert notification['notification_setting']['delivery_format'] == 'JSON', 'setting from cidr'
+    assert notification['notification_setting']['notification_interval'] == 47, 'setting from cidr'
+    assert notification['notification_setting']['organization_id'] == 1, 'setting from cidr'
+    assert notification['notification_setting']['ripe_org_hdl'] == 'ORG-CAGF1-RIPE', 'cidr'
+
+    pprint(notification)
+
+    # cidr has no settings but owning ripe handle is associated with an organization
+    cidr = '2001:4b68::/29'
+    notification = NotificationSetting.contact_for_netblock(cidr)
+    pprint(notification)
+    assert notification['abusecs'][0] == 'abuse@drei.com', 'abusec from ripe'
+    assert notification['notification_setting']['delivery_format'] == 'CSV', 'default'
+    assert notification['notification_setting']['notification_interval'] == 604800, 'default'
+    assert notification['notification_setting']['organization_id'] == 1, 'setting from cidr'
+    assert notification['notification_setting']['ripe_org_hdl'] == 'ORG-CAGF1-RIPE', 'cidr'
+
+    # remember org_id to create a abusec later
+    organization_id = notification['notification_setting']['organization_id']
+
+    # not found
+    cidr = '1.1.1.1'
+    with pytest.raises(AttributeError):
+        notification = NotificationSetting.contact_for_netblock(cidr)
+
+    # cidr not associated with org
+    cidr = '2a03:8a80::/32'
+    notification = NotificationSetting.contact_for_netblock(cidr)
+    pprint(notification)
+    assert notification['abusecs'][0] == 'abuse@cardcomplete.com', 'abusec from ripe'
+    assert notification['notification_setting']['delivery_format'] == 'CSV', 'default'
+    assert notification['notification_setting']['notification_interval'] == 604800, 'default'
+    assert notification['notification_setting']['organization_id'] is None, 'no org found'
+    assert notification['notification_setting']['ripe_org_hdl'] is None, 'no org found'
+
+
+    # create abusec for created org
+    abusec_role = MembershipRole.query.filter_by(name='abuse-c').one()
+    eorg_user = User.query.filter_by(name='eorgmaster').one()
+    oxu = OrganizationMembership(
+            user=User.query.filter_by(name='eorgmaster').one(),
+            membership_role=MembershipRole.query.filter_by(name='abuse-c').one(),
+            organization=Organization.get(organization_id),
+            email='emailforcdir@local.com'
+            )
+
+    db.session.add(oxu)
+    db.session.commit()
+    cidr = '94.245.192.0/18'
+    notification = NotificationSetting.contact_for_netblock(cidr)
+    pprint(notification)
+    assert notification['abusecs'][0] == 'emailforcdir@local.com', 'abusec local'
+    assert notification['notification_setting']['delivery_format'] == 'JSON', 'setting from cidr'
+    assert notification['notification_setting']['notification_interval'] == 47, 'setting from cidr'
+    assert notification['notification_setting']['organization_id'] == 1, 'setting from cidr'
+    assert notification['notification_setting']['ripe_org_hdl'] == 'ORG-CAGF1-RIPE', 'cidr'
+
+    # cidr has no settings but owning ripe handle is associated with an organization
+    cidr = '2001:4b68::/29'
+    notification = NotificationSetting.contact_for_netblock(cidr)
+    pprint(notification)
+    assert notification['abusecs'][0] == 'emailforcdir@local.com', 'abusec local'
+    assert notification['notification_setting']['delivery_format'] == 'CSV', 'default'
+    assert notification['notification_setting']['notification_interval'] == 604800, 'default'
+    assert notification['notification_setting']['organization_id'] == 1, 'setting from cidr'
+    assert notification['notification_setting']['ripe_org_hdl'] == 'ORG-CAGF1-RIPE', 'cidr'
+
 

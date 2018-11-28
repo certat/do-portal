@@ -771,7 +771,7 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
                                notification_setting = {},
                                delivery_protocol = 'Mail',
                                delivery_format = 'CSV',
-                               notification_interval = 0):
+                               notification_interval = 604800):
 
 
          self.fody_org = FodyOrganization(ripe_org_hdl = self.ripe_org_hdl)
@@ -808,7 +808,7 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
 class NotificationSetting(Model, SerializerMixin):
     __tablename__ = 'notification_settings'
     __public__ = ('delivery_protocol', 'delivery_format', 'notification_interval',
-                  'asn', 'cidr', 'ripe_org_hdl', 'organization_id'  )
+                  'asn', 'cidr', 'ripe_org_hdl', 'organization_id', )
 
     query_class = FilteredQuery
 
@@ -822,10 +822,55 @@ class NotificationSetting(Model, SerializerMixin):
     cidr = db.Column(postgres.CIDR)
     deleted = db.Column(db.Integer, default=0)
 
+    organization = db.relationship('Organization')
+
     # ripe_org_hdl = db.Column(db.Integer,
     #               db.ForeignKey('fody.organisation_automatic.ripe_org_hdl'))
 
 
+    @staticmethod
+    def contact_for_netblock(cidr):
+        abusecs = []
+        default_notification_setting = {
+            'delivery_protocol': 'Mail',
+            'delivery_format': 'CSV',
+            'notification_interval': 604800,
+            'cidr': cidr,
+            'organization_id': None,
+            'ripe_org_hdl': None,
+        }
+
+        ripe_org_hdl = FodyOrganization.handle_for_cidr(cidr)
+        # check if the ripe handle is associated with an org and excactly this cidr
+        ns = NotificationSetting.query. \
+             filter_by(ripe_org_hdl=ripe_org_hdl, cidr=cidr).first()
+
+        # no explicit settings for cidr, check if cidr is associated with an organization via ripe handle
+        if ns:
+            nss = ns.serialize()
+        else:
+            nss = default_notification_setting
+            ns = NotificationSetting.query. \
+                filter_by(ripe_org_hdl=ripe_org_hdl).first()
+            if ns:
+                nss['organization_id'] = ns.organization_id
+                nss['ripe_org_hdl'] = ns.ripe_org_hdl
+
+        org_abusecs = []
+        if ns:
+        # we have a cidr with settings get the local abusecs (if defined)
+            org_abusecs = ns.organization.organization_memberships. \
+                      filter_by(membership_role = MembershipRole.query.filter_by(name='abuse-c').\
+                      one()).all()
+
+        # if cidr is not found in database AttributeError: ('no such cidr', ..) is raised and not caught here
+        if org_abusecs:
+            abusecs = [o.email for o in org_abusecs]
+        else:
+            fody_org = FodyOrganization(ripe_org_hdl = ripe_org_hdl)
+            abusecs = fody_org.abusecs
+
+        return {'abusecs': abusecs, 'notification_setting': nss }
 
 class FodyOrganization():
     # __tablename__ = 'fody.organisation_automatic'
@@ -840,6 +885,25 @@ class FodyOrganization():
     cidrs   = None
     asns    = None
     abusecs = None
+
+    @staticmethod
+    def handle_for_cidr(cidr):
+        results = db.engine.execute(
+            text("""
+            select ripe_org_hdl
+                   from fody.organisation_automatic oa
+                   join fody.organisation_to_network_automatic o2na
+                     on oa.organisation_automatic_id =
+                        o2na.organisation_automatic_id
+                   join fody.network_automatic na
+                     on o2na.network_automatic_id = na.network_automatic_id
+                      where address = :b_address
+            """
+            ), {'b_address': cidr})
+
+        for row in results:
+            return row[0]
+        raise AttributeError('no such cidr', cidr)
 
     def __init__(self, ripe_org_hdl):
         results = db.engine.execute(
@@ -1119,7 +1183,8 @@ class Organization(Model, SerializerMixin):
 
     organization_memberships = db.relationship(
         'OrganizationMembership',
-        backref='orgs_for_user'
+        backref='orgs_for_user',
+        lazy="dynamic"
     )
 
     group = db.relationship(
