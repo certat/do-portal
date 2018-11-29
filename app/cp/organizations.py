@@ -321,7 +321,8 @@ def add_cp_organization():
                     email_=Email(email=e['email']),
                     cp=cp))
     except KeyError as ke:
-        print('No contact emails provided: {}'.format(ke))
+        None
+        # print('No contact emails provided: {}'.format(ke))
 
     try:
         ripe_handles = request.json.pop('ripe_handles')
