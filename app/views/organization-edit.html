@@ -91,11 +91,13 @@
   <div class="panel-body">
     <div ng-repeat="ripe_handle in org.ripe_handles">
       <div class="row show-grid">
-          <div class="col-xs-10">
+          <div class="col-xs-2">
             {{ripe_handle}}
+          </div>
+          <div class="col-xs-10">
 	    <button ng-show="edit" class="btn btn-sm btn-default" ng-click="delete_ripe_handle(ripe_handle, $index)">
 	      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-	      remove
+	      Remove
 	    </button>
           </div>
       </div>
