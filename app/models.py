@@ -27,11 +27,27 @@ from validate_email import validate_email
 from app.utils.mail import send_email
 import phonenumbers
 import time
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+import re
 # from pprint import pprint
 
 #: we don't have an app context yet,
 #: we need to load the configuration from the config module
 _config = config.get(os.getenv('DO_CONFIG') or 'default')
+
+def check_phonenumber(phonenumber):
+    try:
+        if not phonenumber:
+            phonenumber = None
+        else:
+            x = phonenumbers.parse(phonenumber, None)
+            m = re.search(r'^\+\d+$', phonenumber)
+            if not m:
+                raise AttributeError(phonenumber, 'number has to start with a + and may only contain numbers')
+    except phonenumbers.phonenumberutil.NumberParseException as err:
+        # db.session.rollback()
+        raise AttributeError(phonenumber, 'seems not to be valid:', err)
+    return phonenumber
 
 def check_password_quality(password):
     import re
@@ -1474,15 +1490,7 @@ class OrganizationMembership(Model, SerializerMixin):
 
     @phone.setter
     def phone(self, phone):
-        try:
-            if not phone:
-                phone = None
-            else:
-                x = phonenumbers.parse(phone, None)
-        except phonenumbers.phonenumberutil.NumberParseException as err:
-            db.session.rollback()
-            raise AttributeError(phone, 'seems not to be valid:', err)
-        self._phone = phone
+        self._phone = check_phonenumber(phone)
 
     @property
     def mobile(self):
@@ -1490,15 +1498,7 @@ class OrganizationMembership(Model, SerializerMixin):
 
     @mobile.setter
     def mobile(self, mobile):
-        try:
-            if not mobile:
-                mobile = None
-            else:
-                x = phonenumbers.parse(mobile, None)
-        except phonenumbers.phonenumberutil.NumberParseException as err:
-            db.session.rollback()
-            raise AttributeError(mobile, 'seems not to be valid:', err)
-        self._mobile = mobile
+        self._mobile = check_phonenumber(mobile)
 
 
 """ watch for insert on Org Memberships """
