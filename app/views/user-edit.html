@@ -82,7 +82,7 @@
         </div>
       </div>
 
-      <button ng-show="user.id" class="btn btn-default" ng-click="update_user()">
+      <button id="update-user" ng-show="user.id" class="btn btn-default" ng-click="update_user()">
         <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
         Save
       </button>
@@ -251,7 +251,7 @@
 
       <div class="row show-grid">
         <div class="col-xs-12">
-          <button ng-show="user.id" class="btn btn-default" ng-click="save_membership(m)">
+          <button id="update-membership" ng-show="user.id" class="btn btn-default" ng-click="save_membership(m)">
             <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
             Save
           </button>
@@ -268,7 +268,7 @@
   </div>
 
   <div class="panel-footer">
-    <button ng-hide="user.id" class="btn btn-default" ng-click="create_user()">
+    <button id="create-user" ng-hide="user.id" class="btn btn-default" ng-click="create_user()">
       <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
       Save
     </button>
