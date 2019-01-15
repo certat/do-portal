@@ -29,6 +29,7 @@ import phonenumbers
 import time
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 import re
+
 # from pprint import pprint
 
 #: we don't have an app context yet,
@@ -280,6 +281,7 @@ class User(UserMixin, Model, SerializerMixin):
 
     _orgs = []
     _org_ids = []
+    _organizations_list = []
 
     user_memberships = db.relationship(
         'OrganizationMembership',
@@ -538,16 +540,44 @@ class User(UserMixin, Model, SerializerMixin):
            self._org_tree_iterator(sub_org.id)
 
 
-    def _org_tree(self, org_id):
+    def _org_tree(self, org_id, limit = 1000, offset = 0):
         results = db.engine.execute(
-                text("""with recursive sub_orgs as (select id, abbreviation, full_name, display_name, deleted, parent_org_id, 'n/a'::text from organizations
+                text("""with recursive sub_orgs as (
+                              select id,
+                              abbreviation,
+                              full_name,
+                              display_name,
+                              deleted,
+                              parent_org_id,
+                              'n/a'::text parent_org_abbreviation,
+                              0 depth
+                         from organizations
                    where id = :b_parent_org_id
                    union
-                   select o.id, o.abbreviation, o.full_name, o.display_name, o.deleted, o.parent_org_id, s.abbreviation::text from organizations o
+                   select distinct o.id, o.abbreviation, o.full_name, o.display_name, o.deleted, o.parent_org_id, s.abbreviation::text, s.depth + 1 from organizations o
                    join sub_orgs s ON s.id = o.parent_org_id)
-                   select * from sub_orgs
-                """), {'b_parent_org_id': org_id});
+                   select * from sub_orgs where deleted = 0 limit :b_limit offset :b_offset
+                """), {'b_parent_org_id': org_id, 'b_limit': limit, 'b_offset': offset});
 
+        self._organizations_list = []
+
+        for r in results.fetchall():
+            h = {}
+            for i, k in enumerate(results.keys()):
+                h[k] = r[i]
+
+            self._organizations_list.append(h)
+
+        results = db.engine.execute(
+                text("""with recursive sub_orgs as (select id, abbreviation, full_name, display_name, deleted, parent_org_id, 'n/a'::text, 0 depth from organizations
+                   where id = :b_parent_org_id
+                   union
+                   select o.id, o.abbreviation, o.full_name, o.display_name, o.deleted, o.parent_org_id, s.abbreviation::text, s.depth + 1 from organizations o
+                   join sub_orgs s ON s.id = o.parent_org_id)
+                   select * from sub_orgs limit :b_limit offset :b_offset
+                """), {'b_parent_org_id': org_id, 'b_limit': limit, 'b_offset': offset});
+
+        self._org_ids = []
         for row in results:
             self._org_ids.append(row[0])
 
@@ -575,18 +605,27 @@ class User(UserMixin, Model, SerializerMixin):
 
         # find all orgs where the org.id is the parent_org_id recursivly
         #  for org in orgs_admin:
+
         ### old implementation ####
+
         for oa in orgs_admins:
            # self._org_tree_iterator(oa.organization_id)
            self._org_tree(oa.organization_id)
         return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids)).filter(OrganizationMembership.deleted == 0)
 
-    def get_organizations(self):
+    def get_organizations(self, limit = 1000, offset = 0):
         """returns a list of Organization records"""
         self.get_organization_memberships()
         if not self._org_ids:
             return []
-        return Organization.query.filter(Organization.id.in_(self._org_ids))
+        return Organization.query.filter(Organization.id.in_(self._org_ids)).limit(limit).offset(offset)
+
+    def get_organizations_raw(self, limit = 5, offset = 0):
+        """returns a list of Organization records"""
+        self.get_organization_memberships()
+        if not self._org_ids:
+            return []
+        return self._organizations_list
 
     def get_users(self):
         """returns a list of unique User records"""

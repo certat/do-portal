@@ -4,6 +4,7 @@ from app.models import FodyOrganization
 from app import db
 import datetime
 import pytest
+from pprint import pprint
 
 # from .conftest import assert_msg
 # from app.fixtures import testfixture
@@ -174,6 +175,22 @@ def test_login():
                           'energyorg-electricity-transmission',
                           'energyorg-gas'], \
         'correct list of orgs for energyorg'
+
+def test_organizations_raw():
+    (admin, auth) = User.authenticate('admin@energyorg.at', 'blaBla12$')
+    assert auth is True
+    pprint(admin.get_organizations_raw())
+
+    # full_names = [org.full_name for org in admin.get_organizations()]
+    '''
+    full_names.sort()
+    assert full_names == ['energyorg', 'energyorg-electricity',
+                          'energyorg-electricity-transmission',
+                          'energyorg-gas'], \
+        'correct list of orgs for energyorg'
+    '''
+
+
 
 
 def test_delete_membership():

@@ -90,8 +90,12 @@ def get_cp_organizations():
     :status 403: Access denied. Authorization will not help and the request
         SHOULD NOT be repeated.
     """
-    orgs = g.user.get_organizations()
-    return ApiResponse({'organizations': [o.serialize() for o in orgs]})
+
+    # needs limit, count, offset
+    # orgs = g.user.get_organizations()
+    # return ApiResponse({'organizations': [o.serialize() for o in orgs]})
+    orgs = g.user.get_organizations_raw()
+    return ApiResponse({'organizations': orgs}) # 'pager': {'page': 1, 'maxpage})
 #    return ApiResponse(o.serialize())
 
 
