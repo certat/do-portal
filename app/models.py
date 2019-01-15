@@ -46,7 +46,7 @@ def check_phonenumber(phonenumber):
                 raise AttributeError(phonenumber, 'number has to start with a + and may only contain numbers')
     except phonenumbers.phonenumberutil.NumberParseException as err:
         # db.session.rollback()
-        raise AttributeError(phonenumber, 'seems not to be valid:', err)
+        raise AttributeError(phonenumber, 'seems not to be a valid phonenumber')
     return phonenumber
 
 def check_password_quality(password):
@@ -340,7 +340,7 @@ class User(UserMixin, Model, SerializerMixin):
     def email(self, email):
         email = email.lower()
         if not validate_email(email):
-            raise AttributeError(email, 'seems not to be valid')
+            raise AttributeError(email, 'seems not to be a valid email address')
         user = User.query.filter_by(_email=email).first()
         if user:
             if self.id != user.id:
@@ -1481,7 +1481,7 @@ class OrganizationMembership(Model, SerializerMixin):
         email = email.lower()
         if not validate_email(email):
             db.session.rollback()
-            raise AttributeError(email, 'seems not to be valid')
+            raise AttributeError(email, 'seems not to be a valid email address')
         self._email = email
 
     @property
