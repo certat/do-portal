@@ -329,11 +329,11 @@ def add_cp_user():
     """
     try:
         user = User.fromdict(request.json['user'])
+        membership = OrganizationMembership.fromdict(
+                    request.json['organization_membership'])
     except AttributeError as ae:
         return ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?' + str(ae) ,}, 422, {})
 
-    membership = OrganizationMembership.fromdict(
-                    request.json['organization_membership'])
 
     # The role and organization must exist and the current user must be able to
     # admin the organization.
@@ -425,7 +425,7 @@ def update_cp_user(user_id):
     try:
         user.from_json(request.json)
     except AttributeError:
-        return ApiResponse({'message': 'Attribute update error. Invalid email, phone or mobile?',}, 422, {})
+        return ApiResponse({'message': 'Attribute update error. Invalid email, phone or mobile?' + str(ae),}, 422, {})
 
     try:
         if 'password' in request.json:
