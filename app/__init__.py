@@ -22,7 +22,8 @@ __version__ = '.'.join(map(str, version_[0:2]))
 __release__ = '.'.join(map(str, version_))
 
 
-db = SQLAlchemy()
+app = FlaskApi(__name__)
+db = SQLAlchemy(app, session_options={"expire_on_commit": False})
 mail = Mail()
 login_manager = LoginManager()
 celery = Celery(__name__, broker=Config.BROKER_URL)
@@ -36,7 +37,6 @@ fireeye = FireEye()
 
 
 def create_app(config_name):
-    app = FlaskApi(__name__)
     app.config.from_object(config[config_name])
     if app.config['TESTING']:
         app.config.from_envvar('DO_TESTING_CONFIG', silent=True)

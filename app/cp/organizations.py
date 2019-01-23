@@ -6,7 +6,8 @@ from app.models import Organization, Permission, ContactEmail, Email
 from app.api.decorators import permission_required
 # from app.models import Organization, ContactEmail, Email
 from . import cp
-
+import psycopg2
+import sqlalchemy.exc
 
 @cp.route('/organizations', methods=['GET'])
 def get_cp_organizations():
@@ -334,6 +335,7 @@ def add_cp_organization():
     except KeyError:
         None
     except AttributeError as ae:
+        db.session.rollback()
         return ApiResponse({'message': str(ae) ,}, 404, {})
 
     db.session.add(o)
@@ -456,7 +458,13 @@ def update_cp_organization(org_id):
     except KeyError:
         None
     except AttributeError as ae:
+        db.session.rollback()
+        db.session.refresh
         return ApiResponse({'message': str(ae) ,}, 404, {})
+    except sqlalchemy.exc.IntegrityError as ie:
+        db.session.rollback()
+        db.session.refresh
+        return ApiResponse({'message': str(ie) ,}, 421, {})
 
     o.from_json(request.json)
     o.contact_emails = []
@@ -474,8 +482,18 @@ def update_cp_organization(org_id):
                 fmb=fmb,
                 cp=cp))
 
-    db.session.add(o)
-    db.session.commit()
+    try:
+        db.session.add(o)
+        db.session.commit()
+    except sqlalchemy.exc.IntegrityError as ie:
+        db.session.rollback()
+        db.session.refresh
+        return ApiResponse({'message': 'could not write RIPE handle already used' ,}, 421, {})
+    except:
+        db.session.rollback()
+        db.session.refresh
+        return ApiResponse({'message': 'could not write'}, 421, {})
+
     return ApiResponse({'message': 'Organization saved'})
     # return {'message': 'Organization saved'}
 
