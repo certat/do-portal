@@ -814,7 +814,7 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
 
         notification_settings['asns'] = [{'asn': k,  'notification_setting': get_ns_dict(k)}  for k in self.fody_org.asns]
         notification_settings['cidrs'] = [{'cidr': k, 'notification_setting': get_ns_dict(k)}  for k in self.fody_org.cidrs]
-        notification_settings['abusec'] = self.fody_org.abusecs
+        notification_settings['abusecs'] = self.fody_org.abusecs
         notification_settings['name'] = self.fody_org.name
         self._notification_settings = notification_settings
         return self._notification_settings
