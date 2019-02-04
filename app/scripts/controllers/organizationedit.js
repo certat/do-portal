@@ -93,6 +93,7 @@ angular.module('cpApp')
                         comment: 'RIPE handle: ' + ripe_handle,
                       });
                   });
+                  $scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN );
                 }
             }, function(){});
       });
@@ -181,6 +182,9 @@ angular.module('cpApp')
             { field: 'zip' },
             { field: 'comment' },
           ],
+          onRegisterApi: function(gridApi) {
+            $scope.gridApi = gridApi;
+          }
       };
     }
     else {
