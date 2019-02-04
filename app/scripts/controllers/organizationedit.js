@@ -93,9 +93,9 @@ angular.module('cpApp')
                         comment: 'RIPE handle: ' + ripe_handle,
                       });
                   });
-                  $scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN );
                 }
             }, function(){});
+        $scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN );
       });
     };
 
@@ -126,8 +126,12 @@ angular.module('cpApp')
               var memberships = result.shift().filter(function(m){return m.organization_id === parseInt($stateParams.id);});
               var gridData = [];
               var roles = {};
+              $scope.manual_abusec_exists = false;
               memberships.forEach(function(m){
                   var role_name = $scope.roles[m.membership_role_id].display_name;
+                  if (role_name === 'Domain Abuse Contact (abuse-c)') {
+                      $scope.manual_abusec_exists = true;
+                  }
                   roles[role_name] = 1;
                   gridData.push({
                       user_id: m.user_id,
@@ -164,7 +168,7 @@ angular.module('cpApp')
                      type: uiGridConstants.filter.SELECT,
                      condition: uiGridConstants.filter.EXACT,
                      selectOptions: []
-             }
+             },
       };
       $scope.gridOptions = {
           enableFiltering: true,
@@ -174,13 +178,17 @@ angular.module('cpApp')
               cellTemplate: '<div class="ui-grid-cell-contents"><a ng-if="row.entity.user_id" ui-sref="user_edit({id:row.entity.user_id})">{{row.entity.user}}</a><span ng-if="!row.entity.user_id">{{row.entity.user}}</span></div>',
             },
             $scope.roleColumnDef,
-            { field: 'email' },
+            { field: 'email',
+              cellTemplate: "<div class=\"ui-grid-cell-contents\"><a href=\"mailto:{{row.entity.email}}\" ng-class=\"{'text-muted': row.entity.role === 'Abuse-C Automatic' && grid.appScope.manual_abusec_exists}\">{{row.entity.email}}</a></div>"
+            },
             { field: 'phone' },
             { field: 'city' },
             { field: 'country' },
             { field: 'street' },
             { field: 'zip' },
-            { field: 'comment' },
+            { field: 'comment',
+              cellTemplate: "<div class=\"ui-grid-cell-contents\">{{row.entity.comment}} <span ng-if=\"row.entity.role === 'Abuse-C Automatic' && grid.appScope.manual_abusec_exists\"> (DEACTIVATED manually)</span></div>"
+            },
           ],
           onRegisterApi: function(gridApi) {
             $scope.gridApi = gridApi;
