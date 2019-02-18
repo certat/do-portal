@@ -40,7 +40,12 @@ if PGPASSWORD=do_portal psql -U do_portal -h cert_db -d do_portal -lqt | cut -d 
   mv misc/tmp-migrations misc/migrations # TODO remove hack
 
   echo '### init RIPE/FODY'
-  # pg_dump --no-owner --schema-only --no-privileges contactdb > /tmp/contactdb_schema_only.pgdump
+  ### create RIPE/FODY dump
+  # 1) create dump on remote server
+  #    `pg_dump --no-owner --schema-only --no-privileges contactdb > /tmp/contactdb_schema_only.pgdump`
+  # 2) move to install/contactdb_schema_only.pgdump
+  # 3) change schema
+  #    `sed -i 's/public\./fody./g' install/contactdb_schema_only.pgdump`
   PGPASSWORD=do_portal psql -h db -U do_portal -c "CREATE SCHEMA fody";
   PGPASSWORD=do_portal psql -U do_portal -h cert_db -d do_portal --echo-errors --file=install/contactdb_schema_only.pgdump
 fi

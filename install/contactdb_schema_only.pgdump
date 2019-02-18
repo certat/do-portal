@@ -36,7 +36,7 @@ SET default_with_oids = false;
 -- Name: as_contacts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.as_contacts (
+CREATE TABLE fody.as_contacts (
     asnum integer NOT NULL,
     contacts character varying(255) NOT NULL,
     unreliable boolean NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE public.as_contacts (
 -- Name: autonomous_system_annotation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.autonomous_system_annotation (
+CREATE TABLE fody.autonomous_system_annotation (
     autonomous_system_annotation_id integer NOT NULL,
     asn bigint NOT NULL,
     annotation json NOT NULL
@@ -64,7 +64,7 @@ CREATE TABLE public.autonomous_system_annotation (
 -- Name: autonomous_system_annotation_autonomous_system_annotation_i_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.autonomous_system_annotation_autonomous_system_annotation_i_seq
+CREATE SEQUENCE fody.autonomous_system_annotation_autonomous_system_annotation_i_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -76,14 +76,14 @@ CREATE SEQUENCE public.autonomous_system_annotation_autonomous_system_annotation
 -- Name: autonomous_system_annotation_autonomous_system_annotation_i_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.autonomous_system_annotation_autonomous_system_annotation_i_seq OWNED BY public.autonomous_system_annotation.autonomous_system_annotation_id;
+ALTER SEQUENCE fody.autonomous_system_annotation_autonomous_system_annotation_i_seq OWNED BY fody.autonomous_system_annotation.autonomous_system_annotation_id;
 
 
 --
 -- Name: contact; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.contact (
+CREATE TABLE fody.contact (
     contact_id integer NOT NULL,
     firstname character varying(500) DEFAULT ''::character varying NOT NULL,
     lastname character varying(500) DEFAULT ''::character varying NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE public.contact (
 -- Name: contact_automatic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.contact_automatic (
+CREATE TABLE fody.contact_automatic (
     contact_automatic_id integer NOT NULL,
     firstname character varying(500) DEFAULT ''::character varying NOT NULL,
     lastname character varying(500) DEFAULT ''::character varying NOT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE public.contact_automatic (
 -- Name: contact_automatic_contact_automatic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.contact_automatic_contact_automatic_id_seq
+CREATE SEQUENCE fody.contact_automatic_contact_automatic_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -130,14 +130,14 @@ CREATE SEQUENCE public.contact_automatic_contact_automatic_id_seq
 -- Name: contact_automatic_contact_automatic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.contact_automatic_contact_automatic_id_seq OWNED BY public.contact_automatic.contact_automatic_id;
+ALTER SEQUENCE fody.contact_automatic_contact_automatic_id_seq OWNED BY fody.contact_automatic.contact_automatic_id;
 
 
 --
 -- Name: contact_contact_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.contact_contact_id_seq
+CREATE SEQUENCE fody.contact_contact_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -149,14 +149,14 @@ CREATE SEQUENCE public.contact_contact_id_seq
 -- Name: contact_contact_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.contact_contact_id_seq OWNED BY public.contact.contact_id;
+ALTER SEQUENCE fody.contact_contact_id_seq OWNED BY fody.contact.contact_id;
 
 
 --
 -- Name: email_status; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.email_status (
+CREATE TABLE fody.email_status (
     email character varying(100) NOT NULL,
     enabled boolean NOT NULL,
     added timestamp with time zone DEFAULT now() NOT NULL
@@ -167,7 +167,7 @@ CREATE TABLE public.email_status (
 -- Name: fqdn; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.fqdn (
+CREATE TABLE fody.fqdn (
     fqdn_id integer NOT NULL,
     fqdn text NOT NULL,
     comment text DEFAULT ''::text NOT NULL
@@ -178,7 +178,7 @@ CREATE TABLE public.fqdn (
 -- Name: fqdn_annotation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.fqdn_annotation (
+CREATE TABLE fody.fqdn_annotation (
     fqdn_annotation_id integer NOT NULL,
     fqdn_id integer NOT NULL,
     annotation json NOT NULL
@@ -189,7 +189,7 @@ CREATE TABLE public.fqdn_annotation (
 -- Name: fqdn_annotation_fqdn_annotation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.fqdn_annotation_fqdn_annotation_id_seq
+CREATE SEQUENCE fody.fqdn_annotation_fqdn_annotation_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -201,14 +201,14 @@ CREATE SEQUENCE public.fqdn_annotation_fqdn_annotation_id_seq
 -- Name: fqdn_annotation_fqdn_annotation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.fqdn_annotation_fqdn_annotation_id_seq OWNED BY public.fqdn_annotation.fqdn_annotation_id;
+ALTER SEQUENCE fody.fqdn_annotation_fqdn_annotation_id_seq OWNED BY fody.fqdn_annotation.fqdn_annotation_id;
 
 
 --
 -- Name: fqdn_automatic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.fqdn_automatic (
+CREATE TABLE fody.fqdn_automatic (
     fqdn_automatic_id integer NOT NULL,
     fqdn text NOT NULL,
     comment text DEFAULT ''::text NOT NULL,
@@ -222,7 +222,7 @@ CREATE TABLE public.fqdn_automatic (
 -- Name: fqdn_automatic_fqdn_automatic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.fqdn_automatic_fqdn_automatic_id_seq
+CREATE SEQUENCE fody.fqdn_automatic_fqdn_automatic_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -234,14 +234,14 @@ CREATE SEQUENCE public.fqdn_automatic_fqdn_automatic_id_seq
 -- Name: fqdn_automatic_fqdn_automatic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.fqdn_automatic_fqdn_automatic_id_seq OWNED BY public.fqdn_automatic.fqdn_automatic_id;
+ALTER SEQUENCE fody.fqdn_automatic_fqdn_automatic_id_seq OWNED BY fody.fqdn_automatic.fqdn_automatic_id;
 
 
 --
 -- Name: fqdn_fqdn_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.fqdn_fqdn_id_seq
+CREATE SEQUENCE fody.fqdn_fqdn_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -253,14 +253,14 @@ CREATE SEQUENCE public.fqdn_fqdn_id_seq
 -- Name: fqdn_fqdn_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.fqdn_fqdn_id_seq OWNED BY public.fqdn.fqdn_id;
+ALTER SEQUENCE fody.fqdn_fqdn_id_seq OWNED BY fody.fqdn.fqdn_id;
 
 
 --
 -- Name: national_cert; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.national_cert (
+CREATE TABLE fody.national_cert (
     national_cert_id integer NOT NULL,
     country_code character(2) NOT NULL,
     comment text DEFAULT ''::text NOT NULL,
@@ -272,7 +272,7 @@ CREATE TABLE public.national_cert (
 -- Name: national_cert_automatic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.national_cert_automatic (
+CREATE TABLE fody.national_cert_automatic (
     national_cert_automatic_id integer NOT NULL,
     country_code character(2) NOT NULL,
     comment text DEFAULT ''::text NOT NULL,
@@ -287,7 +287,7 @@ CREATE TABLE public.national_cert_automatic (
 -- Name: national_cert_automatic_national_cert_automatic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.national_cert_automatic_national_cert_automatic_id_seq
+CREATE SEQUENCE fody.national_cert_automatic_national_cert_automatic_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -299,14 +299,14 @@ CREATE SEQUENCE public.national_cert_automatic_national_cert_automatic_id_seq
 -- Name: national_cert_automatic_national_cert_automatic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.national_cert_automatic_national_cert_automatic_id_seq OWNED BY public.national_cert_automatic.national_cert_automatic_id;
+ALTER SEQUENCE fody.national_cert_automatic_national_cert_automatic_id_seq OWNED BY fody.national_cert_automatic.national_cert_automatic_id;
 
 
 --
 -- Name: national_cert_national_cert_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.national_cert_national_cert_id_seq
+CREATE SEQUENCE fody.national_cert_national_cert_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -318,14 +318,14 @@ CREATE SEQUENCE public.national_cert_national_cert_id_seq
 -- Name: national_cert_national_cert_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.national_cert_national_cert_id_seq OWNED BY public.national_cert.national_cert_id;
+ALTER SEQUENCE fody.national_cert_national_cert_id_seq OWNED BY fody.national_cert.national_cert_id;
 
 
 --
 -- Name: network; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.network (
+CREATE TABLE fody.network (
     network_id integer NOT NULL,
     address cidr NOT NULL,
     comment text DEFAULT ''::text NOT NULL
@@ -336,7 +336,7 @@ CREATE TABLE public.network (
 -- Name: network_annotation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.network_annotation (
+CREATE TABLE fody.network_annotation (
     network_annotation_id integer NOT NULL,
     network_id integer NOT NULL,
     annotation json NOT NULL
@@ -347,7 +347,7 @@ CREATE TABLE public.network_annotation (
 -- Name: network_annotation_network_annotation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.network_annotation_network_annotation_id_seq
+CREATE SEQUENCE fody.network_annotation_network_annotation_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -359,14 +359,14 @@ CREATE SEQUENCE public.network_annotation_network_annotation_id_seq
 -- Name: network_annotation_network_annotation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.network_annotation_network_annotation_id_seq OWNED BY public.network_annotation.network_annotation_id;
+ALTER SEQUENCE fody.network_annotation_network_annotation_id_seq OWNED BY fody.network_annotation.network_annotation_id;
 
 
 --
 -- Name: network_automatic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.network_automatic (
+CREATE TABLE fody.network_automatic (
     network_automatic_id integer NOT NULL,
     address cidr NOT NULL,
     comment text DEFAULT ''::text NOT NULL,
@@ -380,7 +380,7 @@ CREATE TABLE public.network_automatic (
 -- Name: network_automatic_network_automatic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.network_automatic_network_automatic_id_seq
+CREATE SEQUENCE fody.network_automatic_network_automatic_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -392,14 +392,14 @@ CREATE SEQUENCE public.network_automatic_network_automatic_id_seq
 -- Name: network_automatic_network_automatic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.network_automatic_network_automatic_id_seq OWNED BY public.network_automatic.network_automatic_id;
+ALTER SEQUENCE fody.network_automatic_network_automatic_id_seq OWNED BY fody.network_automatic.network_automatic_id;
 
 
 --
 -- Name: network_network_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.network_network_id_seq
+CREATE SEQUENCE fody.network_network_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -411,14 +411,14 @@ CREATE SEQUENCE public.network_network_id_seq
 -- Name: network_network_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.network_network_id_seq OWNED BY public.network.network_id;
+ALTER SEQUENCE fody.network_network_id_seq OWNED BY fody.network.network_id;
 
 
 --
 -- Name: organisation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.organisation (
+CREATE TABLE fody.organisation (
     organisation_id integer NOT NULL,
     name character varying(500) NOT NULL,
     sector_id integer,
@@ -433,7 +433,7 @@ CREATE TABLE public.organisation (
 -- Name: organisation_annotation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.organisation_annotation (
+CREATE TABLE fody.organisation_annotation (
     organisation_annotation_id integer NOT NULL,
     organisation_id integer NOT NULL,
     annotation json NOT NULL
@@ -444,7 +444,7 @@ CREATE TABLE public.organisation_annotation (
 -- Name: organisation_annotation_organisation_annotation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.organisation_annotation_organisation_annotation_id_seq
+CREATE SEQUENCE fody.organisation_annotation_organisation_annotation_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -456,14 +456,14 @@ CREATE SEQUENCE public.organisation_annotation_organisation_annotation_id_seq
 -- Name: organisation_annotation_organisation_annotation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.organisation_annotation_organisation_annotation_id_seq OWNED BY public.organisation_annotation.organisation_annotation_id;
+ALTER SEQUENCE fody.organisation_annotation_organisation_annotation_id_seq OWNED BY fody.organisation_annotation.organisation_annotation_id;
 
 
 --
 -- Name: organisation_automatic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.organisation_automatic (
+CREATE TABLE fody.organisation_automatic (
     organisation_automatic_id integer NOT NULL,
     name character varying(500) NOT NULL,
     sector_id integer,
@@ -481,7 +481,7 @@ CREATE TABLE public.organisation_automatic (
 -- Name: organisation_automatic_organisation_automatic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.organisation_automatic_organisation_automatic_id_seq
+CREATE SEQUENCE fody.organisation_automatic_organisation_automatic_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -493,14 +493,14 @@ CREATE SEQUENCE public.organisation_automatic_organisation_automatic_id_seq
 -- Name: organisation_automatic_organisation_automatic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.organisation_automatic_organisation_automatic_id_seq OWNED BY public.organisation_automatic.organisation_automatic_id;
+ALTER SEQUENCE fody.organisation_automatic_organisation_automatic_id_seq OWNED BY fody.organisation_automatic.organisation_automatic_id;
 
 
 --
 -- Name: organisation_organisation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.organisation_organisation_id_seq
+CREATE SEQUENCE fody.organisation_organisation_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -512,14 +512,14 @@ CREATE SEQUENCE public.organisation_organisation_id_seq
 -- Name: organisation_organisation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.organisation_organisation_id_seq OWNED BY public.organisation.organisation_id;
+ALTER SEQUENCE fody.organisation_organisation_id_seq OWNED BY fody.organisation.organisation_id;
 
 
 --
 -- Name: organisation_to_asn; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.organisation_to_asn (
+CREATE TABLE fody.organisation_to_asn (
     organisation_id integer NOT NULL,
     asn bigint NOT NULL
 );
@@ -529,7 +529,7 @@ CREATE TABLE public.organisation_to_asn (
 -- Name: organisation_to_asn_automatic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.organisation_to_asn_automatic (
+CREATE TABLE fody.organisation_to_asn_automatic (
     organisation_automatic_id integer NOT NULL,
     asn bigint NOT NULL,
     import_source character varying(500) NOT NULL,
@@ -542,7 +542,7 @@ CREATE TABLE public.organisation_to_asn_automatic (
 -- Name: organisation_to_fqdn; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.organisation_to_fqdn (
+CREATE TABLE fody.organisation_to_fqdn (
     organisation_id integer NOT NULL,
     fqdn_id integer NOT NULL
 );
@@ -552,7 +552,7 @@ CREATE TABLE public.organisation_to_fqdn (
 -- Name: organisation_to_fqdn_automatic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.organisation_to_fqdn_automatic (
+CREATE TABLE fody.organisation_to_fqdn_automatic (
     organisation_automatic_id integer NOT NULL,
     fqdn_automatic_id integer NOT NULL,
     import_source character varying(500) NOT NULL,
@@ -565,7 +565,7 @@ CREATE TABLE public.organisation_to_fqdn_automatic (
 -- Name: organisation_to_network; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.organisation_to_network (
+CREATE TABLE fody.organisation_to_network (
     organisation_id integer NOT NULL,
     network_id integer NOT NULL
 );
@@ -575,7 +575,7 @@ CREATE TABLE public.organisation_to_network (
 -- Name: organisation_to_network_automatic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.organisation_to_network_automatic (
+CREATE TABLE fody.organisation_to_network_automatic (
     organisation_automatic_id integer NOT NULL,
     network_automatic_id integer NOT NULL,
     import_source character varying(500) NOT NULL,
@@ -588,7 +588,7 @@ CREATE TABLE public.organisation_to_network_automatic (
 -- Name: sector; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.sector (
+CREATE TABLE fody.sector (
     sector_id integer NOT NULL,
     name character varying(100) NOT NULL
 );
@@ -598,7 +598,7 @@ CREATE TABLE public.sector (
 -- Name: sector_sector_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.sector_sector_id_seq
+CREATE SEQUENCE fody.sector_sector_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -610,119 +610,119 @@ CREATE SEQUENCE public.sector_sector_id_seq
 -- Name: sector_sector_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.sector_sector_id_seq OWNED BY public.sector.sector_id;
+ALTER SEQUENCE fody.sector_sector_id_seq OWNED BY fody.sector.sector_id;
 
 
 --
 -- Name: autonomous_system_annotation_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.autonomous_system_annotation ALTER COLUMN autonomous_system_annotation_id SET DEFAULT nextval('public.autonomous_system_annotation_autonomous_system_annotation_i_seq'::regclass);
+ALTER TABLE ONLY fody.autonomous_system_annotation ALTER COLUMN autonomous_system_annotation_id SET DEFAULT nextval('fody.autonomous_system_annotation_autonomous_system_annotation_i_seq'::regclass);
 
 
 --
 -- Name: contact_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.contact ALTER COLUMN contact_id SET DEFAULT nextval('public.contact_contact_id_seq'::regclass);
+ALTER TABLE ONLY fody.contact ALTER COLUMN contact_id SET DEFAULT nextval('fody.contact_contact_id_seq'::regclass);
 
 
 --
 -- Name: contact_automatic_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.contact_automatic ALTER COLUMN contact_automatic_id SET DEFAULT nextval('public.contact_automatic_contact_automatic_id_seq'::regclass);
+ALTER TABLE ONLY fody.contact_automatic ALTER COLUMN contact_automatic_id SET DEFAULT nextval('fody.contact_automatic_contact_automatic_id_seq'::regclass);
 
 
 --
 -- Name: fqdn_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.fqdn ALTER COLUMN fqdn_id SET DEFAULT nextval('public.fqdn_fqdn_id_seq'::regclass);
+ALTER TABLE ONLY fody.fqdn ALTER COLUMN fqdn_id SET DEFAULT nextval('fody.fqdn_fqdn_id_seq'::regclass);
 
 
 --
 -- Name: fqdn_annotation_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.fqdn_annotation ALTER COLUMN fqdn_annotation_id SET DEFAULT nextval('public.fqdn_annotation_fqdn_annotation_id_seq'::regclass);
+ALTER TABLE ONLY fody.fqdn_annotation ALTER COLUMN fqdn_annotation_id SET DEFAULT nextval('fody.fqdn_annotation_fqdn_annotation_id_seq'::regclass);
 
 
 --
 -- Name: fqdn_automatic_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.fqdn_automatic ALTER COLUMN fqdn_automatic_id SET DEFAULT nextval('public.fqdn_automatic_fqdn_automatic_id_seq'::regclass);
+ALTER TABLE ONLY fody.fqdn_automatic ALTER COLUMN fqdn_automatic_id SET DEFAULT nextval('fody.fqdn_automatic_fqdn_automatic_id_seq'::regclass);
 
 
 --
 -- Name: national_cert_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.national_cert ALTER COLUMN national_cert_id SET DEFAULT nextval('public.national_cert_national_cert_id_seq'::regclass);
+ALTER TABLE ONLY fody.national_cert ALTER COLUMN national_cert_id SET DEFAULT nextval('fody.national_cert_national_cert_id_seq'::regclass);
 
 
 --
 -- Name: national_cert_automatic_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.national_cert_automatic ALTER COLUMN national_cert_automatic_id SET DEFAULT nextval('public.national_cert_automatic_national_cert_automatic_id_seq'::regclass);
+ALTER TABLE ONLY fody.national_cert_automatic ALTER COLUMN national_cert_automatic_id SET DEFAULT nextval('fody.national_cert_automatic_national_cert_automatic_id_seq'::regclass);
 
 
 --
 -- Name: network_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.network ALTER COLUMN network_id SET DEFAULT nextval('public.network_network_id_seq'::regclass);
+ALTER TABLE ONLY fody.network ALTER COLUMN network_id SET DEFAULT nextval('fody.network_network_id_seq'::regclass);
 
 
 --
 -- Name: network_annotation_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.network_annotation ALTER COLUMN network_annotation_id SET DEFAULT nextval('public.network_annotation_network_annotation_id_seq'::regclass);
+ALTER TABLE ONLY fody.network_annotation ALTER COLUMN network_annotation_id SET DEFAULT nextval('fody.network_annotation_network_annotation_id_seq'::regclass);
 
 
 --
 -- Name: network_automatic_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.network_automatic ALTER COLUMN network_automatic_id SET DEFAULT nextval('public.network_automatic_network_automatic_id_seq'::regclass);
+ALTER TABLE ONLY fody.network_automatic ALTER COLUMN network_automatic_id SET DEFAULT nextval('fody.network_automatic_network_automatic_id_seq'::regclass);
 
 
 --
 -- Name: organisation_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation ALTER COLUMN organisation_id SET DEFAULT nextval('public.organisation_organisation_id_seq'::regclass);
+ALTER TABLE ONLY fody.organisation ALTER COLUMN organisation_id SET DEFAULT nextval('fody.organisation_organisation_id_seq'::regclass);
 
 
 --
 -- Name: organisation_annotation_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_annotation ALTER COLUMN organisation_annotation_id SET DEFAULT nextval('public.organisation_annotation_organisation_annotation_id_seq'::regclass);
+ALTER TABLE ONLY fody.organisation_annotation ALTER COLUMN organisation_annotation_id SET DEFAULT nextval('fody.organisation_annotation_organisation_annotation_id_seq'::regclass);
 
 
 --
 -- Name: organisation_automatic_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_automatic ALTER COLUMN organisation_automatic_id SET DEFAULT nextval('public.organisation_automatic_organisation_automatic_id_seq'::regclass);
+ALTER TABLE ONLY fody.organisation_automatic ALTER COLUMN organisation_automatic_id SET DEFAULT nextval('fody.organisation_automatic_organisation_automatic_id_seq'::regclass);
 
 
 --
 -- Name: sector_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sector ALTER COLUMN sector_id SET DEFAULT nextval('public.sector_sector_id_seq'::regclass);
+ALTER TABLE ONLY fody.sector ALTER COLUMN sector_id SET DEFAULT nextval('fody.sector_sector_id_seq'::regclass);
 
 
 --
 -- Name: as_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.as_contacts
+ALTER TABLE ONLY fody.as_contacts
     ADD CONSTRAINT as_contacts_pkey PRIMARY KEY (asnum);
 
 
@@ -730,7 +730,7 @@ ALTER TABLE ONLY public.as_contacts
 -- Name: autonomous_system_annotation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.autonomous_system_annotation
+ALTER TABLE ONLY fody.autonomous_system_annotation
     ADD CONSTRAINT autonomous_system_annotation_pkey PRIMARY KEY (autonomous_system_annotation_id);
 
 
@@ -738,7 +738,7 @@ ALTER TABLE ONLY public.autonomous_system_annotation
 -- Name: contact_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.contact_automatic
+ALTER TABLE ONLY fody.contact_automatic
     ADD CONSTRAINT contact_automatic_pkey PRIMARY KEY (contact_automatic_id);
 
 
@@ -746,7 +746,7 @@ ALTER TABLE ONLY public.contact_automatic
 -- Name: contact_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.contact
+ALTER TABLE ONLY fody.contact
     ADD CONSTRAINT contact_pkey PRIMARY KEY (contact_id);
 
 
@@ -754,7 +754,7 @@ ALTER TABLE ONLY public.contact
 -- Name: email_status_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.email_status
+ALTER TABLE ONLY fody.email_status
     ADD CONSTRAINT email_status_pkey PRIMARY KEY (email);
 
 
@@ -762,7 +762,7 @@ ALTER TABLE ONLY public.email_status
 -- Name: fqdn_annotation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.fqdn_annotation
+ALTER TABLE ONLY fody.fqdn_annotation
     ADD CONSTRAINT fqdn_annotation_pkey PRIMARY KEY (fqdn_annotation_id);
 
 
@@ -770,7 +770,7 @@ ALTER TABLE ONLY public.fqdn_annotation
 -- Name: fqdn_automatic_fqdn_import_source_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.fqdn_automatic
+ALTER TABLE ONLY fody.fqdn_automatic
     ADD CONSTRAINT fqdn_automatic_fqdn_import_source_key UNIQUE (fqdn, import_source);
 
 
@@ -778,7 +778,7 @@ ALTER TABLE ONLY public.fqdn_automatic
 -- Name: fqdn_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.fqdn_automatic
+ALTER TABLE ONLY fody.fqdn_automatic
     ADD CONSTRAINT fqdn_automatic_pkey PRIMARY KEY (fqdn_automatic_id);
 
 
@@ -786,7 +786,7 @@ ALTER TABLE ONLY public.fqdn_automatic
 -- Name: fqdn_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.fqdn
+ALTER TABLE ONLY fody.fqdn
     ADD CONSTRAINT fqdn_pkey PRIMARY KEY (fqdn_id);
 
 
@@ -794,7 +794,7 @@ ALTER TABLE ONLY public.fqdn
 -- Name: national_cert_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.national_cert_automatic
+ALTER TABLE ONLY fody.national_cert_automatic
     ADD CONSTRAINT national_cert_automatic_pkey PRIMARY KEY (national_cert_automatic_id);
 
 
@@ -802,7 +802,7 @@ ALTER TABLE ONLY public.national_cert_automatic
 -- Name: national_cert_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.national_cert
+ALTER TABLE ONLY fody.national_cert
     ADD CONSTRAINT national_cert_pkey PRIMARY KEY (national_cert_id);
 
 
@@ -810,7 +810,7 @@ ALTER TABLE ONLY public.national_cert
 -- Name: network_annotation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.network_annotation
+ALTER TABLE ONLY fody.network_annotation
     ADD CONSTRAINT network_annotation_pkey PRIMARY KEY (network_annotation_id);
 
 
@@ -818,7 +818,7 @@ ALTER TABLE ONLY public.network_annotation
 -- Name: network_automatic_address_import_source_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.network_automatic
+ALTER TABLE ONLY fody.network_automatic
     ADD CONSTRAINT network_automatic_address_import_source_key UNIQUE (address, import_source);
 
 
@@ -826,7 +826,7 @@ ALTER TABLE ONLY public.network_automatic
 -- Name: network_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.network_automatic
+ALTER TABLE ONLY fody.network_automatic
     ADD CONSTRAINT network_automatic_pkey PRIMARY KEY (network_automatic_id);
 
 
@@ -834,7 +834,7 @@ ALTER TABLE ONLY public.network_automatic
 -- Name: network_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.network
+ALTER TABLE ONLY fody.network
     ADD CONSTRAINT network_pkey PRIMARY KEY (network_id);
 
 
@@ -842,7 +842,7 @@ ALTER TABLE ONLY public.network
 -- Name: organisation_annotation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_annotation
+ALTER TABLE ONLY fody.organisation_annotation
     ADD CONSTRAINT organisation_annotation_pkey PRIMARY KEY (organisation_annotation_id);
 
 
@@ -850,7 +850,7 @@ ALTER TABLE ONLY public.organisation_annotation
 -- Name: organisation_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_automatic
+ALTER TABLE ONLY fody.organisation_automatic
     ADD CONSTRAINT organisation_automatic_pkey PRIMARY KEY (organisation_automatic_id);
 
 
@@ -858,7 +858,7 @@ ALTER TABLE ONLY public.organisation_automatic
 -- Name: organisation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation
+ALTER TABLE ONLY fody.organisation
     ADD CONSTRAINT organisation_pkey PRIMARY KEY (organisation_id);
 
 
@@ -866,7 +866,7 @@ ALTER TABLE ONLY public.organisation
 -- Name: organisation_to_asn_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_asn_automatic
+ALTER TABLE ONLY fody.organisation_to_asn_automatic
     ADD CONSTRAINT organisation_to_asn_automatic_pkey PRIMARY KEY (organisation_automatic_id, asn);
 
 
@@ -874,7 +874,7 @@ ALTER TABLE ONLY public.organisation_to_asn_automatic
 -- Name: organisation_to_asn_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_asn
+ALTER TABLE ONLY fody.organisation_to_asn
     ADD CONSTRAINT organisation_to_asn_pkey PRIMARY KEY (organisation_id, asn);
 
 
@@ -882,7 +882,7 @@ ALTER TABLE ONLY public.organisation_to_asn
 -- Name: organisation_to_fqdn_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_fqdn_automatic
+ALTER TABLE ONLY fody.organisation_to_fqdn_automatic
     ADD CONSTRAINT organisation_to_fqdn_automatic_pkey PRIMARY KEY (organisation_automatic_id, fqdn_automatic_id);
 
 
@@ -890,7 +890,7 @@ ALTER TABLE ONLY public.organisation_to_fqdn_automatic
 -- Name: organisation_to_fqdn_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_fqdn
+ALTER TABLE ONLY fody.organisation_to_fqdn
     ADD CONSTRAINT organisation_to_fqdn_pkey PRIMARY KEY (organisation_id, fqdn_id);
 
 
@@ -898,7 +898,7 @@ ALTER TABLE ONLY public.organisation_to_fqdn
 -- Name: organisation_to_network_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_network_automatic
+ALTER TABLE ONLY fody.organisation_to_network_automatic
     ADD CONSTRAINT organisation_to_network_automatic_pkey PRIMARY KEY (organisation_automatic_id, network_automatic_id);
 
 
@@ -906,7 +906,7 @@ ALTER TABLE ONLY public.organisation_to_network_automatic
 -- Name: organisation_to_network_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_network
+ALTER TABLE ONLY fody.organisation_to_network
     ADD CONSTRAINT organisation_to_network_pkey PRIMARY KEY (organisation_id, network_id);
 
 
@@ -914,7 +914,7 @@ ALTER TABLE ONLY public.organisation_to_network
 -- Name: sector_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sector
+ALTER TABLE ONLY fody.sector
     ADD CONSTRAINT sector_pkey PRIMARY KEY (sector_id);
 
 
@@ -922,264 +922,264 @@ ALTER TABLE ONLY public.sector
 -- Name: autonomous_system_annotation_asn_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX autonomous_system_annotation_asn_idx ON public.autonomous_system_annotation USING btree (asn);
+CREATE INDEX autonomous_system_annotation_asn_idx ON fody.autonomous_system_annotation USING btree (asn);
 
 
 --
 -- Name: contact_automatic_organisation_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX contact_automatic_organisation_idx ON public.contact_automatic USING btree (organisation_automatic_id);
+CREATE INDEX contact_automatic_organisation_idx ON fody.contact_automatic USING btree (organisation_automatic_id);
 
 
 --
 -- Name: contact_organisation_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX contact_organisation_idx ON public.contact USING btree (organisation_id);
+CREATE INDEX contact_organisation_idx ON fody.contact USING btree (organisation_id);
 
 
 --
 -- Name: fqdn_annotation_fqdn_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX fqdn_annotation_fqdn_idx ON public.fqdn_annotation USING btree (fqdn_id);
+CREATE INDEX fqdn_annotation_fqdn_idx ON fody.fqdn_annotation USING btree (fqdn_id);
 
 
 --
 -- Name: fqdn_fqdn_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX fqdn_fqdn_idx ON public.fqdn USING btree (fqdn);
+CREATE INDEX fqdn_fqdn_idx ON fody.fqdn USING btree (fqdn);
 
 
 --
 -- Name: idx_as_contacts_asnum; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_as_contacts_asnum ON public.as_contacts USING btree (asnum);
+CREATE INDEX idx_as_contacts_asnum ON fody.as_contacts USING btree (asnum);
 
 
 --
 -- Name: national_cert_automatic_country_code_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX national_cert_automatic_country_code_idx ON public.national_cert_automatic USING btree (country_code);
+CREATE INDEX national_cert_automatic_country_code_idx ON fody.national_cert_automatic USING btree (country_code);
 
 
 --
 -- Name: national_cert_country_code_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX national_cert_country_code_idx ON public.national_cert USING btree (country_code);
+CREATE INDEX national_cert_country_code_idx ON fody.national_cert USING btree (country_code);
 
 
 --
 -- Name: network_annotation_network_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX network_annotation_network_idx ON public.network_annotation USING btree (network_id);
+CREATE INDEX network_annotation_network_idx ON fody.network_annotation USING btree (network_id);
 
 
 --
 -- Name: network_automatic_cidr_lower_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX network_automatic_cidr_lower_idx ON public.network_automatic USING btree (((host((network((address)::inet))::inet))::inet));
+CREATE INDEX network_automatic_cidr_lower_idx ON fody.network_automatic USING btree (((host((network((address)::inet))::inet))::inet));
 
 
 --
 -- Name: network_automatic_cidr_upper_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX network_automatic_cidr_upper_idx ON public.network_automatic USING btree (((host(broadcast((address)::inet)))::inet));
+CREATE INDEX network_automatic_cidr_upper_idx ON fody.network_automatic USING btree (((host(broadcast((address)::inet)))::inet));
 
 
 --
 -- Name: network_cidr_lower_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX network_cidr_lower_idx ON public.network USING btree (((host((network((address)::inet))::inet))::inet));
+CREATE INDEX network_cidr_lower_idx ON fody.network USING btree (((host((network((address)::inet))::inet))::inet));
 
 
 --
 -- Name: network_cidr_upper_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX network_cidr_upper_idx ON public.network USING btree (((host(broadcast((address)::inet)))::inet));
+CREATE INDEX network_cidr_upper_idx ON fody.network USING btree (((host(broadcast((address)::inet)))::inet));
 
 
 --
 -- Name: organisation_annotation_organisation_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX organisation_annotation_organisation_idx ON public.organisation_annotation USING btree (organisation_id);
+CREATE INDEX organisation_annotation_organisation_idx ON fody.organisation_annotation USING btree (organisation_id);
 
 
 --
 -- Name: organisation_to_asn_asn_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX organisation_to_asn_asn_idx ON public.organisation_to_asn USING btree (asn);
+CREATE INDEX organisation_to_asn_asn_idx ON fody.organisation_to_asn USING btree (asn);
 
 
 --
 -- Name: organisation_to_asn_automatic_asn_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX organisation_to_asn_automatic_asn_idx ON public.organisation_to_asn_automatic USING btree (asn);
+CREATE INDEX organisation_to_asn_automatic_asn_idx ON fody.organisation_to_asn_automatic USING btree (asn);
 
 
 --
 -- Name: contact_automatic_organisation_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.contact_automatic
-    ADD CONSTRAINT contact_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES public.organisation_automatic(organisation_automatic_id);
+ALTER TABLE ONLY fody.contact_automatic
+    ADD CONSTRAINT contact_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES fody.organisation_automatic(organisation_automatic_id);
 
 
 --
 -- Name: contact_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.contact
-    ADD CONSTRAINT contact_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+ALTER TABLE ONLY fody.contact
+    ADD CONSTRAINT contact_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES fody.organisation(organisation_id);
 
 
 --
 -- Name: fqdn_annotation_fqdn_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.fqdn_annotation
-    ADD CONSTRAINT fqdn_annotation_fqdn_id_fkey FOREIGN KEY (fqdn_id) REFERENCES public.fqdn(fqdn_id);
+ALTER TABLE ONLY fody.fqdn_annotation
+    ADD CONSTRAINT fqdn_annotation_fqdn_id_fkey FOREIGN KEY (fqdn_id) REFERENCES fody.fqdn(fqdn_id);
 
 
 --
 -- Name: national_cert_automatic_organisation_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.national_cert_automatic
-    ADD CONSTRAINT national_cert_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES public.organisation_automatic(organisation_automatic_id);
+ALTER TABLE ONLY fody.national_cert_automatic
+    ADD CONSTRAINT national_cert_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES fody.organisation_automatic(organisation_automatic_id);
 
 
 --
 -- Name: national_cert_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.national_cert
-    ADD CONSTRAINT national_cert_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+ALTER TABLE ONLY fody.national_cert
+    ADD CONSTRAINT national_cert_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES fody.organisation(organisation_id);
 
 
 --
 -- Name: network_annotation_network_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.network_annotation
-    ADD CONSTRAINT network_annotation_network_id_fkey FOREIGN KEY (network_id) REFERENCES public.network(network_id);
+ALTER TABLE ONLY fody.network_annotation
+    ADD CONSTRAINT network_annotation_network_id_fkey FOREIGN KEY (network_id) REFERENCES fody.network(network_id);
 
 
 --
 -- Name: organisation_annotation_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_annotation
-    ADD CONSTRAINT organisation_annotation_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+ALTER TABLE ONLY fody.organisation_annotation
+    ADD CONSTRAINT organisation_annotation_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES fody.organisation(organisation_id);
 
 
 --
 -- Name: organisation_automatic_sector_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_automatic
-    ADD CONSTRAINT organisation_automatic_sector_id_fkey FOREIGN KEY (sector_id) REFERENCES public.sector(sector_id);
+ALTER TABLE ONLY fody.organisation_automatic
+    ADD CONSTRAINT organisation_automatic_sector_id_fkey FOREIGN KEY (sector_id) REFERENCES fody.sector(sector_id);
 
 
 --
 -- Name: organisation_sector_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation
-    ADD CONSTRAINT organisation_sector_id_fkey FOREIGN KEY (sector_id) REFERENCES public.sector(sector_id);
+ALTER TABLE ONLY fody.organisation
+    ADD CONSTRAINT organisation_sector_id_fkey FOREIGN KEY (sector_id) REFERENCES fody.sector(sector_id);
 
 
 --
 -- Name: organisation_to_asn_automatic_organisation_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_asn_automatic
-    ADD CONSTRAINT organisation_to_asn_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES public.organisation_automatic(organisation_automatic_id);
+ALTER TABLE ONLY fody.organisation_to_asn_automatic
+    ADD CONSTRAINT organisation_to_asn_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES fody.organisation_automatic(organisation_automatic_id);
 
 
 --
 -- Name: organisation_to_asn_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_asn
-    ADD CONSTRAINT organisation_to_asn_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+ALTER TABLE ONLY fody.organisation_to_asn
+    ADD CONSTRAINT organisation_to_asn_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES fody.organisation(organisation_id);
 
 
 --
 -- Name: organisation_to_fqdn_automatic_fqdn_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_fqdn_automatic
-    ADD CONSTRAINT organisation_to_fqdn_automatic_fqdn_automatic_id_fkey FOREIGN KEY (fqdn_automatic_id) REFERENCES public.fqdn_automatic(fqdn_automatic_id);
+ALTER TABLE ONLY fody.organisation_to_fqdn_automatic
+    ADD CONSTRAINT organisation_to_fqdn_automatic_fqdn_automatic_id_fkey FOREIGN KEY (fqdn_automatic_id) REFERENCES fody.fqdn_automatic(fqdn_automatic_id);
 
 
 --
 -- Name: organisation_to_fqdn_automatic_organisation_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_fqdn_automatic
-    ADD CONSTRAINT organisation_to_fqdn_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES public.organisation_automatic(organisation_automatic_id);
+ALTER TABLE ONLY fody.organisation_to_fqdn_automatic
+    ADD CONSTRAINT organisation_to_fqdn_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES fody.organisation_automatic(organisation_automatic_id);
 
 
 --
 -- Name: organisation_to_fqdn_fqdn_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_fqdn
-    ADD CONSTRAINT organisation_to_fqdn_fqdn_id_fkey FOREIGN KEY (fqdn_id) REFERENCES public.fqdn(fqdn_id);
+ALTER TABLE ONLY fody.organisation_to_fqdn
+    ADD CONSTRAINT organisation_to_fqdn_fqdn_id_fkey FOREIGN KEY (fqdn_id) REFERENCES fody.fqdn(fqdn_id);
 
 
 --
 -- Name: organisation_to_fqdn_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_fqdn
-    ADD CONSTRAINT organisation_to_fqdn_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+ALTER TABLE ONLY fody.organisation_to_fqdn
+    ADD CONSTRAINT organisation_to_fqdn_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES fody.organisation(organisation_id);
 
 
 --
 -- Name: organisation_to_network_automati_organisation_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_network_automatic
-    ADD CONSTRAINT organisation_to_network_automati_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES public.organisation_automatic(organisation_automatic_id);
+ALTER TABLE ONLY fody.organisation_to_network_automatic
+    ADD CONSTRAINT organisation_to_network_automati_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES fody.organisation_automatic(organisation_automatic_id);
 
 
 --
 -- Name: organisation_to_network_automatic_network_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_network_automatic
-    ADD CONSTRAINT organisation_to_network_automatic_network_automatic_id_fkey FOREIGN KEY (network_automatic_id) REFERENCES public.network_automatic(network_automatic_id);
+ALTER TABLE ONLY fody.organisation_to_network_automatic
+    ADD CONSTRAINT organisation_to_network_automatic_network_automatic_id_fkey FOREIGN KEY (network_automatic_id) REFERENCES fody.network_automatic(network_automatic_id);
 
 
 --
 -- Name: organisation_to_network_network_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_network
-    ADD CONSTRAINT organisation_to_network_network_id_fkey FOREIGN KEY (network_id) REFERENCES public.network(network_id);
+ALTER TABLE ONLY fody.organisation_to_network
+    ADD CONSTRAINT organisation_to_network_network_id_fkey FOREIGN KEY (network_id) REFERENCES fody.network(network_id);
 
 
 --
 -- Name: organisation_to_network_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organisation_to_network
-    ADD CONSTRAINT organisation_to_network_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+ALTER TABLE ONLY fody.organisation_to_network
+    ADD CONSTRAINT organisation_to_network_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES fody.organisation(organisation_id);
 
 
 --
