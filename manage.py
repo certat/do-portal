@@ -16,6 +16,7 @@ from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, Vulnerability, Tag
 from app.models import ContactEmail, emails_organizations, tags_vulnerabilities
 from app.models import Role, ReportType, MembershipRole, Country
+from app.fixtures import testfixture
 
 
 def create_cli_app(info):
@@ -137,6 +138,18 @@ def import_certs(collab_url, username, password):
         db.session.commit()
         click.echo('Done')
 
+@cli.command()
+def initializedb():
+    """ fill lookup tables """
+    Country._Country__insert_defaults()
+    MembershipRole._MembershipRole__insert_defaults()
+    click.echo('Done')
+
+
+@cli.command()
+def insertmasteruser():
+    testfixture.testdata.addyaml("install/master_user.yaml")
+    db.session.commit()
 
 @cli.command()
 def addsampledata():

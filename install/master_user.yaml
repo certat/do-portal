@@ -1,0 +1,11 @@
+org:
+  - abbreviation: master
+    full_name: "MasterOrg"
+    display_name: "Master Org"
+user:
+  - name: master
+    org: MasterOrg
+    role: OrgAdmin
+    comment: "Master User"
+    email: "master@master.master"
+    password: "Bla12345%"
