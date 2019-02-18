@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:stretch
 
 RUN    apt-get update \
     && apt-get install -y \
@@ -9,6 +9,7 @@ RUN    apt-get update \
        libffi-dev p7zip-full libncurses-dev \
        libxslt-dev lib32z1-dev libpq-dev \
        python3-venv python3-dev python3-pip \
+       postgresql-client-9.6 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN useradd --create-home --home-dir /home/cert \
@@ -34,4 +35,4 @@ RUN cp config.cfg.docker config.cfg
 
 EXPOSE 5001
 
-CMD /bin/bash -c "source ./bin/activate && python manage.py run -h 0.0.0.0 -p 5001"
+CMD ["bash", "./docker_entrypoint.sh"]
