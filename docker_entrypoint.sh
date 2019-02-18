@@ -47,7 +47,7 @@ set -e
 if [[ $fody_schema_exists != *"fody (1 row)"* ]]; then
   echo 'init RIPE/FODY'
   PGPASSWORD=do_portal psql -h db -U do_portal -c "CREATE SCHEMA fody";
-  PGPASSWORD=do_portal psql -U do_portal -h cert_db -d do_portal --echo-errors --file=create_fody_schema.sql
+  PGPASSWORD=do_portal psql -U do_portal -h cert_db -d do_portal --echo-errors --file=install/create_fody_schema.sql
 fi
 
 source ./bin/activate && python manage.py run -h 0.0.0.0 -p 5001
