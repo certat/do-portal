@@ -1,0 +1,1188 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.15
+-- Dumped by pg_dump version 9.5.15
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: as_contacts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.as_contacts (
+    asnum integer NOT NULL,
+    contacts character varying(255) NOT NULL,
+    unreliable boolean NOT NULL,
+    type character varying(30) DEFAULT 'manual'::character varying,
+    govcert boolean,
+    comment character varying(255),
+    cc_contacts character varying(255),
+    sector character varying(255),
+    "can-see-tlp-amber_shadowserver-drone" boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: autonomous_system_annotation; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.autonomous_system_annotation (
+    autonomous_system_annotation_id integer NOT NULL,
+    asn bigint NOT NULL,
+    annotation json NOT NULL
+);
+
+
+--
+-- Name: autonomous_system_annotation_autonomous_system_annotation_i_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.autonomous_system_annotation_autonomous_system_annotation_i_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: autonomous_system_annotation_autonomous_system_annotation_i_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.autonomous_system_annotation_autonomous_system_annotation_i_seq OWNED BY public.autonomous_system_annotation.autonomous_system_annotation_id;
+
+
+--
+-- Name: contact; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.contact (
+    contact_id integer NOT NULL,
+    firstname character varying(500) DEFAULT ''::character varying NOT NULL,
+    lastname character varying(500) DEFAULT ''::character varying NOT NULL,
+    tel character varying(500) DEFAULT ''::character varying NOT NULL,
+    openpgp_fpr character varying(128) DEFAULT ''::character varying NOT NULL,
+    email character varying(100) NOT NULL,
+    comment text DEFAULT ''::text NOT NULL,
+    organisation_id integer NOT NULL
+);
+
+
+--
+-- Name: contact_automatic; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.contact_automatic (
+    contact_automatic_id integer NOT NULL,
+    firstname character varying(500) DEFAULT ''::character varying NOT NULL,
+    lastname character varying(500) DEFAULT ''::character varying NOT NULL,
+    tel character varying(500) DEFAULT ''::character varying NOT NULL,
+    openpgp_fpr character varying(128) DEFAULT ''::character varying NOT NULL,
+    email character varying(100) NOT NULL,
+    comment text DEFAULT ''::text NOT NULL,
+    import_source character varying(500) NOT NULL,
+    import_time timestamp without time zone NOT NULL,
+    organisation_automatic_id integer NOT NULL,
+    CONSTRAINT automatic_templ_import_source_check CHECK (((import_source)::text <> ''::text))
+);
+
+
+--
+-- Name: contact_automatic_contact_automatic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.contact_automatic_contact_automatic_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contact_automatic_contact_automatic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.contact_automatic_contact_automatic_id_seq OWNED BY public.contact_automatic.contact_automatic_id;
+
+
+--
+-- Name: contact_contact_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.contact_contact_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contact_contact_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.contact_contact_id_seq OWNED BY public.contact.contact_id;
+
+
+--
+-- Name: email_status; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_status (
+    email character varying(100) NOT NULL,
+    enabled boolean NOT NULL,
+    added timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: fqdn; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.fqdn (
+    fqdn_id integer NOT NULL,
+    fqdn text NOT NULL,
+    comment text DEFAULT ''::text NOT NULL
+);
+
+
+--
+-- Name: fqdn_annotation; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.fqdn_annotation (
+    fqdn_annotation_id integer NOT NULL,
+    fqdn_id integer NOT NULL,
+    annotation json NOT NULL
+);
+
+
+--
+-- Name: fqdn_annotation_fqdn_annotation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.fqdn_annotation_fqdn_annotation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: fqdn_annotation_fqdn_annotation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.fqdn_annotation_fqdn_annotation_id_seq OWNED BY public.fqdn_annotation.fqdn_annotation_id;
+
+
+--
+-- Name: fqdn_automatic; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.fqdn_automatic (
+    fqdn_automatic_id integer NOT NULL,
+    fqdn text NOT NULL,
+    comment text DEFAULT ''::text NOT NULL,
+    import_source character varying(500) NOT NULL,
+    import_time timestamp without time zone NOT NULL,
+    CONSTRAINT automatic_templ_import_source_check CHECK (((import_source)::text <> ''::text))
+);
+
+
+--
+-- Name: fqdn_automatic_fqdn_automatic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.fqdn_automatic_fqdn_automatic_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: fqdn_automatic_fqdn_automatic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.fqdn_automatic_fqdn_automatic_id_seq OWNED BY public.fqdn_automatic.fqdn_automatic_id;
+
+
+--
+-- Name: fqdn_fqdn_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.fqdn_fqdn_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: fqdn_fqdn_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.fqdn_fqdn_id_seq OWNED BY public.fqdn.fqdn_id;
+
+
+--
+-- Name: national_cert; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.national_cert (
+    national_cert_id integer NOT NULL,
+    country_code character(2) NOT NULL,
+    comment text DEFAULT ''::text NOT NULL,
+    organisation_id integer NOT NULL
+);
+
+
+--
+-- Name: national_cert_automatic; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.national_cert_automatic (
+    national_cert_automatic_id integer NOT NULL,
+    country_code character(2) NOT NULL,
+    comment text DEFAULT ''::text NOT NULL,
+    organisation_automatic_id integer NOT NULL,
+    import_source character varying(500) NOT NULL,
+    import_time timestamp without time zone NOT NULL,
+    CONSTRAINT automatic_templ_import_source_check CHECK (((import_source)::text <> ''::text))
+);
+
+
+--
+-- Name: national_cert_automatic_national_cert_automatic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.national_cert_automatic_national_cert_automatic_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: national_cert_automatic_national_cert_automatic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.national_cert_automatic_national_cert_automatic_id_seq OWNED BY public.national_cert_automatic.national_cert_automatic_id;
+
+
+--
+-- Name: national_cert_national_cert_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.national_cert_national_cert_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: national_cert_national_cert_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.national_cert_national_cert_id_seq OWNED BY public.national_cert.national_cert_id;
+
+
+--
+-- Name: network; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.network (
+    network_id integer NOT NULL,
+    address cidr NOT NULL,
+    comment text DEFAULT ''::text NOT NULL
+);
+
+
+--
+-- Name: network_annotation; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.network_annotation (
+    network_annotation_id integer NOT NULL,
+    network_id integer NOT NULL,
+    annotation json NOT NULL
+);
+
+
+--
+-- Name: network_annotation_network_annotation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.network_annotation_network_annotation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: network_annotation_network_annotation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.network_annotation_network_annotation_id_seq OWNED BY public.network_annotation.network_annotation_id;
+
+
+--
+-- Name: network_automatic; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.network_automatic (
+    network_automatic_id integer NOT NULL,
+    address cidr NOT NULL,
+    comment text DEFAULT ''::text NOT NULL,
+    import_source character varying(500) NOT NULL,
+    import_time timestamp without time zone NOT NULL,
+    CONSTRAINT automatic_templ_import_source_check CHECK (((import_source)::text <> ''::text))
+);
+
+
+--
+-- Name: network_automatic_network_automatic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.network_automatic_network_automatic_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: network_automatic_network_automatic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.network_automatic_network_automatic_id_seq OWNED BY public.network_automatic.network_automatic_id;
+
+
+--
+-- Name: network_network_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.network_network_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: network_network_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.network_network_id_seq OWNED BY public.network.network_id;
+
+
+--
+-- Name: organisation; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organisation (
+    organisation_id integer NOT NULL,
+    name character varying(500) NOT NULL,
+    sector_id integer,
+    comment text DEFAULT ''::text NOT NULL,
+    ripe_org_hdl character varying(100) DEFAULT ''::character varying NOT NULL,
+    ti_handle character varying(500) DEFAULT ''::character varying NOT NULL,
+    first_handle character varying(500) DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: organisation_annotation; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organisation_annotation (
+    organisation_annotation_id integer NOT NULL,
+    organisation_id integer NOT NULL,
+    annotation json NOT NULL
+);
+
+
+--
+-- Name: organisation_annotation_organisation_annotation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.organisation_annotation_organisation_annotation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organisation_annotation_organisation_annotation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.organisation_annotation_organisation_annotation_id_seq OWNED BY public.organisation_annotation.organisation_annotation_id;
+
+
+--
+-- Name: organisation_automatic; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organisation_automatic (
+    organisation_automatic_id integer NOT NULL,
+    name character varying(500) NOT NULL,
+    sector_id integer,
+    comment text DEFAULT ''::text NOT NULL,
+    ripe_org_hdl character varying(100) DEFAULT ''::character varying NOT NULL,
+    ti_handle character varying(500) DEFAULT ''::character varying NOT NULL,
+    first_handle character varying(500) DEFAULT ''::character varying NOT NULL,
+    import_source character varying(500) NOT NULL,
+    import_time timestamp without time zone NOT NULL,
+    CONSTRAINT automatic_templ_import_source_check CHECK (((import_source)::text <> ''::text))
+);
+
+
+--
+-- Name: organisation_automatic_organisation_automatic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.organisation_automatic_organisation_automatic_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organisation_automatic_organisation_automatic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.organisation_automatic_organisation_automatic_id_seq OWNED BY public.organisation_automatic.organisation_automatic_id;
+
+
+--
+-- Name: organisation_organisation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.organisation_organisation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organisation_organisation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.organisation_organisation_id_seq OWNED BY public.organisation.organisation_id;
+
+
+--
+-- Name: organisation_to_asn; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organisation_to_asn (
+    organisation_id integer NOT NULL,
+    asn bigint NOT NULL
+);
+
+
+--
+-- Name: organisation_to_asn_automatic; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organisation_to_asn_automatic (
+    organisation_automatic_id integer NOT NULL,
+    asn bigint NOT NULL,
+    import_source character varying(500) NOT NULL,
+    import_time timestamp without time zone NOT NULL,
+    CONSTRAINT automatic_templ_import_source_check CHECK (((import_source)::text <> ''::text))
+);
+
+
+--
+-- Name: organisation_to_fqdn; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organisation_to_fqdn (
+    organisation_id integer NOT NULL,
+    fqdn_id integer NOT NULL
+);
+
+
+--
+-- Name: organisation_to_fqdn_automatic; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organisation_to_fqdn_automatic (
+    organisation_automatic_id integer NOT NULL,
+    fqdn_automatic_id integer NOT NULL,
+    import_source character varying(500) NOT NULL,
+    import_time timestamp without time zone NOT NULL,
+    CONSTRAINT automatic_templ_import_source_check CHECK (((import_source)::text <> ''::text))
+);
+
+
+--
+-- Name: organisation_to_network; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organisation_to_network (
+    organisation_id integer NOT NULL,
+    network_id integer NOT NULL
+);
+
+
+--
+-- Name: organisation_to_network_automatic; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organisation_to_network_automatic (
+    organisation_automatic_id integer NOT NULL,
+    network_automatic_id integer NOT NULL,
+    import_source character varying(500) NOT NULL,
+    import_time timestamp without time zone NOT NULL,
+    CONSTRAINT automatic_templ_import_source_check CHECK (((import_source)::text <> ''::text))
+);
+
+
+--
+-- Name: sector; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sector (
+    sector_id integer NOT NULL,
+    name character varying(100) NOT NULL
+);
+
+
+--
+-- Name: sector_sector_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sector_sector_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sector_sector_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sector_sector_id_seq OWNED BY public.sector.sector_id;
+
+
+--
+-- Name: autonomous_system_annotation_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.autonomous_system_annotation ALTER COLUMN autonomous_system_annotation_id SET DEFAULT nextval('public.autonomous_system_annotation_autonomous_system_annotation_i_seq'::regclass);
+
+
+--
+-- Name: contact_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contact ALTER COLUMN contact_id SET DEFAULT nextval('public.contact_contact_id_seq'::regclass);
+
+
+--
+-- Name: contact_automatic_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contact_automatic ALTER COLUMN contact_automatic_id SET DEFAULT nextval('public.contact_automatic_contact_automatic_id_seq'::regclass);
+
+
+--
+-- Name: fqdn_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fqdn ALTER COLUMN fqdn_id SET DEFAULT nextval('public.fqdn_fqdn_id_seq'::regclass);
+
+
+--
+-- Name: fqdn_annotation_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fqdn_annotation ALTER COLUMN fqdn_annotation_id SET DEFAULT nextval('public.fqdn_annotation_fqdn_annotation_id_seq'::regclass);
+
+
+--
+-- Name: fqdn_automatic_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fqdn_automatic ALTER COLUMN fqdn_automatic_id SET DEFAULT nextval('public.fqdn_automatic_fqdn_automatic_id_seq'::regclass);
+
+
+--
+-- Name: national_cert_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.national_cert ALTER COLUMN national_cert_id SET DEFAULT nextval('public.national_cert_national_cert_id_seq'::regclass);
+
+
+--
+-- Name: national_cert_automatic_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.national_cert_automatic ALTER COLUMN national_cert_automatic_id SET DEFAULT nextval('public.national_cert_automatic_national_cert_automatic_id_seq'::regclass);
+
+
+--
+-- Name: network_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.network ALTER COLUMN network_id SET DEFAULT nextval('public.network_network_id_seq'::regclass);
+
+
+--
+-- Name: network_annotation_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.network_annotation ALTER COLUMN network_annotation_id SET DEFAULT nextval('public.network_annotation_network_annotation_id_seq'::regclass);
+
+
+--
+-- Name: network_automatic_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.network_automatic ALTER COLUMN network_automatic_id SET DEFAULT nextval('public.network_automatic_network_automatic_id_seq'::regclass);
+
+
+--
+-- Name: organisation_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation ALTER COLUMN organisation_id SET DEFAULT nextval('public.organisation_organisation_id_seq'::regclass);
+
+
+--
+-- Name: organisation_annotation_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_annotation ALTER COLUMN organisation_annotation_id SET DEFAULT nextval('public.organisation_annotation_organisation_annotation_id_seq'::regclass);
+
+
+--
+-- Name: organisation_automatic_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_automatic ALTER COLUMN organisation_automatic_id SET DEFAULT nextval('public.organisation_automatic_organisation_automatic_id_seq'::regclass);
+
+
+--
+-- Name: sector_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sector ALTER COLUMN sector_id SET DEFAULT nextval('public.sector_sector_id_seq'::regclass);
+
+
+--
+-- Name: as_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.as_contacts
+    ADD CONSTRAINT as_contacts_pkey PRIMARY KEY (asnum);
+
+
+--
+-- Name: autonomous_system_annotation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.autonomous_system_annotation
+    ADD CONSTRAINT autonomous_system_annotation_pkey PRIMARY KEY (autonomous_system_annotation_id);
+
+
+--
+-- Name: contact_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contact_automatic
+    ADD CONSTRAINT contact_automatic_pkey PRIMARY KEY (contact_automatic_id);
+
+
+--
+-- Name: contact_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contact
+    ADD CONSTRAINT contact_pkey PRIMARY KEY (contact_id);
+
+
+--
+-- Name: email_status_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_status
+    ADD CONSTRAINT email_status_pkey PRIMARY KEY (email);
+
+
+--
+-- Name: fqdn_annotation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fqdn_annotation
+    ADD CONSTRAINT fqdn_annotation_pkey PRIMARY KEY (fqdn_annotation_id);
+
+
+--
+-- Name: fqdn_automatic_fqdn_import_source_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fqdn_automatic
+    ADD CONSTRAINT fqdn_automatic_fqdn_import_source_key UNIQUE (fqdn, import_source);
+
+
+--
+-- Name: fqdn_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fqdn_automatic
+    ADD CONSTRAINT fqdn_automatic_pkey PRIMARY KEY (fqdn_automatic_id);
+
+
+--
+-- Name: fqdn_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fqdn
+    ADD CONSTRAINT fqdn_pkey PRIMARY KEY (fqdn_id);
+
+
+--
+-- Name: national_cert_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.national_cert_automatic
+    ADD CONSTRAINT national_cert_automatic_pkey PRIMARY KEY (national_cert_automatic_id);
+
+
+--
+-- Name: national_cert_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.national_cert
+    ADD CONSTRAINT national_cert_pkey PRIMARY KEY (national_cert_id);
+
+
+--
+-- Name: network_annotation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.network_annotation
+    ADD CONSTRAINT network_annotation_pkey PRIMARY KEY (network_annotation_id);
+
+
+--
+-- Name: network_automatic_address_import_source_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.network_automatic
+    ADD CONSTRAINT network_automatic_address_import_source_key UNIQUE (address, import_source);
+
+
+--
+-- Name: network_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.network_automatic
+    ADD CONSTRAINT network_automatic_pkey PRIMARY KEY (network_automatic_id);
+
+
+--
+-- Name: network_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.network
+    ADD CONSTRAINT network_pkey PRIMARY KEY (network_id);
+
+
+--
+-- Name: organisation_annotation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_annotation
+    ADD CONSTRAINT organisation_annotation_pkey PRIMARY KEY (organisation_annotation_id);
+
+
+--
+-- Name: organisation_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_automatic
+    ADD CONSTRAINT organisation_automatic_pkey PRIMARY KEY (organisation_automatic_id);
+
+
+--
+-- Name: organisation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation
+    ADD CONSTRAINT organisation_pkey PRIMARY KEY (organisation_id);
+
+
+--
+-- Name: organisation_to_asn_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_asn_automatic
+    ADD CONSTRAINT organisation_to_asn_automatic_pkey PRIMARY KEY (organisation_automatic_id, asn);
+
+
+--
+-- Name: organisation_to_asn_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_asn
+    ADD CONSTRAINT organisation_to_asn_pkey PRIMARY KEY (organisation_id, asn);
+
+
+--
+-- Name: organisation_to_fqdn_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_fqdn_automatic
+    ADD CONSTRAINT organisation_to_fqdn_automatic_pkey PRIMARY KEY (organisation_automatic_id, fqdn_automatic_id);
+
+
+--
+-- Name: organisation_to_fqdn_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_fqdn
+    ADD CONSTRAINT organisation_to_fqdn_pkey PRIMARY KEY (organisation_id, fqdn_id);
+
+
+--
+-- Name: organisation_to_network_automatic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_network_automatic
+    ADD CONSTRAINT organisation_to_network_automatic_pkey PRIMARY KEY (organisation_automatic_id, network_automatic_id);
+
+
+--
+-- Name: organisation_to_network_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_network
+    ADD CONSTRAINT organisation_to_network_pkey PRIMARY KEY (organisation_id, network_id);
+
+
+--
+-- Name: sector_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sector
+    ADD CONSTRAINT sector_pkey PRIMARY KEY (sector_id);
+
+
+--
+-- Name: autonomous_system_annotation_asn_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX autonomous_system_annotation_asn_idx ON public.autonomous_system_annotation USING btree (asn);
+
+
+--
+-- Name: contact_automatic_organisation_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX contact_automatic_organisation_idx ON public.contact_automatic USING btree (organisation_automatic_id);
+
+
+--
+-- Name: contact_organisation_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX contact_organisation_idx ON public.contact USING btree (organisation_id);
+
+
+--
+-- Name: fqdn_annotation_fqdn_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fqdn_annotation_fqdn_idx ON public.fqdn_annotation USING btree (fqdn_id);
+
+
+--
+-- Name: fqdn_fqdn_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fqdn_fqdn_idx ON public.fqdn USING btree (fqdn);
+
+
+--
+-- Name: idx_as_contacts_asnum; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_as_contacts_asnum ON public.as_contacts USING btree (asnum);
+
+
+--
+-- Name: national_cert_automatic_country_code_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX national_cert_automatic_country_code_idx ON public.national_cert_automatic USING btree (country_code);
+
+
+--
+-- Name: national_cert_country_code_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX national_cert_country_code_idx ON public.national_cert USING btree (country_code);
+
+
+--
+-- Name: network_annotation_network_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX network_annotation_network_idx ON public.network_annotation USING btree (network_id);
+
+
+--
+-- Name: network_automatic_cidr_lower_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX network_automatic_cidr_lower_idx ON public.network_automatic USING btree (((host((network((address)::inet))::inet))::inet));
+
+
+--
+-- Name: network_automatic_cidr_upper_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX network_automatic_cidr_upper_idx ON public.network_automatic USING btree (((host(broadcast((address)::inet)))::inet));
+
+
+--
+-- Name: network_cidr_lower_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX network_cidr_lower_idx ON public.network USING btree (((host((network((address)::inet))::inet))::inet));
+
+
+--
+-- Name: network_cidr_upper_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX network_cidr_upper_idx ON public.network USING btree (((host(broadcast((address)::inet)))::inet));
+
+
+--
+-- Name: organisation_annotation_organisation_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX organisation_annotation_organisation_idx ON public.organisation_annotation USING btree (organisation_id);
+
+
+--
+-- Name: organisation_to_asn_asn_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX organisation_to_asn_asn_idx ON public.organisation_to_asn USING btree (asn);
+
+
+--
+-- Name: organisation_to_asn_automatic_asn_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX organisation_to_asn_automatic_asn_idx ON public.organisation_to_asn_automatic USING btree (asn);
+
+
+--
+-- Name: contact_automatic_organisation_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contact_automatic
+    ADD CONSTRAINT contact_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES public.organisation_automatic(organisation_automatic_id);
+
+
+--
+-- Name: contact_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contact
+    ADD CONSTRAINT contact_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+
+
+--
+-- Name: fqdn_annotation_fqdn_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fqdn_annotation
+    ADD CONSTRAINT fqdn_annotation_fqdn_id_fkey FOREIGN KEY (fqdn_id) REFERENCES public.fqdn(fqdn_id);
+
+
+--
+-- Name: national_cert_automatic_organisation_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.national_cert_automatic
+    ADD CONSTRAINT national_cert_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES public.organisation_automatic(organisation_automatic_id);
+
+
+--
+-- Name: national_cert_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.national_cert
+    ADD CONSTRAINT national_cert_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+
+
+--
+-- Name: network_annotation_network_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.network_annotation
+    ADD CONSTRAINT network_annotation_network_id_fkey FOREIGN KEY (network_id) REFERENCES public.network(network_id);
+
+
+--
+-- Name: organisation_annotation_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_annotation
+    ADD CONSTRAINT organisation_annotation_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+
+
+--
+-- Name: organisation_automatic_sector_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_automatic
+    ADD CONSTRAINT organisation_automatic_sector_id_fkey FOREIGN KEY (sector_id) REFERENCES public.sector(sector_id);
+
+
+--
+-- Name: organisation_sector_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation
+    ADD CONSTRAINT organisation_sector_id_fkey FOREIGN KEY (sector_id) REFERENCES public.sector(sector_id);
+
+
+--
+-- Name: organisation_to_asn_automatic_organisation_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_asn_automatic
+    ADD CONSTRAINT organisation_to_asn_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES public.organisation_automatic(organisation_automatic_id);
+
+
+--
+-- Name: organisation_to_asn_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_asn
+    ADD CONSTRAINT organisation_to_asn_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+
+
+--
+-- Name: organisation_to_fqdn_automatic_fqdn_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_fqdn_automatic
+    ADD CONSTRAINT organisation_to_fqdn_automatic_fqdn_automatic_id_fkey FOREIGN KEY (fqdn_automatic_id) REFERENCES public.fqdn_automatic(fqdn_automatic_id);
+
+
+--
+-- Name: organisation_to_fqdn_automatic_organisation_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_fqdn_automatic
+    ADD CONSTRAINT organisation_to_fqdn_automatic_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES public.organisation_automatic(organisation_automatic_id);
+
+
+--
+-- Name: organisation_to_fqdn_fqdn_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_fqdn
+    ADD CONSTRAINT organisation_to_fqdn_fqdn_id_fkey FOREIGN KEY (fqdn_id) REFERENCES public.fqdn(fqdn_id);
+
+
+--
+-- Name: organisation_to_fqdn_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_fqdn
+    ADD CONSTRAINT organisation_to_fqdn_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+
+
+--
+-- Name: organisation_to_network_automati_organisation_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_network_automatic
+    ADD CONSTRAINT organisation_to_network_automati_organisation_automatic_id_fkey FOREIGN KEY (organisation_automatic_id) REFERENCES public.organisation_automatic(organisation_automatic_id);
+
+
+--
+-- Name: organisation_to_network_automatic_network_automatic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_network_automatic
+    ADD CONSTRAINT organisation_to_network_automatic_network_automatic_id_fkey FOREIGN KEY (network_automatic_id) REFERENCES public.network_automatic(network_automatic_id);
+
+
+--
+-- Name: organisation_to_network_network_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_network
+    ADD CONSTRAINT organisation_to_network_network_id_fkey FOREIGN KEY (network_id) REFERENCES public.network(network_id);
+
+
+--
+-- Name: organisation_to_network_organisation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organisation_to_network
+    ADD CONSTRAINT organisation_to_network_organisation_id_fkey FOREIGN KEY (organisation_id) REFERENCES public.organisation(organisation_id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

@@ -40,8 +40,9 @@ if PGPASSWORD=do_portal psql -U do_portal -h cert_db -d do_portal -lqt | cut -d 
   mv misc/tmp-migrations misc/migrations # TODO remove hack
 
   echo '### init RIPE/FODY'
-  #PGPASSWORD=do_portal psql -h db -U do_portal -c "CREATE SCHEMA fody";
-  #PGPASSWORD=do_portal psql -U do_portal -h cert_db -d do_portal --echo-errors --file=install/create_fody_schema.sql
+  # pg_dump --no-owner --schema-only --no-privileges contactdb > /tmp/contactdb_schema_only.pgdump
+  PGPASSWORD=do_portal psql -h db -U do_portal -c "CREATE SCHEMA fody";
+  PGPASSWORD=do_portal psql -U do_portal -h cert_db -d do_portal --echo-errors --file=install/contactdb_schema_only.pgdump
 fi
 
 source ./bin/activate && python manage.py run -h 0.0.0.0 -p 5001
