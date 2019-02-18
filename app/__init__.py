@@ -23,6 +23,9 @@ __release__ = '.'.join(map(str, version_))
 
 
 app = FlaskApi(__name__)
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app, session_options={"expire_on_commit": False})
 mail = Mail()
 login_manager = LoginManager()

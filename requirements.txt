@@ -94,4 +94,4 @@ Pyyaml
 validate_email
 Flask-Session
 phonenumbers
-psycopg2
+psycopg2-binary
