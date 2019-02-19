@@ -1849,11 +1849,14 @@ class OrganizationMembership(Model, SerializerMixin):
 
     @email.setter
     def email(self, email):
-        email = email.lower()
-        if not validate_email(email):
-            db.session.rollback()
-            raise AttributeError(email, 'seems not to be a valid email address')
-        self._email = email
+        if email:
+            email = email.lower()
+            if not validate_email(email):
+                raise AttributeError(email, 'seems not to be a valid email address')
+            self._email = email
+            return email
+        self._email = None
+        return None
 
     @property
     def phone(self):

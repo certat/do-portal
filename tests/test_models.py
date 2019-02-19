@@ -176,20 +176,19 @@ def test_login():
                           'energyorg-gas'], \
         'correct list of orgs for energyorg'
 
+    '''
 def test_organizations_raw():
     (admin, auth) = User.authenticate('admin@energyorg.at', 'blaBla12$')
     assert auth is True
     pprint(admin.get_organizations_raw())
 
     # full_names = [org.full_name for org in admin.get_organizations()]
-    '''
     full_names.sort()
     assert full_names == ['energyorg', 'energyorg-electricity',
                           'energyorg-electricity-transmission',
                           'energyorg-gas'], \
         'correct list of orgs for energyorg'
     '''
-
 
 
 
@@ -244,8 +243,8 @@ def test_read_org_with_more_admins():
     # Organization.query.get_or_404(org_id)
     orgs = admin.get_organizations()
     assert [o.full_name for o in orgs] == \
-        ['eorg-electricity', 'eorg-gas'], 'correct orgs'
-    assert len([o.id for o in orgs]) == 2, 'OrgAdmin for 2 orgs'
+        ['eorg-electricity'], 'correct orgs'
+    assert len([o.id for o in orgs]) == 1, 'OrgAdmin for 1  orgs'
 
 def test_delete_organization_with_childs():
     eorg = Organization.query.filter_by(abbreviation='eorg').one()

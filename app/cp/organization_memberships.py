@@ -339,8 +339,9 @@ def update_cp_organization_membership(membership_id):
 
     try:
         membership.from_json(request.json)
-    except AttributeError:
-        return  ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {})
+    except AttributeError as ae:
+        db.session.rollback()
+        return  ApiResponse({'message': str(ae),}, 422, {})
 
     db.session.add(membership)
     db.session.commit()
