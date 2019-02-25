@@ -67,6 +67,7 @@ angular.module('cpApp')
           asns:  [],
           cidrs: [],
       };
+      var ripe_abusec_role_name = 'Abuse-C Automatic';
       $scope.org.ripe_handles.forEach(function(ripe_handle) {
           Organization.ripe_details({'org_id': $scope.org.id ,'ripe_handle': ripe_handle}).$promise
             .then(function(resp){
@@ -83,7 +84,7 @@ angular.module('cpApp')
                       $scope.gridOptions.data.push({
                         user_id: '',
                         user: '',
-                        role: 'Abuse-C Automatic',
+                        role: ripe_abusec_role_name,
                         email: abusec,
                         phone: '',
                         city: '',
@@ -93,9 +94,13 @@ angular.module('cpApp')
                         comment: 'RIPE handle: ' + ripe_handle,
                       });
                   });
+
+                  // add ripe_abusec_role_name, to filter dropdown
+                  $scope.role_names[ripe_abusec_role_name]  = true;
+                  update_role_filter();
+
                 }
             }, function(){});
-        $scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN );
       });
     };
 
@@ -104,9 +109,11 @@ angular.module('cpApp')
         arr.forEach(function(i) { hash[i.id] = i; });
         return hash;
     }
+    function update_role_filter() {
+        $scope.roleColumnDef.filter.selectOptions = get_role_options($scope.role_names);
+    }
     function get_role_options(roles) {
         var roleOptions = [];
-        roleOptions.push({value: 'Abuse-C Automatic', label: 'Abuse-C Automatic'});
         for(var role_name in roles) {
           roleOptions.push({value: role_name, label: role_name});
         }
@@ -125,14 +132,14 @@ angular.module('cpApp')
               $scope.roles    = _array2hash(result.shift());
               var memberships = result.shift().filter(function(m){return m.organization_id === parseInt($stateParams.id);});
               var gridData = [];
-              var roles = {};
+              $scope.role_names = {};
               $scope.manual_abusec_exists = false;
               memberships.forEach(function(m){
                   var role_name = $scope.roles[m.membership_role_id].display_name;
                   if (role_name === 'Domain Abuse Contact (abuse-c)') {
                       $scope.manual_abusec_exists = true;
                   }
-                  roles[role_name] = 1;
+                  $scope.role_names[role_name] = true;
                   gridData.push({
                       user_id: m.user_id,
                       user: $scope.users[m.user_id].name,
@@ -149,7 +156,7 @@ angular.module('cpApp')
 
               $scope.org = result.shift();
               $scope.gridOptions.data = gridData;
-              $scope.roleColumnDef.filter.selectOptions = get_role_options(roles);
+              update_role_filter();
               loadRipeDetails();
             }
         );
@@ -192,6 +199,17 @@ angular.module('cpApp')
           ],
           onRegisterApi: function(gridApi) {
             $scope.gridApi = gridApi;
+
+            // resize grid table height according to visible rows
+            $scope.$watch(
+                function() { return $scope.gridApi.core.getVisibleRows().length; },
+                function(newValue) {
+                    var scrollbarWidth = 15;
+                    var headerHeight   = 55;
+                    var rowHeight      = 30;
+                    $scope.gridHeight  = (newValue * rowHeight + headerHeight + scrollbarWidth) + 'px';
+                }
+            );
           }
       };
     }

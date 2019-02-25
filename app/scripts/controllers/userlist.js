@@ -120,23 +120,6 @@ angular.module('cpApp')
            }
     };
 
-    // resize grid table height according to visible rows
-    $scope.$watch(
-        function() { return $scope.gridApi.core.getVisibleRows().length; },
-        function(newValue) {
-            var scrollbarWidth = 15;
-            var headerHeight = document.getElementsByClassName('ui-grid-header')[0].offsetHeight;
-            if (newValue > 0) {
-              var rowHeight = 30; // your row height
-              $scope.gridHeight = (newValue * rowHeight + headerHeight + scrollbarWidth) + 'px';
-            }
-            else {
-              $scope.gridHeight = (headerHeight + scrollbarWidth) + 'px';
-            }
-            $scope.gridApi.grid.handleWindowResize();
-        }
-    );
-
     $scope.gridOptions = {
         enableFiltering: true,
         enableGridMenu: true,
@@ -162,6 +145,17 @@ angular.module('cpApp')
         ],
         onRegisterApi: function(gridApi) {
           $scope.gridApi = gridApi;
+
+          // resize grid table height according to visible rows
+          $scope.$watch(
+              function() { return $scope.gridApi.core.getVisibleRows().length; },
+              function(newValue) {
+                  var scrollbarWidth = 15;
+                  var headerHeight   = 55;
+                  var rowHeight      = 30;
+                  $scope.gridHeight  = (newValue * rowHeight + headerHeight + scrollbarWidth) + 'px';
+              }
+          );
         }
     };
   });

@@ -115,7 +115,7 @@
   </div>
 
   <div class="panel-body">
-    <div ng-if="gridOptions.data.length" ui-grid="gridOptions" ui-grid-exporter ui-grid-resize-columns ui-grid-auto-resize></div>
+    <div ng-if="gridOptions.data.length" ui-grid="gridOptions" ng-style="{'height':gridHeight}" ui-grid-exporter ui-grid-resize-columns ui-grid-auto-resize></div>
     <div ng-if="!gridOptions.data.length">No memberships available.</div>
   </div>
 </div>
