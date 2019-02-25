@@ -13,8 +13,11 @@ done
 
 echo "Postgres is up - check schema"
 
+# select_fody_table should be either 'f' or 't'
+select_fody_table=`PGPASSWORD=do_portal psql -U do_portal -h cert_db -d do_portal -t -c "SELECT EXISTS (SELECT 1 from information_schema.tables WHERE table_schema = 'fody' AND table_name = 'organisation_automatic');"`
+
 # DB init
-if PGPASSWORD=do_portal psql -U do_portal -h cert_db -d do_portal -lqt | cut -d \| -f 1 | grep -qw do_portal; then
+if [ $select_fody_table = 'f' ]; then
   echo '###############'
   echo '### init DB ###'
   echo '###############'
