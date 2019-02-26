@@ -4,7 +4,9 @@ from datetime import timedelta
 # CAUTION! Changing the secret key will invalidate all encrypted data
 # E.i. user passwords, login tokens, session cookies
 SECRET_KEY = "sB45#}\"So%TGY5jtq[^/uLq$}?4',`QdiKM_a3h*#/T9"
-SERVER_NAME = "localhost:5001"
+#SERVER_NAME = "localhost:5001"
+
+CP_SERVER = 'http://cp-portal:5002'
 
 TESTING = True
 

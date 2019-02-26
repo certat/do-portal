@@ -6,7 +6,7 @@ set -e
 
 echo $DO_LOCAL_CONFIG
 
-until PGPASSWORD=do_portal psql -h db -U do_portal -c '\q'; do
+until PGPASSWORD=do_portal psql -h cert_db -U do_portal -c '\q'; do
   echo "Postgres is unavailable - sleeping"
   sleep 1
 done
@@ -49,7 +49,7 @@ if [ $select_fody_table = 'f' ]; then
   # 2) move to install/contactdb_schema_only.pgdump
   # 3) change schema
   #    `sed -i 's/public\./fody./g' install/contactdb_schema_only.pgdump`
-  PGPASSWORD=do_portal psql -h db -U do_portal -c "CREATE SCHEMA fody";
+  PGPASSWORD=do_portal psql -h cert_db -U do_portal -c "CREATE SCHEMA fody";
   PGPASSWORD=do_portal psql -U do_portal -h cert_db -d do_portal --echo-errors --file=install/contactdb_schema_only.pgdump
 fi
 

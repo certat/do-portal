@@ -94,10 +94,10 @@ INSERT INTO public.test (id, name, branch_id) VALUES (4, 'login', 1);
 INSERT INTO public.test (id, name, branch_id) VALUES (6, 'logout', 1);
 INSERT INTO public.test (id, name, branch_id) VALUES (8, 'create organization', 1);
 INSERT INTO public.test (id, name, branch_id) VALUES (9, 'create contact', 1);
-INSERT INTO public.test (id, name, branch_id) VALUES (5, 'cp-aec-stg', 1);
 INSERT INTO public.test (id, name, branch_id) VALUES (7, 'test portal', 1);
 INSERT INTO public.test (id, name, branch_id) VALUES (10, 'create membership', 1);
 INSERT INTO public.test (id, name, branch_id) VALUES (11, 'create RIPE handle', 1);
+INSERT INTO public.test (id, name, branch_id) VALUES (5, 'do-config', 1);
 
 
 --
@@ -132,15 +132,15 @@ SET row_security = off;
 -- Data for Name: test_tag; Type: TABLE DATA; Schema: public; Owner: epplication
 --
 
-INSERT INTO public.test_tag (id, test_id, tag_id) VALUES (18, 5, 1);
 INSERT INTO public.test_tag (id, test_id, tag_id) VALUES (20, 7, 4);
+INSERT INTO public.test_tag (id, test_id, tag_id) VALUES (22, 5, 1);
 
 
 --
 -- Name: test_tag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: epplication
 --
 
-SELECT pg_catalog.setval('public.test_tag_id_seq', 20, true);
+SELECT pg_catalog.setval('public.test_tag_id_seq', 22, true);
 
 
 --
@@ -168,21 +168,26 @@ SET row_security = off;
 -- Data for Name: step; Type: TABLE DATA; Schema: public; Owner: epplication
 --
 
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (225, 'set db_password', 11, true, false, '1', 5, 'VarVal', '{"value":"53eALUVyXhd5xAtwHwsJ","global":0,"variable":"db_password"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (221, 'set db_host', 6, true, false, '1', 5, 'VarVal', '{"value":"83.136.33.36","variable":"db_host","global":0}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (107, 'set host', 1, true, false, '1', 5, 'VarVal', '{"variable":"host","value":"https://cp-aec-stg.cert.at","global":0}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (110, 'password', 3, true, false, '1', 5, 'VarVal', '{"value":"Bla12345%","variable":"password","global":0}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (224, 'set db_username', 9, true, false, '1', 5, 'VarVal', '{"value":"do_portal","variable":"db_username","global":0}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (223, 'set db_database', 8, true, false, '1', 5, 'VarVal', '{"variable":"db_database","global":0,"value":"do_portal"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (222, 'set db_port', 7, true, false, '1', 5, 'VarVal', '{"global":0,"variable":"db_port","value":"5432"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (236, 'set db_host', 6, true, false, '1', 5, 'VarVal', '{"global":0,"value":"cert_db","variable":"db_host"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (245, 'query organisation_automatic_id', 6, true, false, '1', 11, 'VarQueryPath', '{"var_result":"organisation_automatic_id","query_path":"//organisation_automatic_id","input":"[% db_response %]"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (203, 'sleep', 3, true, false, '1', 10, 'Script', '{"command":"sleep 3","var_stdout":"script_response"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (243, 'create random ripe_org identifier', 3, true, false, '1', 11, 'VarRand', '{"variable":"ripe_org","rand":"d{3}[A-Z]{3}[a-z]{3}"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (220, 'filter contact names', 4, true, false, '1', 10, 'SeleniumInput', '{"selector":".ui-grid-filter-input-0","locator":"css","identifier":"selenium","input":"[% contact_name %]"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (226, 'connect to backend DB', 1, true, false, '1', 11, 'DBConnect', '{"password":"[% db_password %]","host":"[% db_host %]","database":"[% db_database %]","username":"[% db_username %]","port":"[% db_port %]"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (107, 'set host', 1, true, false, '1', 5, 'VarVal', '{"global":0,"variable":"host","value":"http://cp-portal:5002"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (109, 'set username', 2, true, false, '1', 5, 'VarVal', '{"value":"cert@master.at","variable":"username","global":0}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (227, 'disconnect from backend DB', 9, true, false, '1', 11, 'DBDisconnect', '{}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (122, 'goto login page', 2, true, false, '1', 4, 'SeleniumRequest', '{"url":"[%host%]/#!/login","identifier":"selenium"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (200, 'request Contacts page', 2, true, false, '1', 10, 'SeleniumClick', '{"selector":"Contacts","locator":"link_text","identifier":"selenium"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (123, 'get page content', 3, true, false, '1', 4, 'SeleniumContent', '{"variable":"selenium_content","content_type":"body_text","identifier":"selenium"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (124, 'check "Login" text exists', 4, true, false, '1', 4, 'VarCheckRegExp', '{"modifiers":"xms","value":"[%selenium_content%]","regexp":"Login"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (201, 'sleep', 1, true, false, '1', 10, 'Script', '{"var_stdout":"script_response","command":"sleep 3"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (121, 'connect to portal', 1, true, false, '1', 4, 'SeleniumConnect', '{"port":"4444","host":"epplication_selenium","identifier":"selenium"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (109, 'set username', 2, true, false, '1', 5, 'VarVal', '{"value":"team@energy-cert.at","global":0,"variable":"username"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (203, 'sleep', 3, true, false, '1', 10, 'Script', '{"command":"sleep 3","var_stdout":"script_response"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (220, 'filter contact names', 4, true, false, '1', 10, 'SeleniumInput', '{"selector":".ui-grid-filter-input-0","locator":"css","identifier":"selenium","input":"[% contact_name %]"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (226, 'connect to backend DB', 1, true, false, '1', 11, 'DBConnect', '{"password":"[% db_password %]","host":"[% db_host %]","database":"[% db_database %]","username":"[% db_username %]","port":"[% db_port %]"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (125, 'check "Lost Password" text exists', 5, true, false, '1', 4, 'VarCheckRegExp', '{"modifiers":"xms","value":"[%selenium_content%]","regexp":"Lost\\sPassword\\?"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (224, 'set db_username', 10, true, false, '1', 5, 'VarVal', '{"value":"do_portal","variable":"db_username","global":0}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (211, 'select role', 11, true, false, '1', 10, 'SeleniumJS', '{"javascript":"js_select_helper(0,''Administrator Organisation'',''#membership-details-1'');","identifier":"selenium"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (204, 'debug', 5, true, false, '1', 10, 'SeleniumContent', '{"content_type":"body_text","identifier":"selenium","variable":"selenium_content"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (127, 'enter username', 6, true, false, '1', 4, 'SeleniumInput', '{"input":"[%username%]","selector":"email","locator":"name","identifier":"selenium"}');
@@ -197,14 +202,12 @@ INSERT INTO public.step (id, name, "position", active, highlight, condition, tes
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (216, 'check created user exists', 6, true, false, '1', 10, 'VarCheckRegExp', '{"modifiers":"xms","regexp":"[% contact_name %]","value":"[% selenium_content %]"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (212, 'select org', 12, true, false, '1', 10, 'SeleniumJS', '{"identifier":"selenium","javascript":"js_select_helper(1,''[%parent_org%]'',''#membership-details-1'');"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (207, 'create membership', 9, true, false, '1', 7, 'SubTest', '{"subtest_id":"10"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (223, 'set db_database', 9, true, false, '1', 5, 'VarVal', '{"variable":"db_database","global":0,"value":"do_portal"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (227, 'disconnect from backend DB', 3, true, false, '1', 11, 'DBDisconnect', '{}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (133, 'selenium disconnect', 4, true, false, '1', 6, 'SeleniumDisconnect', '{"identifier":"selenium"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (222, 'set db_port', 8, true, false, '1', 5, 'VarVal', '{"global":0,"variable":"db_port","value":"5432"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (228, 'create RIPE handle', 2, true, false, '1', 11, 'DB', '{"sql":"SELECT ripe_org_hdl FROM fody.organisation;","var_result":"db_response"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (237, 'create RIPE handle', 2, true, false, '1', 11, 'DB', '{"sql":"SELECT ripe_org_hdl FROM fody.organisation;","var_result":"db_response"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (239, 'create org', 4, true, false, '1', 11, 'DB', '{"sql":"insert into fody.organisation_automatic (name, ripe_org_hdl, import_source, import_time) values (''name_[%ripe_org%]'', ''ripe_org_hdl_[%ripe_org%]'', ''ripe'', NOW());","var_result":"db_response"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (240, 'select organisation_automatic_id', 5, true, false, '1', 11, 'DB', '{"sql":"SELECT organisation_automatic_id FROM fody.organisation_automatic WHERE ripe_org_hdl = ''ripe_org_hdl_[%ripe_org%]'';","var_result":"db_response"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (234, 'check "Lost Password" text exists', 3, true, false, '1', 6, 'VarCheckRegExp', '{"modifiers":"xms","value":"[%selenium_content%]","regexp":"Lost\\sPassword\\?"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (230, 'create RIPE handle', 17, true, false, '1', 7, 'SubTest', '{"subtest_id":"11"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (110, 'password', 3, true, false, '1', 5, 'VarVal', '{"variable":"password","value":"Bla","global":0}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (129, 'click login button', 8, true, false, '1', 4, 'SeleniumClick', '{"selector":"//button[@type=''submit'' and contains(., \"Login\")]","identifier":"selenium","locator":"xpath"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (131, 'check "My Account" text exists', 11, true, false, '1', 4, 'VarCheckRegExp', '{"modifiers":"xms","value":"[%selenium_content%]","regexp":"My\\sAccount"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (130, 'get page content', 10, true, false, '1', 4, 'SeleniumContent', '{"variable":"selenium_content","content_type":"body_text","identifier":"selenium"}');
@@ -212,7 +215,6 @@ INSERT INTO public.step (id, name, "position", active, highlight, condition, tes
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (108, 'set rest headers', 4, true, false, '1', 5, 'VarVal', '{"global":0,"value":"{ \"Content-Type\":\"application/json; charset=utf-8\", \"Accept\": \"application/json\"}","variable":"rest_headers_default"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (139, 'click "New Organization" link', 3, true, false, '1', 8, 'SeleniumClick', '{"selector":"New Organization","locator":"link_text","identifier":"selenium"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (135, 'login', 1, true, false, '1', 7, 'SubTest', '{"subtest_id":"4"}');
-INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (236, 'set db_host', 7, true, false, '1', 5, 'VarVal', '{"global":0,"variable":"db_host","value":"cp-backend-aec-stg.intern.cert.at"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (188, 'create random org name', 15, true, false, '1', 7, 'VarRand', '{"rand":"[a-z]{5}","variable":"org_name"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (189, 'create random org name', 13, true, false, '1', 7, 'VarRand', '{"rand":"[a-z]{5}","variable":"org_name"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (197, 'inject js_select_helper function', 3, true, false, '1', 7, 'SeleniumJS', '{"javascript":"[%js_select_helper%]","identifier":"selenium"}');
@@ -226,6 +228,9 @@ INSERT INTO public.step (id, name, "position", active, highlight, condition, tes
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (155, 'request Contacts page', 1, true, false, '1', 9, 'SeleniumClick', '{"selector":"Contacts","locator":"link_text","identifier":"selenium"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (233, 'get page content', 2, true, false, '1', 6, 'SeleniumContent', '{"identifier":"selenium","variable":"selenium_content","content_type":"body_text"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (156, 'click "New Contact" link', 2, true, false, '1', 9, 'SeleniumClick', '{"identifier":"selenium","locator":"link_text","selector":"New Contact"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (241, 'create contact', 8, true, false, '1', 11, 'DB', '{"var_result":"db_response","sql":"insert into fody.contact_automatic (firstname, lastname, email, import_source, import_time, organisation_automatic_id) values (''firstname_[%ripe_org%]'', ''lastname_[%ripe_org%]'', ''email@ripe_org_[%ripe_org%].at'', ''ripe'', NOW(), [%organisation_automatic_id%]);"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (225, 'set db_password', 10, true, false, '1', 5, 'VarVal', '{"global":0,"variable":"db_password","value":"do_portal"}');
+INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (244, 'check org id', 7, true, false, '1', 11, 'VarCheckRegExp', '{"regexp":"\\d+","value":"[%organisation_automatic_id%]","modifiers":"xms"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (151, 'get page content', 10, true, false, '1', 8, 'SeleniumContent', '{"variable":"selenium_content","content_type":"body_text","identifier":"selenium"}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (152, 'check "No memberships available." text exists', 12, true, false, '1', 8, 'VarCheckRegExp', '{"value":"[%selenium_content%]","modifiers":"xms","regexp":"No\\smemberships\\savailable\\."}');
 INSERT INTO public.step (id, name, "position", active, highlight, condition, test_id, type, parameters) VALUES (153, 'check "org_name" text exists', 11, true, false, '1', 8, 'VarCheckRegExp', '{"regexp":"Name:\\s[%org_name%]_name","value":"[%selenium_content%]","modifiers":"xms"}');
@@ -258,7 +263,7 @@ INSERT INTO public.step (id, name, "position", active, highlight, condition, tes
 -- Name: step_id_seq; Type: SEQUENCE SET; Schema: public; Owner: epplication
 --
 
-SELECT pg_catalog.setval('public.step_id_seq', 236, true);
+SELECT pg_catalog.setval('public.step_id_seq', 245, true);
 
 
 --

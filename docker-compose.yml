@@ -9,10 +9,18 @@ services:
             POSTGRES_DB: do_portal
         volumes:
             - db_data:/var/lib/postgresql/data
+        networks:
+            - do-portal-net
     do-portal:
         container_name: do-portal
         build: .
         ports:
             - "5001:5001"
+        networks:
+            - do-portal-net
 volumes:
     db_data:
+
+networks:
+    do-portal-net:
+        driver: bridge

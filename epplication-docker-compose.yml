@@ -1,0 +1,41 @@
+version: '3'
+services:
+    db:
+        image: postgres:9.6-alpine
+        container_name: epplication_db
+        environment:
+            POSTGRES_USER: epplication
+            POSTGRES_PASSWORD: epplication
+            POSTGRES_DB: epplication
+        volumes:
+            - db_data:/var/lib/postgresql/data
+        networks:
+            - do-portal_do-portal-net
+    selenium:
+        image: selenium/standalone-firefox-debug
+        container_name: epplication_selenium
+        volumes:
+            - /dev/shm:/dev/shm
+        ports:
+            - "5900:5900"
+        networks:
+            - do-portal_do-portal-net
+    app:
+        container_name: epplication_app
+        image: davewood/epplication:1.0.4
+        depends_on:
+            - db
+        volumes:
+            - app_data_job_exports:/home/epplication/EPPlication/root/job_exports
+            - app_data_ssh_keys:/home/epplication/EPPlication/ssh_keys
+        ports:
+            - "8080:80"
+        networks:
+            - do-portal_do-portal-net
+networks:
+    do-portal_do-portal-net:
+        external: true
+volumes:
+    db_data:
+    app_data_job_exports:
+    app_data_ssh_keys:
