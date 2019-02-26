@@ -1,5 +1,5 @@
 {
   "version": "0.7.0",
-  "webServiceUrl": "http://localhost:5001/cp/1.0",
-  "authUrl": "http://localhost:5001/auth"
+  "webServiceUrl": "http://do-portal:5001/cp/1.0",
+  "authUrl": "http://do-portal:5001/auth"
 }

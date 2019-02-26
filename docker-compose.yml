@@ -6,3 +6,8 @@ services:
         ports:
             - "5002:5002"
             - "35729:35729"
+        networks:
+            - do-portal_do-portal-net
+networks:
+    do-portal_do-portal-net:
+        external: true
