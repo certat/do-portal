@@ -1,22 +1,35 @@
 # Docker
 
-## git repositories
+## requirements
+ 1) install docker
+ 2) install docker-compose
 
-```
-wget https://github.com/certat/do-portal/archive/release.zip
-unzip release.zip
-rm release.zip
-cd do-portal-release
-docker-compose build
+## installation
+mkdir cert
+cd cert
+certdir=`pwd`
+
+### run do-portal
+cd $certdir
+git clone https://github.com/certat/do-portal.git
+cd do-portal
 docker-compose up
 
-wget https://github.com/certat/customer-portal/archive/release.zip
-unzip release.zip
-rm release.zip
-cd customer-portal-release
-docker-compose build
+## run cp-portal
+cd $certdir
+git clone https://github.com/certat/customer-portal.git
+cd customer-portal
 docker-compose up
-```
 
-## open in browser
-http://127.0.0.1:5002
+## run ui-tests
+cd $certdir
+cp do-portal/epplication-docker-compose.yml .
+docker-compose -f epplication-docker-compose.yml up
+docker cp do-portal/epplication_tests.dump epplication_app:/home/epplication/EPPlication/
+docker exec -it epplication_app bash -c 'carton exec script/database.pl -cmd delete-tests'
+docker exec -it epplication_app bash -c 'carton exec script/database.pl -cmd restore-tests --file epplication_tests.dump'
+firefox localhost:8080
+  - login admin/admin123
+  - select config 'do-config' in navigation menu
+  - select and run 'test portal' test
+  - if you want to watch the selenium browser -> `xtightvncviewer localhost::5900` (password: `secret`)
