@@ -18,5 +18,6 @@ EXPOSE 5002
 EXPOSE 35729
 
 COPY --chown=cert:cert . /home/cert/customer-portal
-#RUN PATH=$(npm bin):$PATH grunt
+RUN cp config/envs/docker.json config/envs/devel.json
+
 CMD PATH=$(npm bin):$PATH grunt serve
