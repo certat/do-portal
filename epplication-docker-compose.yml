@@ -22,7 +22,7 @@ services:
             - do-portal_do-portal-net
     app:
         container_name: epplication_app
-        image: davewood/epplication:1.0.4
+        image: davewood/epplication:latest
         depends_on:
             - db
         volumes:
