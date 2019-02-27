@@ -118,7 +118,7 @@ module.exports = function (grunt) {
         // Change this to '0.0.0.0' to access the server from outside.
         //hostname: '127.0.0.1',
         //hostname: '0.0.0.0',
-        hostname: 'cp-portal',
+        hostname: 'customer-portal',
         livereload: 35729
       },
       livereload: {

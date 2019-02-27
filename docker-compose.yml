@@ -1,13 +1,13 @@
 version: '3'
 services:
-    cp-portal:
-        container_name: cp-portal
+    customer-portal:
+        container_name: customer-portal
         build: .
         ports:
             - "5002:5002"
             - "35729:35729"
         networks:
-            - do-portal_do-portal-net
+            - do-portal-net
 networks:
-    do-portal_do-portal-net:
+    do-portal-net:
         external: true
