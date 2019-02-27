@@ -10,7 +10,7 @@ services:
         volumes:
             - db_data:/var/lib/postgresql/data
         networks:
-            - do-portal_do-portal-net
+            - do-portal-net
     selenium:
         image: selenium/standalone-firefox-debug
         container_name: epplication_selenium
@@ -19,7 +19,7 @@ services:
         ports:
             - "5900:5900"
         networks:
-            - do-portal_do-portal-net
+            - do-portal-net
     app:
         container_name: epplication_app
         image: davewood/epplication:latest
@@ -31,9 +31,9 @@ services:
         ports:
             - "8080:80"
         networks:
-            - do-portal_do-portal-net
+            - do-portal-net
 networks:
-    do-portal_do-portal-net:
+    do-portal-net:
         external: true
 volumes:
     db_data:

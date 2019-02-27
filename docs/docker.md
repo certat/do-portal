@@ -22,12 +22,11 @@ cd customer-portal
 docker-compose up
 
 ## run ui-tests
-cd $certdir
-cp do-portal/epplication-docker-compose.yml .
-docker-compose -f epplication-docker-compose.yml up
-docker cp do-portal/epplication_tests.dump epplication_app:/home/epplication/EPPlication/
+cd $certdir/do-portal/epplication
+docker-compose up
+docker cp ui-tests.sql epplication_app:/home/epplication/EPPlication/
 docker exec -it epplication_app bash -c 'carton exec script/database.pl -cmd delete-tests'
-docker exec -it epplication_app bash -c 'carton exec script/database.pl -cmd restore-tests --file epplication_tests.dump'
+docker exec -it epplication_app bash -c 'carton exec script/database.pl -cmd restore-tests --file ui-tests.sql'
 firefox localhost:8080
   - login admin/admin123
   - select config 'do-config' in navigation menu

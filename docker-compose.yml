@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
     db:
         image: postgres:9.6-alpine
@@ -23,4 +23,5 @@ volumes:
 
 networks:
     do-portal-net:
+        name: do-portal-net
         driver: bridge
