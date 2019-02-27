@@ -1839,8 +1839,8 @@ class OrganizationMembership(Model, SerializerMixin):
 
     @sms_alerting.setter
     def sms_alerting(self, sms_alerting):
-        if sms_alerting == 1 and not self._mobile:
-            raise AttributeError('if sms_alerting is set mobile number also has to be set')
+        # if sms_alerting == 1 and not self._mobile:
+        #    raise AttributeError('if sms_alerting is set mobile number also has to be set')
         self._sms_alerting = sms_alerting
 
     @property
