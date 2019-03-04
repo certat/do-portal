@@ -20,7 +20,6 @@ flake8==3.2.1
 Flask==0.12
 Flask-Cache==0.13.1
 Flask-DebugToolbar==0.10.0
--e git+https://github.com/ics/Flask-GnuPG#egg=Flask-GnuPG
 Flask-JsonSchema==0.1.1
 flask-ldap3-login==0.9.10
 Flask-Login
@@ -28,7 +27,6 @@ Flask-Mail==0.9.1
 Flask-Migrate==2.0.0
 Flask-Principal==0.4.0
 Flask-SQLAlchemy==2.1
--e git+https://github.com/certeu/Flask-Tinyclients#egg=Flask-Tinyclients
 Flask-WTF==0.12
 future==0.15.2
 gnureadline==6.3.3
@@ -41,7 +39,6 @@ jsonschema==2.5.1
 kombu==3.0.35
 ldap3==1.4.0
 lxml==3.6.1
--e git+https://gitlab.com/mailman/mailmanclient#egg=mailmanclient
 Mako==1.0.4
 MarkupSafe==0.23
 mccabe==0.5.3
