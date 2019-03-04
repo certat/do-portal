@@ -1,0 +1,16 @@
+<div class="row vertical-spacer-5 col-md-12">
+  <div class="row col-md-5 col-xs-1"></div>
+  <div class="row col-lg-2 col-md-3 col-xs-12">
+    <form class="form-control login-form" role="form" ng-submit="verifyTOTP()">
+      <fieldset>
+        <legend>Authentication code</legend>
+        <div class="control-group show-grid">
+          <input type="number" name="totp" ng-model="credentials.totp"
+                 placeholder="Enter the 6-digit code" class="form-control" required>
+        </div>
+      </fieldset>
+      <button type="submit" class="btn btn-info">Login</button>
+    </form>
+  </div>
+  <div class="row col-md-3 col-xs-1"></div>
+</div>

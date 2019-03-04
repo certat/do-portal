@@ -1,0 +1,16 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <a class="btn btn-xs btn-default pull-right" ui-sref="organization_create({edit:1})">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      New Organization
+    </a>
+    <h3 class="panel-title">Organizations</h3>
+  </div>
+  <div class="panel-body">
+    <div ng-repeat="org in orgs">
+      <div class="row show-grid">
+        <div ng-style="{'padding-left':20+org.offset*20+'px'}"><a ui-sref="organizations({id: org.id})">{{org.full_name}}</a></div>
+      </div>
+    </div>
+  </div>
+</div>

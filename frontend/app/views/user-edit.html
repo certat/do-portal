@@ -1,0 +1,280 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+      <h3 class="panel-title">{{user.id ? "Edit Contact" : "New Contact"}}</h3>
+  </div>
+  <div class="panel-body">
+    <div class="well">
+      <div class="row show-grid">
+        <div class="col-xs-12"><strong>Contact Details</strong></div>
+      </div>
+
+      <div ng-show="user.picture" class="row show-grid">
+        <div class="col-xs-12">
+          <div class="thumbnail pull-right"><img data-ng-src="{{user.picture}}" style="height:100px;width:100%;"></div>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Picture</div>
+
+        <div class="col-xs-10">
+          <input ng-hide="user.picture" type="file" data-key="picture" cp-file-select>
+          <button ng-show="user.picture" ng-click="deleteFile(user,'picture')" title="Delete Picture">
+            Delete {{user.picture_filename}}
+          </button>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Title</div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="Title"
+                 ng-model="user.title">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Name *</div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="Name" required
+                 ng-model="user.name">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Email (Login) *</div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="Email" required
+                 ng-model="user.email">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Password</div>
+        <div class="col-xs-10">
+          <input type="password" class="form-control input-sm"
+                 placeholder="Password"
+                 ng-model="user.password">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Birthdate</div>
+        <div class="col-xs-10">
+          <p class="input-group">
+            <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="user.birthdate" is-open="birthdate.popup.opened" datepicker-options="birthdate.options" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="birthdate.open()"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <div ng-if="memberships.length" class="row show-grid">
+        <div class="col-xs-2">Organizations</div>
+        <div class="col-xs-10">
+          <div ng-repeat="m in memberships">
+              <a ui-sref="organizations({id: m.organization_id})">{{organizations[m.organization_id].full_name}}</a> ({{roles[m.membership_role_id].display_name}})
+          </div>
+        </div>
+      </div>
+
+      <button id="update-user" ng-show="user.id" class="btn btn-default" ng-click="update_user()">
+        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+        Save
+      </button>
+      <button ng-show="user.id" class="btn btn-default pull-right" ng-click="delete_user()">
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+        Delete
+      </button>
+
+    </div>
+
+    <div id="{{'membership-details-'+$index}}" class="well" ng-repeat="m in memberships">
+
+      <div class="row show-grid">
+        <div class="col-xs-12"><strong>Membership Details</strong></div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Role *</div>
+        <div class="col-xs-10">
+          <select convert-to-number positive-integer class="form-control input-sm" required ng-model="m.membership_role_id">
+            <option ng-repeat="(id, role) in roles" value="{{id}}">{{role.display_name}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Organization *</div>
+        <div class="col-xs-10">
+          <select convert-to-number class="form-control input-sm" required positive-integer ng-model="m.organization_id">
+            <option ng-repeat="(id, organization) in organizations" value="{{id}}">{{organization.abbreviation}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Street</div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="Street"
+                 ng-model="m.street">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">ZIP</div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="ZIP"
+                 ng-model="m.zip">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">City</div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="City"
+                 ng-model="m.city">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Country</div>
+        <div class="col-xs-10">
+          <select convert-to-number positive-integer class="form-control input-sm" ng-model="m.country_id">
+            <option ng-repeat="country in countries" value="{{country.id}}">{{country.name}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Comment</div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="Comment"
+                 ng-model="m.comment">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Email</div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="Email"
+                 ng-model="m.email">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Phone</div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="Phone"
+                 ng-model="m.phone">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">SMS Alerting</div>
+        <div class="col-xs-10">
+          <ui-switch ng-model="m.sms_alerting"></ui-switch>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Mobile<span ng-show="m.sms_alerting"> *</span></div>
+        <div class="col-xs-10">
+          <input type="text" class="form-control input-sm"
+                 placeholder="Mobile"
+                 ng-required="m.sms_alerting"
+                 ng-model="m.mobile">
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">PGP Key ID</div>
+        <div class="col-xs-10">
+          <textarea class="form-control" rows="3"
+                    placeholder="PGP Key ID" ng-model="m.pgp_key_id"></textarea>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">PGP Key Fingerprint</div>
+        <div class="col-xs-10">
+          <textarea class="form-control" rows="3"
+                    placeholder="PGP Key Fingerprint" ng-model="m.pgp_key_fingerprint"></textarea>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">PGP Key</div>
+        <div class="col-xs-10">
+          <textarea class="form-control" rows="3"
+                    placeholder="PGP Key" ng-model="m.pgp_key"></textarea>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">S/MIME</div>
+        <div class="col-xs-10">
+          <div ng-hide="m.smime_filename">
+            <input type="file" data-key="smime" cp-file-select>
+          </div>
+          <div ng-show="m.smime_filename">
+            <a class="btn btn-sm btn-default" ng-click="deleteFile(m,'smime')" title="Delete S/MIME">Delete</button>
+            <a class="btn btn-sm btn-default" ng-click="downloadFile(m, 'smime', $event)">Download </a>
+            {{m.smime_filename}}
+          </div>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Code of Conduct</div>
+        <div class="col-xs-10">
+          <div ng-hide="m.coc_filename">
+            <input type="file" data-key="coc" cp-file-select>
+          </div>
+          <div ng-show="m.coc_filename">
+            <a class="btn btn-sm btn-default" ng-click="deleteFile(m,'coc')" title="Delete Code of Conduct">Delete</button>
+            <a class="btn btn-sm btn-default" ng-click="downloadFile(m, 'coc', $event)">Download </a>
+            {{m.coc_filename}}
+          </div>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-12">
+          <button ng-show="user.id" class="btn btn-default save-membership" ng-click="save_membership(m)">
+            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+            Save
+          </button>
+          <button ng-show="user.id" ng-click="delete_membership(m.id, $index)" title="Remove this Membership"
+              type="submit" class="btn btn-default btn-sm pull-right">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            Delete
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="panel-footer">
+    <button id="create-user" ng-hide="user.id" class="btn btn-default" ng-click="create_user()">
+      <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+      Save
+    </button>
+    <button id="add-membership" ng-show="user.id" class="btn btn-default" ng-click="add_membership()">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      Add Membership
+    </button>
+  </div>
+</div>

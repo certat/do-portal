@@ -1,0 +1,51 @@
+{
+  "name": "cp",
+  "version": "0.6.5",
+  "dependencies": {
+    "jquery": "^2.2.4",
+    "angular": "^1.4.0",
+    "bootstrap": "^3.2.0",
+    "angular-animate": "^1.4.0",
+    "angular-cookies": "^1.4.0",
+    "angular-messages": "^1.4.0",
+    "angular-resource": "^1.4.0",
+    "angular-route": "^1.4.0",
+    "angular-sanitize": "^1.4.0",
+    "angular-touch": "^1.4.0",
+    "angular-loading-bar": "^0.9.0",
+    "angular-bootstrap": "^1.3.3",
+    "angular-ui-select": "^0.17.1",
+    "ng-csv": "^0.3.6",
+    "ng-file-upload": "^12.0.4",
+    "angular-ui-utils": "ui-utils#^3.0.0",
+    "angular-ui-router": "ui-router#^0.3.0",
+    "jsSHA": "^2.1.0",
+    "strophe.js": "strophejs#^1.2.5",
+    "angular-ui-grid": "^4.6.3",
+    "angular-notify": "^2.5.1"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.4.0"
+  },
+  "appPath": "app",
+  "moduleName": "cpApp",
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "less/bootstrap.less",
+        "dist/css/bootstrap.css",
+        "dist/css/bootstrap-theme.css",
+        "dist/js/bootstrap.js",
+        "dist/fonts/glyphicons-halflings-regular.eot",
+        "dist/fonts/glyphicons-halflings-regular.svg",
+        "dist/fonts/glyphicons-halflings-regular.ttf",
+        "dist/fonts/glyphicons-halflings-regular.woff"
+      ]
+    },
+    "jsSHA": {
+      "main": [
+        "src/sha1.js"
+      ]
+    }
+  }
+}

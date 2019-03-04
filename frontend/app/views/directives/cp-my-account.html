@@ -1,0 +1,52 @@
+<h4>My Account</h4>
+<uib-tabset>
+  <uib-tab heading="Details">
+    <div class="panel panel-default panel-tab">
+      <div class="panel-body">
+        <table class="table table-condensed table-plain">
+          <tbody>
+          <tr ng-repeat="(key, value) in account" ng-hide="key=='otp_toggle'">
+            <td><strong>{{ key | humanizeFilter }}</strong></td>
+            <td> {{ value }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </uib-tab>
+  <uib-tab heading="Password">
+    <div class="panel panel-default panel-tab">
+      <div class="panel-body">
+        <div class="row vertical-spacer-5 col-md-12">
+          <div class="row col-lg-2 col-md-8 col-xs-12">
+            <div class="form-group">
+              <label for="current-password">Current password</label>
+              <input type="password" id="current-password"
+                     class="form-control"
+                     ng-model="credentials.current_password">
+            </div>
+            <div class="form-group">
+              <label for="new-password">New password</label>
+              <input type="password" id="new-password"
+                     class="form-control"
+                     ng-model="credentials.new_password">
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">Confirm password</label>
+              <input type="password" id="confirm-password"
+                     class="form-control"
+                     ng-model="credentials.confirm_password">
+            </div>
+          </div>
+          <div class="row col-md-4 col-xs-1"></div>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <button class="btn btn-default" ng-click="changePassword()">
+          <span class="glyphicon glyphicon-floppy-disk"
+                aria-hidden="true"></span>Save
+        </button>
+      </div>
+    </div>
+  </uib-tab>
+</uib-tabset>
