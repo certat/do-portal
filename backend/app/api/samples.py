@@ -9,7 +9,6 @@ from flask import request, current_app, g, send_file
 from app.core import ApiResponse, ApiPagedResponse
 from app import db
 from app.models import Sample
-from app.tasks import analysis
 from app.utils import get_hashes
 from . import api
 

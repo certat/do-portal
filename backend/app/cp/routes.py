@@ -4,7 +4,6 @@ from app import db
 from app.core import ApiResponse, ApiPagedResponse
 from app.models import Sample, Permission
 from app.api.decorators import permission_required
-from app.tasks import analysis
 from app.utils import get_hashes
 from . import cp
 
