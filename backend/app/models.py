@@ -7,7 +7,6 @@ import random
 import csv
 import yaml
 from urllib.error import HTTPError
-from mailmanclient import MailmanConnectionError, Client
 import onetimepass
 from app import db, login_manager, config
 from sqlalchemy import desc, event, text

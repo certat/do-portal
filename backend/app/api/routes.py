@@ -7,9 +7,7 @@
 
 """
 import os
-from app import gpg
 from app.core import ApiResponse, ApiException
-from app.tasks import send_to_ks
 from flask import current_app, request
 from flask_jsonschema import validate
 from werkzeug.utils import secure_filename

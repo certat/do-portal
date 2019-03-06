@@ -1,6 +1,5 @@
 import os
 import logging
-from celery import Celery
 from config import config, Config
 from flask import g
 from flask_jsonschema import JsonSchema
@@ -109,9 +108,7 @@ def init_extensions(app):
     mail.init_app(app)
     login_manager.init_app(app)
     login_manager.anonymous_user = Anonymous
-    celery.conf.update(app.config)
     jsonschema.init_app(app)
-    ldap3_manager.init_app(app)
     migrate.init_app(app, db, directory=app.config['MIGRATIONS_DIR'])
 
 

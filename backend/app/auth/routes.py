@@ -6,10 +6,9 @@ from io import BytesIO
 from flask import request, current_app, render_template
 from flask import flash, redirect, url_for, session
 from flask_login import login_user, logout_user, current_user, login_required
-from flask_ldap3_login import AuthenticationResponseStatus
 from flask_jsonschema import validate
 from app.models import User, Role, ContactEmail, Permission, Organization
-from app import ldap3_manager, db
+from app import db
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature
 from . import auth
 from app.core import ApiResponse, ApiException
