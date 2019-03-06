@@ -10,7 +10,6 @@ import csv
 from app import create_app
 from flask import current_app
 from flask.cli import FlaskGroup
-from flask_gnupg import fetch_gpg_key
 from app import db
 from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, Vulnerability, Tag
