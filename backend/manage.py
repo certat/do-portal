@@ -10,7 +10,6 @@ import click
 from app import create_app
 from flask import current_app
 from flask.cli import FlaskGroup
-from flask_gnupg import fetch_gpg_key
 from app import db
 from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, Vulnerability, Tag
@@ -259,14 +258,6 @@ def import_hof(filename):
                 db.session.add(vuln)
             db.session.commit()
         print('Done')
-
-
-@cli.command()
-@click.argument('emails', required=True)
-def fetchkeys(emails):
-    """Download GPG keys from remote keyserver"""
-    for e in emails:
-        fetch_gpg_key(e, current_app.config['GPG_KEYSERVERS'][0])
 
 
 @cli.command()

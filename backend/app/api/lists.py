@@ -6,13 +6,11 @@ from io import BytesIO
 
 from flask import request, redirect, url_for, current_app
 from flask_jsonschema import validate
-from flask_gnupg import fetch_gpg_key, get_keyid
 from app.core import ApiResponse, ApiException
 from . import api
 from .emails import send_email
 from ..models import MailmanList, MailmanDomain
 from werkzeug.utils import secure_filename
-from app import gpg
 
 
 @api.route('/lists', methods=['GET'])

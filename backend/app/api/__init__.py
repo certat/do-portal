@@ -12,7 +12,6 @@ from . import organizations, organization_groups, ip_ranges, lists  # noqa
 from . import asns, emails, fqdns, gnupg_keys, samples  # noqa
 from . import deliverables, deliverable_files, reports, tags  # noqa
 from . import vulnerabilities  # noqa
-from .analysis import av, static, vxstream, nessus, fireeye  # noqa
 from . import errors
 from .decorators import rate_limit, admin_required
 from app.utils import addslashes, _HTTP_METHOD_TO_AUDIT_MAP

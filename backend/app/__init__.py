@@ -3,16 +3,12 @@ import logging
 from celery import Celery
 from config import config, Config
 from flask import g
-from flask_gnupg import GPG
 from flask_jsonschema import JsonSchema
 from flask_ldap3_login import LDAP3LoginManager
 from flask_login import LoginManager, current_user
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_tinyclients.nessus import Nessus
-from flask_tinyclients.vxstream import VxStream
-from flask_tinyclients.fireeye import FireEye
 from app.core import FlaskApi, ApiException
 from app.utils import JSONEncoder
 from .utils.mixins import Anonymous
@@ -29,14 +25,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app, session_options={"expire_on_commit": False})
 mail = Mail()
 login_manager = LoginManager()
-celery = Celery(__name__, broker=Config.BROKER_URL)
 jsonschema = JsonSchema()
-gpg = GPG()
-ldap3_manager = LDAP3LoginManager()
 migrate = Migrate()
-vxstream = VxStream()
-nessus = Nessus()
-fireeye = FireEye()
 
 
 def create_app(config_name):
@@ -121,12 +111,8 @@ def init_extensions(app):
     login_manager.anonymous_user = Anonymous
     celery.conf.update(app.config)
     jsonschema.init_app(app)
-    gpg.init_app(app)
     ldap3_manager.init_app(app)
     migrate.init_app(app, db, directory=app.config['MIGRATIONS_DIR'])
-    vxstream.init_app(app)
-    nessus.init_app(app)
-    fireeye.init_app(app)
 
 
 def init_routes(app):
