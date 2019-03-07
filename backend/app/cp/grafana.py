@@ -6,13 +6,13 @@ from flask import Response
 import requests
 
 
-@cp.route('/grafana', methods=['GET'])
+@cp.route('/statistics', methods=['GET'])
 def get_grafana():
     request_headers = {key: value for (key, value) in request.headers  if key != 'Host'}
     request_headers['X_GRAFANA_REMOTE_USER'] = 'dope'
     resp = requests.request(
         method=request.method,
-        url='http://localhost:3005/d/QA7iWe9iz/teshboard?orgId=1',  # request.url.replace(request.host_url, 'orf.at'),
+        url='http://orf.at',  # request.url.replace(request.host_url, 'orf.at'),
         headers=request_headers,
         data=request.get_data(),
         cookies=request.cookies,
