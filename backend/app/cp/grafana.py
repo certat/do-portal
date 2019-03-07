@@ -6,8 +6,11 @@ from flask import Response, current_app
 import requests
 from app.models import Organization, FodyOrganization
 
-@cp.route('/statistics/<int:org_id>', methods=['GET'])
-def get_grafana(org_id):
+# @cp.route('/statistics/<int:org_id>', methods=['GET'])
+@cp.route('/statistics/', methods=['GET'])
+def get_grafana():
+    '''
+    org_id = 5
     o = Organization.query.get_or_404(org_id)
     if not g.user.may_handle_organization(o):
         abort(403)
@@ -43,6 +46,9 @@ def get_grafana(org_id):
                if name.lower() not in excluded_headers]
 
     response = Response(resp.content, resp.status_code, headers)
+    '''
+    headers = []
+    response = Response('<p> bla </p>', 200, headers)
 
     return response
 
