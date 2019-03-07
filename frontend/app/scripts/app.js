@@ -61,6 +61,19 @@ angular
           }
         }
       })
+      .state('statistics', {
+        url: '/statistics',
+        views: {
+          header: {
+            templateUrl: 'views/header.html',
+            controller: 'HeaderCtrl'
+          },
+          content: {
+            templateUrl: 'views/statistics.html',
+            controller: 'StatisticsCtrl'
+          }
+        }
+      })
       .state('organization_list', {
         url: '/organization_list',
         views: {
