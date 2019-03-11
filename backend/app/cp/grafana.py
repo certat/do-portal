@@ -6,16 +6,17 @@ from flask import Response, current_app
 import requests
 from app.models import Organization, FodyOrganization
 
-# /statistics?orgid=123
-@cp.route('/statistics/', methods=['GET'])
-def get_grafana_by_id():
-    orgid = request.args.get('orgid', type = int)
-    response = Response('<p>bla orgid:'+str(orgid)+'</p>', 200, headers)
-
-
 @cp.route('/statistics/', methods=['GET'])
 def get_grafana():
-    orgid = 5
+    orgid = request.args.get('orgid', type = int)
+
+    if orgid:
+        response = Response('<p>bla orgid:'+str(orgid)+'</p>', 200, {})
+    else:
+        response = Response('<p>bla</p>', 200, {})
+
+    return response
+
     o = Organization.query.get_or_404(orgid)
     if not g.user.may_handle_organization(o):
         abort(403)
