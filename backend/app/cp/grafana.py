@@ -8,9 +8,9 @@ from app.models import Organization, FodyOrganization
 
 # /statistics?orgid=123
 @cp.route('/statistics/', methods=['GET'])
-def get_grafana_by_id(org_id):
+def get_grafana_by_id():
     orgid = request.args.get('orgid', type = int)
-    response = Response('<p>bla orgid:'+orgid+'</p>', 200, headers)
+    response = Response('<p>bla orgid:'+str(orgid)+'</p>', 200, headers)
 
 
 @cp.route('/statistics/', methods=['GET'])
