@@ -8,7 +8,7 @@ from app.models import Organization, FodyOrganization
 import flask_cors
 
 @cp.route('/statistics/<int:org_id>', methods=['GET'])
-def get_grafana(org_id):
+def get_grafana_by_id(org_id):
     response = Response('<p> bla </p>', 200, headers)
 
 
@@ -51,7 +51,7 @@ def get_grafana():
                if name.lower() not in excluded_headers]
 
     c = resp.content.decode('utf-8')
-    content = c.replace("/grafana/", "http://localhost:3005/grafana")
+    content = c.replace("/grafana/", "http://localhost:3005/grafana/")
     response = Response(content, resp.status_code, headers)
     # headers = []
     # response = Response('<p> bla </p>', 200, headers)
