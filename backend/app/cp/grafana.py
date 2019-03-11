@@ -5,11 +5,16 @@ from . import cp
 from flask import Response, current_app
 import requests
 from app.models import Organization, FodyOrganization
+import flask_cors
 
-# @cp.route('/statistics/<int:org_id>', methods=['GET'])
+@cp.route('/statistics/<int:org_id>', methods=['GET'])
+def get_grafana(org_id):
+    response = Response('<p> bla </p>', 200, headers)
+
+
 @cp.route('/statistics/', methods=['GET'])
+@flask_cors.cross_origin()
 def get_grafana():
-    '''
     org_id = 5
     o = Organization.query.get_or_404(org_id)
     if not g.user.may_handle_organization(o):
@@ -39,16 +44,17 @@ def get_grafana():
         headers=request_headers,
         data=request.get_data(),
         cookies=request.cookies,
-        allow_redirects=False)
+        allow_redirects=True)
 
     excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
     headers = [(name, value) for (name, value) in resp.raw.headers.items()
                if name.lower() not in excluded_headers]
 
-    response = Response(resp.content, resp.status_code, headers)
-    '''
-    headers = []
-    response = Response('<p> bla </p>', 200, headers)
+    c = resp.content.decode('utf-8')
+    content = c.replace("/grafana/", "http://localhost:3005/grafana")
+    response = Response(content, resp.status_code, headers)
+    # headers = []
+    # response = Response('<p> bla </p>', 200, headers)
 
     return response
 
