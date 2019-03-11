@@ -63,7 +63,6 @@ angular
       })
       .state('statistics', {
         url: '/statistics?orgid',
-        params: { orgid: null },
         views: {
           header: {
             templateUrl: 'views/header.html',

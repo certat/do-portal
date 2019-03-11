@@ -10,10 +10,10 @@ from app.models import Organization, FodyOrganization
 def get_grafana():
     orgid = request.args.get('orgid', type = int)
 
-    if orgid:
-        response = Response('<p>bla orgid:'+str(orgid)+'</p>', 200, {})
-    else:
+    if orgid is None:
         response = Response('<p>bla</p>', 200, {})
+    else:
+        response = Response('<p>bla orgid:'+str(orgid)+'</p>', 200, {})
 
     return response
 
