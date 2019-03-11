@@ -8,6 +8,10 @@
  * Statistics Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('StatisticsCtrl', function ($scope, $sce, config) {
-      $scope.statistics_url = $sce.trustAsResourceUrl(config.apiConfig.webServiceUrl + '/statistics');
+  .controller('StatisticsCtrl', function ($scope, $stateParams, $sce, config) {
+      var url = config.apiConfig.webServiceUrl + '/statistics';
+      if ($stateParams.orgid) {
+          url = url + "?orgid=" + $stateParams.orgid;
+      }
+      $scope.statistics_url = $sce.trustAsResourceUrl(url);
 });

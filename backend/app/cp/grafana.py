@@ -7,16 +7,18 @@ import requests
 from app.models import Organization, FodyOrganization
 import flask_cors
 
-@cp.route('/statistics/<int:org_id>', methods=['GET'])
+# /statistics?orgid=123
+@cp.route('/statistics/', methods=['GET'])
 def get_grafana_by_id(org_id):
-    response = Response('<p> bla </p>', 200, headers)
+    orgid = request.args.get('orgid', type = int)
+    response = Response('<p>bla orgid:'+orgid+'</p>', 200, headers)
 
 
 @cp.route('/statistics/', methods=['GET'])
 @flask_cors.cross_origin()
 def get_grafana():
-    org_id = 5
-    o = Organization.query.get_or_404(org_id)
+    orgid = 5
+    o = Organization.query.get_or_404(orgid)
     if not g.user.may_handle_organization(o):
         abort(403)
 

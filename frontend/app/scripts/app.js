@@ -62,7 +62,8 @@ angular
         }
       })
       .state('statistics', {
-        url: '/statistics',
+        url: '/statistics?orgid',
+        params: { orgid: null },
         views: {
           header: {
             templateUrl: 'views/header.html',
@@ -72,7 +73,7 @@ angular
             templateUrl: 'views/statistics.html',
             controller: 'StatisticsCtrl'
           }
-        }
+        },
       })
       .state('organization_list', {
         url: '/organization_list',
