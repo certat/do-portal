@@ -5,7 +5,6 @@ from . import cp
 from flask import Response, current_app
 import requests
 from app.models import Organization, FodyOrganization
-import flask_cors
 
 # /statistics?orgid=123
 @cp.route('/statistics/', methods=['GET'])
@@ -15,7 +14,6 @@ def get_grafana_by_id(org_id):
 
 
 @cp.route('/statistics/', methods=['GET'])
-@flask_cors.cross_origin()
 def get_grafana():
     orgid = 5
     o = Organization.query.get_or_404(orgid)
@@ -53,7 +51,7 @@ def get_grafana():
                if name.lower() not in excluded_headers]
 
     c = resp.content.decode('utf-8')
-    content = c.replace("/grafana/", "http://localhost:3005/grafana/")
+    content = c.replace("/grafana/", "http://localhost:3005/")
     response = Response(content, resp.status_code, headers)
     # headers = []
     # response = Response('<p> bla </p>', 200, headers)
