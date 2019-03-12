@@ -6,36 +6,15 @@ from flask import Response, current_app
 import requests
 from app.models import Organization, FodyOrganization
 
-@cp.route('/statistics/', methods=['GET'])
-def get_grafana():
-    orgid = request.args.get('orgid', type = int)
 
-    if orgid is None:
-        response = Response('<p>bla</p>', 200, {})
-    else:
-        response = Response('<p>bla orgid:'+str(orgid)+'</p>', 200, {})
-
-    return response
-
-    o = Organization.query.get_or_404(orgid)
-    if not g.user.may_handle_organization(o):
-        abort(403)
-
-    ripe_handles = o.ripe_organizations
-    asns = [FodyOrganization(r.ripe_org_hdl).asns for r in ripe_handles]
-    # http://localhost:3005/d/QA7iWe9iz/teshboard?orgId=1&asn=1
-    grafana_url = ("%s:%s/%s/%s?%s" % (
+def _proxy(url, replace = False):
+    grafana_url = ("%s:%s/" % (
        current_app.config['GRAFANA_HOST'],
-       current_app.config['GRAFANA_PORT'],
-       current_app.config['GRAFANA_ID'],
-       current_app.config['GRAFANA_DASHBOARDNAME'],
-       current_app.config['GRAFANA_OPTIONS'],
+       current_app.config['GRAFANA_PORT']
     ))
-    for asn in asns:
-       grafana_url += '&var-asn='+asn[0]
 
-    # asns.append(grafana_url)
-    # return ApiResponse(asns)
+    grafana_url += url
+
 
     request_headers = {key: value for (key, value) in request.headers  if key != 'Host'}
     request_headers['X_GRAFANA_REMOTE_USER'] =  current_app.config['GRAFANA_REMOTE_USER']
@@ -51,13 +30,48 @@ def get_grafana():
     headers = [(name, value) for (name, value) in resp.raw.headers.items()
                if name.lower() not in excluded_headers]
 
-    c = resp.content.decode('utf-8')
-    content = c.replace("/grafana/", "http://localhost:3005/")
+    headers.append(('Access-Control-Allow-Origin', 'http://localhost:3005/'))
+    # content = c.replace("/grafana/", "http://localhost:3005/")
+    if replace:
+        c = resp.content.decode('utf-8')
+        content = c.replace("/grafana/", "/cp/1.0/proxy/")
+    else:
+        content = resp.content
     response = Response(content, resp.status_code, headers)
-    # headers = []
-    # response = Response('<p> bla </p>', 200, headers)
-
+    print("*** ", grafana_url, resp.status_code)
     return response
+
+# /statistics?orgid=123
+@cp.route('/statistics/', methods=['GET'])
+def get_grafana():
+    orgid = request.args.get('orgid', type = int)
+
+    orgid = 5
+
+    o = Organization.query.get_or_404(orgid)
+    if not g.user.may_handle_organization(o):
+        abort(403)
+
+    ripe_handles = o.ripe_organizations
+    asns = [FodyOrganization(r.ripe_org_hdl).asns for r in ripe_handles]
+    # http://localhost:3005/d/QA7iWe9iz/teshboard?orgId=1&asn=1
+    grafana_url = ("%s/%s?%s" % (
+       current_app.config['GRAFANA_ID'],
+       current_app.config['GRAFANA_DASHBOARDNAME'],
+       current_app.config['GRAFANA_OPTIONS'],
+    ))
+    for asn in asns:
+       grafana_url += '&var-asn='+asn[0]
+
+    # asns.append(grafana_url)
+    # return ApiResponse(asns)
+    r = _proxy(grafana_url, replace = True)
+    return r
+
+@cp.route('/proxy/<path:dummy>', methods=['GET'])
+def proxy(dummy):
+    return _proxy(dummy)
+
 
 '''
 GRAFANA_HOST=localhost
