@@ -15,7 +15,6 @@ def _proxy(url, replace = False):
 
     grafana_url += url
 
-
     request_headers = {key: value for (key, value) in request.headers  if key != 'Host'}
     request_headers['X_GRAFANA_REMOTE_USER'] =  current_app.config['GRAFANA_REMOTE_USER']
     resp = requests.request(
@@ -24,17 +23,17 @@ def _proxy(url, replace = False):
         headers=request_headers,
         data=request.get_data(),
         cookies=request.cookies,
-        allow_redirects=True)
+        allow_redirects=False)
 
     excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
     headers = [(name, value) for (name, value) in resp.raw.headers.items()
                if name.lower() not in excluded_headers]
 
-    headers.append(('Access-Control-Allow-Origin', 'http://localhost:3005/'))
+    # headers.append(('Access-Control-Allow-Origin', 'http://localhost:3005/'))
     # content = c.replace("/grafana/", "http://localhost:3005/")
     if replace:
         c = resp.content.decode('utf-8')
-        content = c.replace("/grafana/", "/cp/1.0/proxy/")
+        content = c.replace("/grafana/", "/proxy/")
     else:
         content = resp.content
     response = Response(content, resp.status_code, headers)
@@ -65,12 +64,17 @@ def get_grafana():
 
     # asns.append(grafana_url)
     # return ApiResponse(asns)
-    r = _proxy(grafana_url, replace = True)
+    r = _proxy(grafana_url, replace = False)
     return r
 
-@cp.route('/proxy/<path:dummy>', methods=['GET'])
+@cp.route('/proxy/<path:dummy>', methods=['GET', 'POST'])
 def proxy(dummy):
-    return _proxy(dummy)
+    return _proxy(dummy, False)
+
+
+@cp.route('/grafana/<path:dummy>', methods=['GET', 'POST'])
+def grafana(dummy):
+    return _proxy(dummy, False)
 
 
 '''
