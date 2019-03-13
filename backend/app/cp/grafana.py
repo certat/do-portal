@@ -37,11 +37,11 @@ def _proxy(url, replace = False):
     else:
         content = resp.content
     response = Response(content, resp.status_code, headers)
-    print("*** ", grafana_url, resp.status_code)
+    # print("*** ", grafana_url, resp.status_code)
     return response
 
 # /statistics?orgid=123
-@cp.route('/statistics/', methods=['GET'])
+@cp.route('/statistics', methods=['GET'])
 def get_grafana():
     orgid = request.args.get('orgid', type = int)
 
@@ -54,18 +54,21 @@ def get_grafana():
     ripe_handles = o.ripe_organizations
     asns = [FodyOrganization(r.ripe_org_hdl).asns for r in ripe_handles]
     # http://localhost:3005/d/QA7iWe9iz/teshboard?orgId=1&asn=1
-    grafana_url = ("%s/%s?%s" % (
+
+    grafana_url = ("/grafana/%s/%s?%s" % (
        current_app.config['GRAFANA_ID'],
        current_app.config['GRAFANA_DASHBOARDNAME'],
        current_app.config['GRAFANA_OPTIONS'],
     ))
+
     for asn in asns:
        grafana_url += '&var-asn='+asn[0]
 
     # asns.append(grafana_url)
     # return ApiResponse(asns)
-    r = _proxy(grafana_url, replace = False)
-    return r
+    # r = _proxy(grafana_url, replace = False)
+    # r = _proxy('grafana/d/gWt9bEXmz/top-tags-over-time-filtered-by-taxonomy', replace = False)
+    return ApiResponse({'statistics_url': grafana_url})
 
 @cp.route('/proxy/<path:dummy>', methods=['GET', 'POST'])
 def proxy(dummy):
