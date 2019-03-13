@@ -77,7 +77,7 @@ def get_grafana():
            grafana_url += '&var-asn='+asn
 
 
-    return ApiResponse({'statistics_url': grafana_url, 'asns': asns})
+    return ApiResponse({'statistics_url': grafana_url})
 
 @cp.route('/proxy/<path:dummy>', methods=['GET', 'POST'])
 def proxy(dummy):
