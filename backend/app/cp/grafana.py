@@ -45,13 +45,18 @@ def _proxy(url, replace = False):
 def get_grafana():
     orgid = request.args.get('orgid', type = int)
 
-    orgid = 5
+    if orgid:
+        o = Organization.query.get_or_404(orgid)
+        if not g.user.may_handle_organization(o):
+            abort(403)
+        ripe_handles = o.ripe_organizations
+    else:
+        orgs = g.user.get_organizations_raw()
+        ripe_handles = []
+        for org in orgs:
+            o = Organization.query.get(org['id'])
+            ripe_handles.append(o.ripe_organizations)
 
-    o = Organization.query.get_or_404(orgid)
-    if not g.user.may_handle_organization(o):
-        abort(403)
-
-    ripe_handles = o.ripe_organizations
     asns = [FodyOrganization(r.ripe_org_hdl).asns for r in ripe_handles]
     # http://localhost:3005/d/QA7iWe9iz/teshboard?orgId=1&asn=1
 
@@ -64,10 +69,6 @@ def get_grafana():
     for asn in asns:
        grafana_url += '&var-asn='+asn[0]
 
-    # asns.append(grafana_url)
-    # return ApiResponse(asns)
-    # r = _proxy(grafana_url, replace = False)
-    # r = _proxy('grafana/d/gWt9bEXmz/top-tags-over-time-filtered-by-taxonomy', replace = False)
     return ApiResponse({'statistics_url': grafana_url})
 
 @cp.route('/proxy/<path:dummy>', methods=['GET', 'POST'])
