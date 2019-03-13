@@ -50,14 +50,20 @@ def get_grafana():
         if not g.user.may_handle_organization(o):
             abort(403)
         ripe_handles = o.ripe_organizations
+        asns = [FodyOrganization(r.ripe_org_hdl).asns for r in ripe_handles]
     else:
         orgs = g.user.get_organizations_raw()
         ripe_handles = []
+        asns = []
         for org in orgs:
             o = Organization.query.get(org['id'])
-            ripe_handles.append(o.ripe_organizations)
+            ripe_handles = o.ripe_organizations
+            for r in ripe_handles:
+                a = FodyOrganization(r.ripe_org_hdl).asns
+                if a:
+                     asns.append(a)
 
-    asns = [FodyOrganization(r.ripe_org_hdl).asns for r in ripe_handles]
+
     # http://localhost:3005/d/QA7iWe9iz/teshboard?orgId=1&asn=1
 
     grafana_url = ("/grafana/%s/%s?%s" % (
@@ -66,10 +72,12 @@ def get_grafana():
        current_app.config['GRAFANA_OPTIONS'],
     ))
 
-    for asn in asns:
-       grafana_url += '&var-asn='+asn[0]
+    for asn_list in asns:
+       for asn in asn_list:
+           grafana_url += '&var-asn='+asn
 
-    return ApiResponse({'statistics_url': grafana_url})
+
+    return ApiResponse({'statistics_url': grafana_url, 'asns': asns})
 
 @cp.route('/proxy/<path:dummy>', methods=['GET', 'POST'])
 def proxy(dummy):
