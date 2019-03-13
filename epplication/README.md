@@ -5,24 +5,19 @@
  2) install docker-compose
 
 ## installation
-mkdir cert
-cd cert
-certdir=`pwd`
+git clone https://github.com/certat/do-portal.git
+rootdir=`pwd`
 
 ### run do-portal
-cd $certdir
-git clone https://github.com/certat/do-portal.git
-cd do-portal
+cd $rootdir/backend
 docker-compose up
 
 ## run cp-portal
-cd $certdir
-git clone https://github.com/certat/customer-portal.git
-cd customer-portal
+cd $rootdir/frontend
 docker-compose up
 
 ## run ui-tests
-cd $certdir/do-portal/epplication
+cd $rootdir/epplication
 docker-compose up
 docker cp ui-tests.sql epplication_app:/home/epplication/EPPlication/
 docker exec -it epplication_app bash -c 'carton exec script/database.pl -cmd delete-tests'
