@@ -27,4 +27,24 @@ my $job_id = $cli->create_job({
 });
 
 say "job started: http://localhost:8080/job/$job_id/show";
-say 'if you want to watch the selenium browser -> `xtightvncviewer localhost::5900` (password: `secret`)'
+say 'if you want to watch the selenium browser -> `xtightvncviewer localhost::5900` (password: `secret`)';
+
+my $status = '';
+while ($status ne 'finished') {
+    my $job = $cli->get_job($job_id);
+    $status = $job->{status};
+    if ($status eq 'finished') {
+        say 'job finished.';
+        say 'duration: ' . $job->{summary}{duration} . ' seconds.';
+        if (defined $job->{summary}{errors}) {
+            say 'errors ' . $job->{summary}{errors} . '.';
+        }
+        else {
+            say 'no errors.';
+        }
+    }
+    else {
+        say $status;
+        sleep 10;
+    }
+}
