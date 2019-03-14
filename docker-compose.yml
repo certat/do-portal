@@ -1,5 +1,29 @@
 version: '3.5'
+
 services:
+
+    portal-db:
+        image: postgres:9.6-alpine
+        container_name: portal-db
+        environment:
+            POSTGRES_USER: do_portal
+            POSTGRES_PASSWORD: do_portal
+            POSTGRES_DB: do_portal
+        volumes:
+            - portal_db_data:/var/lib/postgresql/data
+    portal-backend:
+        container_name: portal-backend
+        build: ./backend
+        ports:
+            - "5001:5001"
+
+    portal-frontend:
+        container_name: portal-frontend
+        build: ./frontend
+        ports:
+            - "5002:5002"
+            - "35729:35729"
+
     epplication_db:
         image: postgres:9.6-alpine
         container_name: epplication_db
@@ -8,9 +32,7 @@ services:
             POSTGRES_PASSWORD: epplication
             POSTGRES_DB: epplication
         volumes:
-            - db_data:/var/lib/postgresql/data
-        networks:
-            - portal-net
+            - epplication_db_data:/var/lib/postgresql/data
     selenium:
         image: selenium/standalone-firefox-debug
         container_name: epplication_selenium
@@ -18,8 +40,6 @@ services:
             - /dev/shm:/dev/shm
         ports:
             - "5900:5900"
-        networks:
-            - portal-net
     app:
         container_name: epplication_app
         image: davewood/epplication:latest
@@ -30,12 +50,9 @@ services:
             - app_data_ssh_keys:/home/epplication/EPPlication/ssh_keys
         ports:
             - "8080:80"
-        networks:
-            - portal-net
+
 volumes:
-    db_data:
+    portal_db_data:
+    epplication_db_data:
     app_data_job_exports:
     app_data_ssh_keys:
-networks:
-    portal-net:
-        external: true

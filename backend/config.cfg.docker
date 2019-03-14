@@ -4,9 +4,9 @@ from datetime import timedelta
 # E.i. user passwords, login tokens, session cookies
 
 SECRET_KEY = "sB45#}\"So%TGY5jtq[^/uLq$}?4',`QdiKM_a3h*#/T9"
-SERVER_NAME = "do-portal:5001"
+SERVER_NAME = "portal-backend:5001"
 
-CP_SERVER = 'http://customer-portal:5002'
+CP_SERVER = 'http://portal-frontend:5002'
 
 TESTING = True
 
@@ -29,5 +29,5 @@ MAIL_USERNAME = 'noreply@doportal'
 MAIL_PASSWORD = None
 MAIL_DEFAULT_SENDER = 'noreply@doportal'
 
-SQLALCHEMY_DATABASE_URI = 'postgresql://do_portal:do_portal@cert_db:5432/do_portal'
+SQLALCHEMY_DATABASE_URI = 'postgresql://do_portal:do_portal@portal-db:5432/do_portal'
 SQLALCHEMY_TRACK_MODIFICATIONS = False

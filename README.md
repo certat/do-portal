@@ -7,18 +7,9 @@
 ## installation
 git clone https://github.com/certat/do-portal.git
 
-## run do-portal
-cd do-portal/backend
-docker-compose up
-
-## run cp-portal
-cd do-portal/frontend
-docker-compose up
-
-## run epplication
-cd do-portal/epplication
+## run portal
 docker-compose up
 
 ## run ui-tests
-cd do-portal/epplication
+cd epplication
 bash test.sh
