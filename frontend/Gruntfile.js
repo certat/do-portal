@@ -16,7 +16,6 @@ module.exports = function (grunt) {
   require('jit-grunt')(grunt, {
     useminPrepare: 'grunt-usemin',
     ngtemplates: 'grunt-angular-templates',
-    cdnify: 'grunt-google-cdn'
   });
 
   // Configurable paths for the application
@@ -26,8 +25,6 @@ module.exports = function (grunt) {
   };
 
   grunt.loadNpmTasks('grunt-replace');
-  grunt.loadNpmTasks('grunt-ssh');
-  grunt.loadNpmTasks('grunt-ssh-deploy');
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -45,7 +42,6 @@ module.exports = function (grunt) {
         options: {
           host: '<%= secret.devel.host %>',
           username: '<%= secret.devel.username %>',
-          deploy_path: '<%= secret.devel.deploy_path %>',
           agent: process.env.SSH_AUTH_SOCK,
           agentForward: true,
           releases_to_keep: 3
@@ -55,22 +51,9 @@ module.exports = function (grunt) {
         options: {
           host: '<%= secret.prod.host %>',
           username: '<%= secret.prod.username %>',
-          deploy_path: '<%= secret.prod.deploy_path %>',
           agent: process.env.SSH_AUTH_SOCK,
           agentForward: true,
           releases_to_keep: 10
-        }
-      }
-    },
-
-    sshexec: {
-      uptime: {
-        command: 'uptime',
-        options: {
-          host: '<%= secret.devel.host %>',
-          username: '<%= secret.devel.username %>',
-          agent: process.env.SSH_AUTH_SOCK,
-          agentForward: true
         }
       }
     },
@@ -398,13 +381,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Replace Google CDN references
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
-      }
-    },
-
     // Copies remaining files to places other tasks can use
     copy: {
       dist: {
@@ -480,11 +456,6 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve:' + target]);
-  });
-
   grunt.registerTask('build', [
     'replace:production',
     'clean:dist',
@@ -496,7 +467,6 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
-    //'cdnify',
     'cssmin',
     'uglify',
     'filerev',
