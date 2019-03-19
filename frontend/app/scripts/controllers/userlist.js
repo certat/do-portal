@@ -153,7 +153,10 @@ angular.module('cpApp')
                   var scrollbarWidth = 15;
                   var headerHeight   = 55;
                   var rowHeight      = 30;
-                  $scope.gridHeight  = (newValue * rowHeight + headerHeight + scrollbarWidth) + 'px';
+                  var maxGridHeight  = 600;
+                  var gridHeight     = (newValue * rowHeight + headerHeight + scrollbarWidth);
+                  var newGridHeight  = gridHeight > maxGridHeight ? maxGridHeight : gridHeight;
+                  $scope.gridHeight  = newGridHeight + 'px';
               }
           );
         }
