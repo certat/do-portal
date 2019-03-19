@@ -26,8 +26,8 @@ my $job_id = $cli->create_job({
     config_id => $config_id,
 });
 
-say "job started: http://localhost:8080/job/$job_id/show";
-say 'if you want to watch the selenium browser -> `xtightvncviewer localhost::5900` (password: `secret`)';
+say "test details -> http://localhost:8080/job/$job_id/show (admin/admin123)";
+say 'selenium browser -> `xtightvncviewer localhost::5900` (password: `secret`)';
 
 my $status = '';
 while ($status ne 'finished') {
