@@ -16,7 +16,6 @@ module.exports = function (grunt) {
   require('jit-grunt')(grunt, {
     useminPrepare: 'grunt-usemin',
     ngtemplates: 'grunt-angular-templates',
-    cdnify: 'grunt-google-cdn'
   });
 
   // Configurable paths for the application
@@ -26,8 +25,6 @@ module.exports = function (grunt) {
   };
 
   grunt.loadNpmTasks('grunt-replace');
-  grunt.loadNpmTasks('grunt-ssh');
-  grunt.loadNpmTasks('grunt-ssh-deploy');
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -45,7 +42,6 @@ module.exports = function (grunt) {
         options: {
           host: '<%= secret.devel.host %>',
           username: '<%= secret.devel.username %>',
-          deploy_path: '<%= secret.devel.deploy_path %>',
           agent: process.env.SSH_AUTH_SOCK,
           agentForward: true,
           releases_to_keep: 3
@@ -55,22 +51,9 @@ module.exports = function (grunt) {
         options: {
           host: '<%= secret.prod.host %>',
           username: '<%= secret.prod.username %>',
-          deploy_path: '<%= secret.prod.deploy_path %>',
           agent: process.env.SSH_AUTH_SOCK,
           agentForward: true,
           releases_to_keep: 10
-        }
-      }
-    },
-
-    sshexec: {
-      uptime: {
-        command: 'uptime',
-        options: {
-          host: '<%= secret.devel.host %>',
-          username: '<%= secret.devel.username %>',
-          agent: process.env.SSH_AUTH_SOCK,
-          agentForward: true
         }
       }
     },
@@ -87,10 +70,6 @@ module.exports = function (grunt) {
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
-      },
-      jsTest: {
-        files: ['test/spec/{,*/}*.js'],
-        tasks: ['newer:jshint:test', 'newer:jscs:test', 'karma']
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
@@ -140,22 +119,6 @@ module.exports = function (grunt) {
           }
         }
       },
-      test: {
-        options: {
-          port: 9001,
-          middleware: function (connect) {
-            return [
-              connect.static('.tmp'),
-              connect.static('test'),
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect.static(appConfig.app)
-            ];
-          }
-        }
-      },
       dist: {
         options: {
           open: true,
@@ -177,12 +140,6 @@ module.exports = function (grunt) {
           '<%= yeoman.app %>/scripts/{,*/}*.js'
         ]
       },
-      test: {
-        options: {
-          jshintrc: 'test/.jshintrc'
-        },
-        src: ['test/spec/{,*/}*.js']
-      }
     },
 
     // Make sure code styles are up to par
@@ -197,9 +154,6 @@ module.exports = function (grunt) {
           '<%= yeoman.app %>/scripts/{,*/}*.js'
         ]
       },
-      test: {
-        src: ['test/spec/{,*/}*.js']
-      }
     },
 
     // Empties folders to start fresh
@@ -221,7 +175,7 @@ module.exports = function (grunt) {
     postcss: {
       options: {
         processors: [
-          require('autoprefixer-core')({browsers: ['last 1 version']})
+          require('autoprefixer')({browsers: ['last 1 version']})
         ]
       },
       server: {
@@ -250,22 +204,6 @@ module.exports = function (grunt) {
       app: {
         src: ['<%= yeoman.app %>/index.html'],
         ignorePath:  /\.\.\//
-      },
-      test: {
-        devDependencies: true,
-        src: '<%= karma.unit.configFile %>',
-        ignorePath:  /\.\.\//,
-        fileTypes:{
-          js: {
-            block: /(([\s\t]*)\/{2}\s*?bower:\s*?(\S*))(\n|\r|.)*?(\/{2}\s*endbower)/gi,
-              detect: {
-                js: /'(.*\.js)'/gi
-              },
-              replace: {
-                js: '\'{{filePath}}\','
-              }
-            }
-          }
       }
     },
 
@@ -443,13 +381,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Replace Google CDN references
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
-      }
-    },
-
     // Copies remaining files to places other tasks can use
     copy: {
       dist: {
@@ -499,22 +430,11 @@ module.exports = function (grunt) {
       server: [
         'copy:styles'
       ],
-      test: [
-        'copy:styles'
-      ],
       dist: [
         'copy:styles',
         'imagemin',
         'svgmin'
       ]
-    },
-
-    // Test settings
-    karma: {
-      unit: {
-        configFile: 'test/karma.conf.js',
-        singleRun: true
-      }
     }
   });
 
@@ -536,20 +456,6 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve:' + target]);
-  });
-
-  grunt.registerTask('test', [
-    'clean:server',
-    'wiredep',
-    'concurrent:test',
-    'postcss',
-    'connect:test',
-    'karma'
-  ]);
-
   grunt.registerTask('build', [
     'replace:production',
     'clean:dist',
@@ -561,7 +467,6 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
-    //'cdnify',
     'cssmin',
     'uglify',
     'filerev',
@@ -572,7 +477,6 @@ module.exports = function (grunt) {
   grunt.registerTask('default', [
     'newer:jshint',
     'newer:jscs',
-    //'test',
     'build'
   ]);
 };
