@@ -1,5 +1,5 @@
 {
   "version": "0.7.0",
-  "webServiceUrl": "http://portal-backend:5001/cp/1.0",
-  "authUrl": "http://portal-backend:5001/auth"
+  "webServiceUrl": "http://portal-backend:8081/cp/1.0",
+  "authUrl": "http://portal-backend:8081/auth"
 }

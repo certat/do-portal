@@ -11,18 +11,20 @@ services:
             POSTGRES_DB: do_portal
         volumes:
             - portal_db_data:/var/lib/postgresql/data
+
     portal-backend:
         container_name: portal-backend
         build: ./backend
-        ports:
-            - "5001:5001"
+        environment:
+            - VIRTUAL_HOST=portal-backend
+        depends_on:
+            - portal-db
 
     portal-frontend:
         container_name: portal-frontend
         build: ./frontend
-        ports:
-            - "5002:5002"
-            - "35729:35729"
+        environment:
+            - VIRTUAL_HOST=portal-frontend
 
     epplication_db:
         image: postgres:9.6-alpine
@@ -33,26 +35,41 @@ services:
             POSTGRES_DB: epplication
         volumes:
             - epplication_db_data:/var/lib/postgresql/data
-    selenium:
+
+    epplication_selenium:
         image: selenium/standalone-firefox-debug
         container_name: epplication_selenium
         volumes:
             - /dev/shm:/dev/shm
         ports:
             - "5900:5900"
-    app:
+
+    epplication_app:
         container_name: epplication_app
         image: davewood/epplication:latest
         depends_on:
             - epplication_db
+            - epplication_selenium
         volumes:
-            - app_data_job_exports:/home/epplication/EPPlication/root/job_exports
-            - app_data_ssh_keys:/home/epplication/EPPlication/ssh_keys
+            - epplication_app_data_job_exports:/home/epplication/EPPlication/root/job_exports
+            - epplication_app_data_ssh_keys:/home/epplication/EPPlication/ssh_keys
+        environment:
+            - VIRTUAL_HOST=epplication_app
+
+    proxy:
+        container_name: proxy
+        image: jwilder/nginx-proxy
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
         ports:
-            - "8080:80"
+            - "8081:80"
+        depends_on:
+            - epplication_app
+            - portal-frontend
+            - portal-backend
 
 volumes:
     portal_db_data:
     epplication_db_data:
-    app_data_job_exports:
-    app_data_ssh_keys:
+    epplication_app_data_job_exports:
+    epplication_app_data_ssh_keys:

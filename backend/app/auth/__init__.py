@@ -31,7 +31,7 @@ app.config.from_envvar('DO_LOCAL_CONFIG')
 if 'CP_SERVER' in app.config:
     cp_server = app.config['CP_SERVER']
 else:
-    cp_server = 'http://127.0.0.1:5002'
+    cp_server = 'http://127.0.0.1:8081'
 
 @auth.after_request
 @crossdomain(origin=cp_server,
