@@ -33,6 +33,6 @@ COPY --chown=cert:cert . /home/cert/do-portal
 RUN mkdir logs
 RUN cp config.cfg.docker config.cfg
 
-EXPOSE 5001
+EXPOSE 8081
 
 CMD ["bash", "./docker_entrypoint.sh"]

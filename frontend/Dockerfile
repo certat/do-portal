@@ -14,8 +14,7 @@ RUN npm install bower
 COPY --chown=cert:cert ./bower.json /home/cert/customer-portal/bower.json
 RUN PATH=$(npm bin):$PATH bower install
 
-EXPOSE 5002
-EXPOSE 35729
+EXPOSE 8081
 
 COPY --chown=cert:cert . /home/cert/customer-portal
 RUN cp config/envs/docker.json config/envs/devel.json

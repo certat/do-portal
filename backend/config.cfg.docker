@@ -4,9 +4,10 @@ from datetime import timedelta
 # E.i. user passwords, login tokens, session cookies
 
 SECRET_KEY = "sB45#}\"So%TGY5jtq[^/uLq$}?4',`QdiKM_a3h*#/T9"
-SERVER_NAME = "portal-backend:5001"
+SERVER_NAME = "portal-backend:8081"
 
-CP_SERVER = 'http://portal-frontend:5002'
+# used to set CORS headers
+CP_SERVER = 'http://portal-frontend:8081'
 
 TESTING = True
 
