@@ -57,6 +57,8 @@ def set_cp_settings(ripe_org_hdl, org_id):
 @cp.route('/ripe/contact', methods=['GET'])
 def get_cp_contact_for_netblock():
     cidr = request.args.get('cidr')
+    if not cidr:
+        return ApiResponse({'message': 'no cidr defined' ,}, 404, {})
     cidr = unquote(cidr)
     try:
         notification_setting = NotificationSetting.contact_for_netblock(cidr)
