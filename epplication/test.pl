@@ -26,7 +26,7 @@ my $job_id = $cli->create_job({
     config_id => $config_id,
 });
 
-say "test details -> http://localhost:8080/job/$job_id/show (admin/admin123)";
+say "test details -> http://epplication_app:8081/job/$job_id/show (admin/admin123)";
 say 'selenium browser -> `xtightvncviewer localhost::5900` (password: `secret`)';
 
 my $status = '';
