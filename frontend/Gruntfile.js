@@ -146,7 +146,6 @@ module.exports = function (grunt) {
     jscs: {
       options: {
         config: '.jscsrc',
-        verbose: true
       },
       all: {
         src: [
