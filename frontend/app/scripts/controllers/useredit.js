@@ -214,6 +214,17 @@ angular.module('cpApp')
         obj[key+'_filename'] = '';
       }
     };
+
+    function startDownload(href, filename) {
+        var dl = document.createElement('a');
+        dl.setAttribute('href', href);
+        dl.setAttribute('download', filename);
+        dl.setAttribute('visibility', 'hidden');
+        dl.setAttribute('display', 'none');
+        // Append to page, wont work in FF otherwise
+        document.body.appendChild(dl);
+        dl.click();
+    }
     $scope.downloadFile = function(m, key, ev) {
         ev.stopPropagation();
         if(!m[key]) {
@@ -226,17 +237,6 @@ angular.module('cpApp')
             startDownload(m[key], m[key+'_filename']);
         }
     };
-    function startDownload(href, filename) {
-        var dl = document.createElement('a');
-        dl.setAttribute('href', href);
-        dl.setAttribute('download', filename);
-        dl.setAttribute('visibility', 'hidden');
-        dl.setAttribute('display', 'none');
-        // Append to page, wont work in FF otherwise
-        document.body.appendChild(dl);
-        dl.click();
-    }
-
     $scope.birthdate = {
       options: {
         startingDay: 1,

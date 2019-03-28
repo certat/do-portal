@@ -11,13 +11,6 @@
 angular.module('cpApp')
   .controller('OrganizationListCtrl', function ($scope, $filter, $uibModal, Organization) {
 
-    Organization.query_list().$promise.then(function(resp){
-      var tree = arr2tree(resp.organizations, 'id','parent_org_id');
-      var orgs = [];
-      tree2offset(tree, orgs, 0);
-      $scope.orgs = orgs;
-    }, function(){});
-
     // creates a tree from a flat set of hierarchically related data
     function arr2tree(treeData, key, parentKey) {
       var keys = [];
@@ -48,4 +41,11 @@ angular.module('cpApp')
         delete x.Children;
       });
     }
+
+    Organization.query_list().$promise.then(function(resp){
+      var tree = arr2tree(resp.organizations, 'id','parent_org_id');
+      var orgs = [];
+      tree2offset(tree, orgs, 0);
+      $scope.orgs = orgs;
+    }, function(){});
   });

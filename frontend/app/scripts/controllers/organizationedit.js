@@ -34,6 +34,28 @@ angular.module('cpApp')
   })
   .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notify, $stateParams, $q, $state, uiGridConstants) {
 
+    function _array2hash(arr) {
+        var hash = {};
+        arr.forEach(function(i) { hash[i.id] = i; });
+        return hash;
+    }
+    function get_role_options(roles) {
+        var roleOptions = [];
+        for(var role_name in roles) {
+          roleOptions.push({value: role_name, label: role_name});
+        }
+        return roleOptions.sort(function(a,b){
+	  var nameA = a.label.toUpperCase();
+	  var nameB = b.label.toUpperCase();
+	  if (nameA < nameB) { return -1; }
+	  if (nameA > nameB) { return 1; }
+	  return 0;
+        });
+    }
+    function update_role_filter() {
+        $scope.roleColumnDef.filter.selectOptions = get_role_options($scope.role_names);
+    }
+
     var loadUsers = function() {
       return User.query_list().$promise
                 .then(function(resp){
@@ -104,27 +126,6 @@ angular.module('cpApp')
       });
     };
 
-    function _array2hash(arr) {
-        var hash = {};
-        arr.forEach(function(i) { hash[i.id] = i; });
-        return hash;
-    }
-    function update_role_filter() {
-        $scope.roleColumnDef.filter.selectOptions = get_role_options($scope.role_names);
-    }
-    function get_role_options(roles) {
-        var roleOptions = [];
-        for(var role_name in roles) {
-          roleOptions.push({value: role_name, label: role_name});
-        }
-        return roleOptions.sort(function(a,b){
-	  var nameA = a.label.toUpperCase();
-	  var nameB = b.label.toUpperCase();
-	  if (nameA < nameB) { return -1; }
-	  if (nameA > nameB) { return 1; }
-	  return 0;
-        });
-    }
     var loadParallel = function() {
         return $q.all([ loadUsers(), loadRoles(), loadMemberships(), loadOrganization($stateParams.id) ])
             .then( function( result ) {
