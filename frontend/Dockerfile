@@ -21,9 +21,9 @@ RUN PATH=$(npm bin):$PATH bower install
 EXPOSE 8081
 
 COPY --chown=cert:cert . /home/cert/customer-portal
-RUN cp config/envs/docker.json config/envs/devel.json
-
-RUN PATH=$(npm bin):$PATH grunt
+RUN    cp config/envs/docker.json config/envs/devel.json \
+    && cp config/envs/docker.json config/envs/production.json \
+    && PATH=$(npm bin):$PATH grunt
 
 USER root
 RUN    cp /home/cert/customer-portal/nginx.conf /etc/nginx/sites-available/portal-frontend \
