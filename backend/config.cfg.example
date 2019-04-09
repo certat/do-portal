@@ -76,7 +76,7 @@ CELERYBEAT_SCHEDULE = {
 }
 
 ## for event download
-DATA_DIR=data
-DATA_SUFFIX=json.zip
+DATA_DIR='data'
+DATA_SUFFIX='json.zip'
 
 

@@ -34,5 +34,5 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://do_portal:do_portal@portal-db:5432/do_po
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 ## for event download
-DATA_DIR=data
-DATA_SUFFIX=json.zip
+DATA_DIR='data'
+DATA_SUFFIX='json.zip'
