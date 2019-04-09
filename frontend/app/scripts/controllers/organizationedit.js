@@ -32,7 +32,7 @@ angular.module('cpApp')
       }
     };
   })
-  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notify, $stateParams, $q, $state, uiGridConstants) {
+  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notify, $stateParams, $q, $state, uiGridConstants, config) {
 
     function _array2hash(arr) {
         var hash = {};
@@ -156,6 +156,7 @@ angular.module('cpApp')
               });
 
               $scope.org = result.shift();
+              $scope.download_events_url = config.apiConfig.webServiceUrl + '/organizations/' + $scope.org.id + '/download_events';
               $scope.gridOptions.data = gridData;
               update_role_filter();
               loadRipeDetails();
