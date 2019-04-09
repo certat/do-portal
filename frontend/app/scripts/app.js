@@ -34,8 +34,20 @@ angular
           }
         }
       })
+      .state('about', {
+        url: '/about',
+        views: {
+          header: {
+            templateUrl: 'views/header.html',
+            controller: 'HeaderCtrl'
+          },
+          content: {
+            templateUrl: 'views/about.html',
+          }
+        }
+      })
       .state('activate-account', {
-          url: '/activate-account?token&email',
+        url: '/activate-account?token&email',
         views: {
           content: {
             templateUrl: 'views/activate-account.html',
