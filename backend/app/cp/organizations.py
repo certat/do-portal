@@ -1,13 +1,14 @@
 from flask import g, abort, request, url_for
 from flask_jsonschema import validate
 from app.core import ApiResponse
-from app import db
+from app import db, app
 from app.models import Organization, Permission, ContactEmail, Email
 from app.api.decorators import permission_required
 # from app.models import Organization, ContactEmail, Email
 from . import cp
 import psycopg2
 import sqlalchemy.exc
+import os
 
 @cp.route('/organizations', methods=['GET'])
 def get_cp_organizations():
@@ -193,6 +194,22 @@ def get_cp_organization(org_id):
     if not g.user.may_handle_organization(o):
         abort(403)
     return ApiResponse(o.serialize())
+
+@cp.route('/organizations/<int:org_id>/download_events', methods=['GET'])
+def get_cp_organization_events(org_id):
+    o = Organization.query.get_or_404(org_id)
+    if not g.user.may_handle_organization(o):
+        abort(403)
+
+    data_dir = app.config['DATA_DIR']
+    data_suffix = app.config['DATA_SUFFIX']
+    filename = os.path.join(data_dir, str(org_id)+'.'+data_suffix)
+    # if os.path.isfile(filename):
+    return app.send_static_file(filename)
+    abort(404)
+
+
+
 
 
 """
