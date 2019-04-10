@@ -217,13 +217,10 @@ angular
     $httpProvider.defaults.withCredentials = true;
   }])
   .run(function($rootScope, notify, $cookies){
+
     var username = $cookies.get('username');
-    if (username) {
-      $rootScope.username = username;
-    }
-    else {
-      $rootScope.username = '';
-    }
+    $rootScope.username = username ? username : '';
+
     $rootScope.alerts = [];
     $rootScope.closeAlert = function(index){
       $rootScope.alerts.splice(index, 1);
