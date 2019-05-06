@@ -1,4 +1,41 @@
-# INSTALL
+# Constituency Portal
+
+This is a web-based application for managing contact information with network information, self-administration and statistics integration.
+It is used by CERT.at/GovCERT.at/Austrian Energy CERT to maintain contact information for customers and network owners
+
+## Features
+
+- organization hierarchy
+- Contacts always have a specified role, e.g. Administrator, Abuse contact etc.
+- automatic import and update of RIPE data
+- Contacts can get login access and administrate their own organization
+- RIPE-handles can be assigned to organizations, linking Autonomous Systems (AS) and Network blocks (CIDRs) to organizations and (abuse) contacts
+- Grafana integration to show statistics on the data from a EventDB for the organization's linked network objects
+- Data per contact: PGP key, S/MIME certificate etc.
+
+## Screenshots
+
+TODO
+
+## Related software / tools
+
+### IntelMQ
+
+Can retrieve the abuse contact information from the portal
+
+https://github.com/certtools/intelmq/
+
+### EventDB
+
+A database feeded by IntelMQ is the data source for the event download and for the statistics
+
+### Grafana
+
+Grafana is integrated to provide statistics for the organizations' events
+
+https://grafana.com/
+
+# Installation
 
 apt-get install -y \
    vim less tree ack \
