@@ -40,15 +40,15 @@ mkdir logs
 ## database
 
 createdb do_portal;
-mv misc/migrations misc/tmp-migrations # TODO remove hack
+mv misc/migrations misc/tmp-migrations
 python manage.py db init;
 python manage.py db migrate;
 python manage.py db upgrade;
 python manage.py initializedb;
 python manage.py insertmasteruser;
 python demodata.py addyaml
-rm -rf misc/migrations # TODO remove hack
-mv misc/tmp-migrations misc/migrations # TODO remove hack
+rm -rf misc/migrations
+mv misc/tmp-migrations misc/migrations
 
 psql -U do_portal -c "CREATE SCHEMA fody";
 psql -U do_portal -d do_portal --echo-errors --file=install/contactdb_schema_only.pgdump
