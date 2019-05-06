@@ -15,8 +15,8 @@
         <li><a ui-sref="account">My Account</a></li>
         <li><a ui-sref="organization_list">Organizations</a></li>
         <li><a ui-sref="user_list">Contacts</a></li>
-        <li><a ui-sref="statistics" ui-sref-opts="{inherit:false}">Statistics</a></li>
         <li><a ui-sref="login" ng-click="logout()">Logout ({{ username() }})</a></li>
+        <li ng-if="enableStatistics"><a ui-sref="statistics" ui-sref-opts="{inherit:false}">Statistics</a></li>
       </ul>
     </div>
   </div>

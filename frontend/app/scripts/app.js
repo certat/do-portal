@@ -216,7 +216,9 @@ angular
     $httpProvider.interceptors.push('authInterceptor');
     $httpProvider.defaults.withCredentials = true;
   }])
-  .run(function($rootScope, notify, $cookies){
+  .run(function($rootScope, notify, $cookies, config){
+
+    $rootScope.enableStatistics = config.enableStatistics;
 
     var username = $cookies.get('username');
     $rootScope.username = username ? username : '';
