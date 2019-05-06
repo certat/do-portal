@@ -9,9 +9,6 @@
  */
 angular.module('cpApp')
   .controller('HeaderCtrl', function ($scope, $location, Auth, $rootScope) {
-    $scope.username = function() {
-        return $rootScope.username;
-    };
     $scope.logout = function () {
       Auth.logout().then(function () {
         $rootScope.username = '';
