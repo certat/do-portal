@@ -950,7 +950,7 @@ class FodyOrganization():
                         o2na.organisation_automatic_id
                    join fody.network_automatic na
                      on o2na.network_automatic_id = na.network_automatic_id
-                      where address = :b_address
+                      where address >>= :b_address
             """
             ), {'b_address': cidr})
 

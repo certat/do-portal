@@ -49,6 +49,13 @@ def test_create_setting(client):
     assert rv.json['notification_setting']['organization_id'] == org.id
     assert rv.json['abusecs'] == ['abuse@nextlayer.at']
 
+    cidr = quote('195.245.92.0/24', safe='')
+    rv = client.get(url_for('cp.get_cp_contact_for_netblock',
+                            cidr=cidr))
+
+    assert rv.json['notification_setting']['organization_id'] == org.id
+    assert rv.json['abusecs'] == ['abuse@nextlayer.at']
+
     cidr = quote('1.2.2.3aa', safe='')
     rv = client.get(url_for('cp.get_cp_contact_for_netblock',
                             cidr=cidr))
