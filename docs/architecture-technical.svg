@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="183.13327mm"
+   height="118.07435mm"
+   viewBox="0 0 183.13327 118.07434"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
+   sodipodi:docname="do-portal-technical.svg">
+  <defs
+     id="defs2">
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker2042"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path2040" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1936"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path1934"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1836"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:collect="always">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1834" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1742"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path1740"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1654"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:collect="always">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1652" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1877"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart">
+      <path
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1875"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1777"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path1775"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1619"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:collect="always">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1617"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1467"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart"
+       inkscape:collect="always">
+      <path
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1465"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1367"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart">
+      <path
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1365"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1303"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path1301"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1257"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1255"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1217"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:collect="always">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1215"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path895"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path898"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="235.38003"
+     inkscape:cy="385.62373"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-text-baseline="true"
+     inkscape:snap-bbox="true"
+     inkscape:snap-nodes="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:window-width="3803"
+     inkscape:window-height="2096"
+     inkscape:window-x="37"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:snap-global="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid815"
+       originx="12.531718"
+       originy="-155.95115" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(12.531718,-22.974479)">
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.16581468;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect817"
+       width="25.144629"
+       height="10.682185"
+       x="42.324123"
+       y="23.057386" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="47.174736"
+       y="29.820879"
+       id="text821"><tspan
+         sodipodi:role="line"
+         id="tspan819"
+         x="47.174736"
+         y="29.820879"
+         style="stroke-width:0.26458332px">Browser</tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect823"
+       width="84.666664"
+       height="29.104166"
+       x="15.875"
+       y="45.645832" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="20.10833"
+       y="72.104164"
+       id="text827"><tspan
+         sodipodi:role="line"
+         id="tspan825"
+         x="20.10833"
+         y="72.104164"
+         style="stroke-width:0.26458332px">Frontend webserver</tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect829"
+       width="37.041668"
+       height="10.583333"
+       x="21.166666"
+       y="50.9375"
+       ry="0" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect831"
+       width="34.395832"
+       height="10.583333"
+       x="58.208336"
+       y="50.9375" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="24.28174"
+       y="57.207066"
+       id="text835"><tspan
+         sodipodi:role="line"
+         id="tspan833"
+         x="24.28174"
+         y="57.207066"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella Bold';stroke-width:0.26458332px">customer-portal</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="69.908737"
+       y="57.72353"
+       id="text839"><tspan
+         sodipodi:role="line"
+         id="tspan837"
+         x="69.908737"
+         y="57.72353"
+         style="stroke-width:0.26458332px">Proxy</tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.32829243;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect841"
+       width="182.80498"
+       height="52.894367"
+       x="-12.367572"
+       y="87.990311" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="35.996563"
+       y="137.09851"
+       id="text845"><tspan
+         sodipodi:role="line"
+         id="tspan843"
+         x="35.996563"
+         y="137.09851"
+         style="stroke-width:0.26458332px">Backend server</tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.19160561;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect847"
+       width="35.029957"
+       height="10.656394"
+       x="69.813301"
+       y="101.17196" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="72.8563"
+       y="107.44192"
+       id="text851"><tspan
+         sodipodi:role="line"
+         id="tspan849"
+         x="72.8563"
+         y="107.44192"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella Bold';stroke-width:0.26458332px">do-portal</tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.35558099;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect853"
+       width="39.641373"
+       height="10.492419"
+       x="-8.8271255"
+       y="128.35519" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-5.6012039"
+       y="134.54332"
+       id="text857"><tspan
+         sodipodi:role="line"
+         id="tspan855"
+         x="-5.6012039"
+         y="134.54332"
+         style="stroke-width:0.26458332px">fody RIPE Import</tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.19980501;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect859"
+       width="22.420805"
+       height="11.714904"
+       x="23.649286"
+       y="93.238243" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.15937239;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect861"
+       width="22.3881"
+       height="12.440414"
+       x="23.665638"
+       y="105.1693" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:3.96875px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="34.850197"
+       y="110.82753"
+       id="text865"><tspan
+         sodipodi:role="line"
+         id="tspan863"
+         x="34.850197"
+         y="110.82753"
+         style="line-height:3.96875px;text-align:center;text-anchor:middle;stroke-width:0.26458332px">RIPE</tspan><tspan
+         sodipodi:role="line"
+         x="34.850197"
+         y="114.79628"
+         style="line-height:3.96875px;text-align:center;text-anchor:middle;stroke-width:0.26458332px"
+         id="tspan883">database</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:3.96875px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="34.850197"
+       y="98.383438"
+       id="text869"><tspan
+         sodipodi:role="line"
+         x="34.850197"
+         y="98.383438"
+         style="line-height:3.96875px;text-align:center;text-anchor:middle;stroke-width:0.26458332px"
+         id="tspan871">contacts</tspan><tspan
+         sodipodi:role="line"
+         x="34.850197"
+         y="102.35219"
+         style="line-height:3.96875px;text-align:center;text-anchor:middle;stroke-width:0.26458332px"
+         id="tspan875">database</tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.19417867;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect877"
+       width="19.4041"
+       height="10.653821"
+       x="-6.1749339"
+       y="74.679504" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-1.1366955"
+       y="81.464798"
+       id="text881"><tspan
+         sodipodi:role="line"
+         id="tspan879"
+         x="-1.1366955"
+         y="81.464798"
+         style="stroke-width:0.26458332px">RIPE</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.25482053;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend)"
+       d="M 33.072917,50.937487 55.5625,33.73957 78.241071,50.843002"
+       id="path887"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.25608662px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1217)"
+       d="m 75.40625,61.52083 17.197916,39.6875"
+       id="path889"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.26206282px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1777)"
+       d="M 5.2916664,85.33333 2.645833,127.66666"
+       id="path893"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.26076305px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#marker1467);marker-end:url(#marker1303)"
+       d="m 46.532687,101.15265 23.164862,5.19829 -23.395466,6.76362"
+       id="path1559"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.18799369px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1619)"
+       d="m 13.221166,128.37492 19.425993,-10.7538"
+       id="path1609"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-118.66856"
+       y="9.4893322"
+       id="text2463"
+       transform="rotate(-86.548718)"><tspan
+         sodipodi:role="line"
+         id="tspan2461"
+         x="-118.66856"
+         y="9.4893322"
+         style="stroke-width:0.26458332px">fetches via API</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="text2467"
+       y="117.20776"
+       x="-50.332382"
+       transform="rotate(-30.002498)"><tspan
+         sodipodi:role="line"
+         id="tspan2465"
+         x="-50.332382"
+         y="117.20776"
+         style="stroke-width:0.26458332px">writes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:3.96875px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="72.593864"
+       y="88.401138"
+       id="text2471"
+       transform="rotate(12.210787)"><tspan
+         sodipodi:role="line"
+         id="tspan2469"
+         x="72.593864"
+         y="88.401138"
+         style="line-height:3.96875px;stroke-width:0.26458332px">reads &amp;</tspan><tspan
+         sodipodi:role="line"
+         x="72.593864"
+         y="92.369888"
+         style="line-height:3.96875px;stroke-width:0.26458332px"
+         id="tspan2531">writes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="19.157078"
+       y="125.73717"
+       id="text2475"
+       transform="rotate(-16.91103)"><tspan
+         sodipodi:role="line"
+         id="tspan2473"
+         x="19.157078"
+         y="125.73717"
+         style="stroke-width:0.26458332px">reads</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:3.96875px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="45.374653"
+       y="44.238235"
+       id="text2479"><tspan
+         sodipodi:role="line"
+         id="tspan2477"
+         x="45.374653"
+         y="44.238235"
+         style="line-height:3.96875px;stroke-width:0.26458332px">connects to</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="50.380306"
+       y="41.223061"
+       id="text2483"><tspan
+         sodipodi:role="line"
+         id="tspan2481"
+         x="50.380306"
+         y="52.179794"
+         style="stroke-width:0.26458332px" /></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.24393447;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1583"
+       width="41.69096"
+       height="10.604066"
+       x="72.079872"
+       y="127.64594" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="135.27946"
+       y="131.59941"
+       id="text1587"><tspan
+         sodipodi:role="line"
+         id="tspan1585"
+         x="135.27946"
+         y="131.59941"
+         style="stroke-width:0.26458332px">Grafana</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="133.48209"
+       y="127.44168"
+       id="text1591"><tspan
+         sodipodi:role="line"
+         id="tspan1589"
+         x="133.48209"
+         y="138.39841"
+         style="stroke-width:0.26458332px" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:3.96875px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="153.49501"
+       y="103.54266"
+       id="text1595"><tspan
+         sodipodi:role="line"
+         id="tspan1593"
+         x="153.49501"
+         y="103.54266"
+         style="line-height:3.96875px;text-align:center;text-anchor:middle;stroke-width:0.26458332px">Aggregated</tspan><tspan
+         sodipodi:role="line"
+         x="153.49501"
+         y="107.51141"
+         style="line-height:3.96875px;text-align:center;text-anchor:middle;stroke-width:0.26458332px"
+         id="tspan1597">EventDB</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:3.96875px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="129.94313"
+       y="60.970356"
+       id="text1601"><tspan
+         sodipodi:role="line"
+         id="tspan1599"
+         x="129.94313"
+         y="60.970356"
+         style="line-height:3.96875px;text-align:center;text-anchor:middle;stroke-width:0.26458332px">IntelMQ</tspan><tspan
+         sodipodi:role="line"
+         x="129.94313"
+         y="64.939102"
+         style="line-height:3.96875px;text-align:center;text-anchor:middle;stroke-width:0.26458332px"
+         id="tspan1634">EventDB</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="129.97031"
+       y="-79.149925"
+       id="text1605"
+       transform="rotate(58.927525)"
+       inkscape:transform-center-x="-0.41409472"
+       inkscape:transform-center-y="0.19491823"><tspan
+         sodipodi:role="line"
+         id="tspan1603"
+         x="129.97031"
+         y="-79.149925"
+         style="stroke-width:0.26458332px">aggregates</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="73.749443"
+       y="134.44656"
+       id="text1609"><tspan
+         sodipodi:role="line"
+         id="tspan1607"
+         x="73.749443"
+         y="134.44656"
+         style="stroke-width:0.26458332px">Eventdownload files</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-41.388512"
+       y="144.66791"
+       id="text1613"
+       transform="rotate(-70.334163)"><tspan
+         sodipodi:role="line"
+         id="tspan1611"
+         x="-41.388512"
+         y="144.66791"
+         style="stroke-width:0.26458332px">creates</tspan></text>
+    <rect
+       y="124.94913"
+       x="130.14076"
+       height="10.655037"
+       width="25.963408"
+       id="rect1624"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.19296314;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.19296314;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1626"
+       width="25.963408"
+       height="10.655037"
+       x="130.14076"
+       y="124.94913" />
+    <rect
+       y="96.034782"
+       x="140.49826"
+       height="15.995769"
+       width="25.920139"
+       id="rect1628"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.23623119;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect
+       y="53.462399"
+       x="116.95486"
+       height="15.995932"
+       width="25.920137"
+       id="rect1630"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2362324;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.26499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.265, 0.265;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 116.41667,87.979162 V 140.89583"
+       id="path1632"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1654)"
+       d="m 91.28125,111.79166 -3.968751,15.875"
+       id="path1636"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1742)"
+       d="M 100.54167,111.79166 142.875,125.02083"
+       id="path1638"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1936)"
+       d="m 150.86261,112.02552 -5.34178,12.99531"
+       id="path1640"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker2042)"
+       d="m 132.29167,69.458329 15.875,26.458333"
+       id="path1642"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1836)"
+       d="M 129.64583,69.458329 111.125,127.66666"
+       id="path1644"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="148.91447"
+       y="74.794533"
+       id="text2358"
+       transform="rotate(17.410582)"><tspan
+         sodipodi:role="line"
+         id="tspan2356"
+         x="148.91447"
+         y="74.794533"
+         style="stroke-width:0.26458332px">proxies</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-42.66264"
+       y="189.3765"
+       id="text2362"
+       transform="rotate(-63.530809)"><tspan
+         sodipodi:role="line"
+         id="tspan2360"
+         x="-42.66264"
+         y="189.3765"
+         style="stroke-width:0.26458332px">reads</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-94.763008"
+       y="118.48312"
+       id="text4622"
+       transform="rotate(-72.64452)"><tspan
+         sodipodi:role="line"
+         id="tspan4620"
+         x="-94.763008"
+         y="118.48312"
+         style="stroke-width:0.26458332px">proxies</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="50.543888"
+       y="60.333431"
+       id="text4626"><tspan
+         sodipodi:role="line"
+         id="tspan4624"
+         x="50.543888"
+         y="60.333431"
+         style="stroke-width:0.26458332px">static</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="90.433868"
+       y="110.31283"
+       id="text4630"><tspan
+         sodipodi:role="line"
+         id="tspan4628"
+         x="90.433868"
+         y="110.31283"
+         style="stroke-width:0.26458332px">Flask App</tspan></text>
+    <text
+       id="text1022"
+       y="-42.992386"
+       x="106.12859"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"
+       transform="rotate(65.16194)"><tspan
+         style="stroke-width:0.26458332px"
+         y="-42.992386"
+         x="106.12859"
+         id="tspan1020"
+         sodipodi:role="line">API</tspan></text>
+    <text
+       transform="rotate(37.909471)"
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:20px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="75.635902"
+       y="-8.993886"
+       id="text1026"><tspan
+         sodipodi:role="line"
+         id="tspan1024"
+         x="75.635902"
+         y="-8.993886"
+         style="stroke-width:0.26458332px">API</tspan></text>
+  </g>
+</svg>

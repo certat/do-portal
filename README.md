@@ -3,6 +3,8 @@
 This is a web-based application for managing contact information with network information, self-administration and statistics integration.
 It is used by CERT.at/GovCERT.at/Austrian Energy CERT to maintain contact information for customers and network owners
 
+![Overview of the portal's users](docs/architecture-users.svg)
+
 ## Features
 
 - organization hierarchy
@@ -12,6 +14,14 @@ It is used by CERT.at/GovCERT.at/Austrian Energy CERT to maintain contact inform
 - RIPE-handles can be assigned to organizations, linking Autonomous Systems (AS) and Network blocks (CIDRs) to organizations and (abuse) contacts
 - Grafana integration to show statistics on the data from a EventDB for the organization's linked network objects
 - Data per contact: PGP key, S/MIME certificate etc.
+
+## Architecture and Software
+
+The portal has two disjunct parts: A frontend and a backend which is queried via a RESTful API.
+The Javascript based frontend uses Angular and bootstrap and and is served by static files from the server, running in the browser of the user.
+The backend is a Flask-based web application using Python, Flask and SQLAlchemy. PostgreSQL is used as database backend.
+
+![Overview of the portal's technical components](docs/architecture-technical.svg)
 
 ## Screenshots
 
@@ -35,8 +45,15 @@ Grafana is integrated to provide statistics for the organizations' events
 
 https://grafana.com/
 
+### Fody
+
+Fody is an interface for IntelMQ related tools. The do-portal uses it's RIPE-Import feature.
+
+http://github.com/Intevation/intelmq-fody/
+
 # Installation
 
+```
 apt-get install -y \
    vim less tree ack \
    build-essential git \
@@ -52,30 +69,31 @@ useradd --create-home --home-dir /home/cert --user-group --shell /bin/bash cert
 su - cert
 
 git clone https://github.com/certat/do-portal.git
+```
 
-// backend and frontend config needs to be in sync.
-// see frontend/nginx.conf, backend/config.cfg.docker and frontend/config/envs/docker.json
+Backend and frontend configuration needs to be in sync.
+See `frontend/nginx.conf`, `backend/config.cfg.docker` and `frontend/config/envs/docker.json`.
 
-## backend
+## Backend
 
+```bash
 cd /home/cert/do-portal/backend
+```
 
-// create config file and save as backend/config.cfg
+Create config file and save as `backend/config.cfg`
 
+```bash
 export DO_LOCAL_CONFIG=/home/cert/do-portal/backend/config.cfg
-
 python3 -m venv ~/do-portal
-
 source ./bin/activate
-
 pip install -U pip setuptools
-
 pip install -r requirements.txt
-
 mkdir logs
+```
 
-## database
+## Database
 
+```bash
 createdb do_portal;
 mv misc/migrations misc/tmp-migrations
 python manage.py db init;
@@ -91,50 +109,58 @@ psql -U do_portal -c "CREATE SCHEMA fody";
 psql -U do_portal -d do_portal --echo-errors --file=install/contactdb_schema_only.pgdump
 
 python manage.py run -h 0.0.0.0 -p 8081
+```
 
-## frontend
+## Frontend
 
+```bash
 cd /home/cert/do-portal/frontend
+```
 
-// create config file and save as config/envs/production.json
-
+Create configuration file and save it as `config/envs/production.json`
+```bash
 npm install
-
 PATH=$(npm bin):$PATH bower install
-
 PATH=$(npm bin):$PATH grunt
+```
+Create the nginx configuration and save it as `/etc/nginx/sites-available/portal-frontend`.
 
-//as root
-
-// create nginx config and save as /etc/nginx/sites-available/portal-frontend
-
+```bash
 ln -s /etc/nginx/sites-available/portal-frontend /etc/nginx/sites-enabled/portal-frontend
-
-/etc/init.d/nginx restart
+systemctl restart nginx
+```
 
 # Docker
 
-## requirements
+An installation based on docker is also possible
+
+## Requirements
  1) install docker
  2) install docker-compose
 
-## installation
+## Installation
+```bash
 git clone https://github.com/certat/do-portal.git
-
+```
 ## run portal
+```bash
 docker-compose up
-
+```
 ## edit /etc/hosts file
 
 add the following lines
 
+```
    127.0.0.1       epplication_app
    127.0.0.1       portal-frontend
    127.0.0.1       portal-backend
+```
 
-this is necessary so that the reverse proxy running inside the docker network
+This is necessary that the reverse proxy running inside the docker network
 sends your request to the correct container.
 
-## run ui-tests
+## Run ui-tests
+```bash
 cd epplication
 bash test.sh
+```
