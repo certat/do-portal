@@ -25,7 +25,17 @@ The backend is a Flask-based web application using Python, Flask and SQLAlchemy.
 
 ## Screenshots
 
-TODO
+### Organization Edit Page
+![organization edit page](/screenshot1.png?raw=true "")
+
+### Organization List Page
+![organization list page](/screenshot2.png?raw=true "")
+
+### Organization Details Page
+![organization details page](/screenshot3.png?raw=true "")
+
+### Contact Create Page
+![contact create page](/screenshot4.png?raw=true "")
 
 ## Related software / tools
 
