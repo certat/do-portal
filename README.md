@@ -3,7 +3,7 @@
 This is a web-based application for managing contact information with network information, self-administration and statistics integration.
 It is used by CERT.at/GovCERT.at/Austrian Energy CERT to maintain contact information for customers and network owners
 
-![Overview of the portal's users](docs/architecture-users.svg)
+![Overview of the portal's users](docs/images/architecture-users.svg)
 
 ## Features
 
@@ -20,12 +20,23 @@ It is used by CERT.at/GovCERT.at/Austrian Energy CERT to maintain contact inform
 The portal has two disjunct parts: A frontend and a backend which is queried via a RESTful API.
 The Javascript based frontend uses Angular and bootstrap and and is served by static files from the server, running in the browser of the user.
 The backend is a Flask-based web application using Python, Flask and SQLAlchemy. PostgreSQL is used as database backend.
+The integrated [stats-portal](https://github.com/certtools/stats-portal) uses Grafana to visualize the data stored in a PostgreSQL database.
 
-![Overview of the portal's technical components](docs/architecture-technical.svg)
+![Overview of the portal's technical components](docs/images/architecture-technical.svg)
 
 ## Screenshots
 
-TODO
+### Organization Edit Page
+![organization edit page](docs/images/screenshot1.png?raw=true "")
+
+### Organization List Page
+![organization list page](docs/images/screenshot2.png?raw=true "")
+
+### Organization Details Page
+![organization details page](docs/images/screenshot3.png?raw=true "")
+
+### Contact Create Page
+![contact create page](docs/images/screenshot4.png?raw=true "")
 
 ## Related software / tools
 
@@ -39,11 +50,11 @@ https://github.com/certtools/intelmq/
 
 A database feeded by IntelMQ is the data source for the event download and for the statistics
 
-### Grafana
+### Stats Portal
 
-Grafana is integrated to provide statistics for the organizations' events
+The stats portal is integrated in this portal and shows statistics for the orgranization's related network objects.
 
-https://grafana.com/
+https://github.com/certtools/stats-portal/
 
 ### Fody
 
@@ -51,116 +62,12 @@ Fody is an interface for IntelMQ related tools. The do-portal uses it's RIPE-Imp
 
 http://github.com/Intevation/intelmq-fody/
 
-# Installation
+# Documentation
 
-```
-apt-get install -y \
-   vim less tree ack \
-   build-essential git \
-   libssl-dev libxml2 libxml2-dev \
-   ssdeep exiftool libfuzzy-dev \
-   libffi-dev p7zip-full libncurses-dev \
-   libxslt-dev lib32z1-dev libpq-dev \
-   python3-venv python3-dev python3-pip \
-   postgresql-client-9.6 nginx
+All documentation can be found in the [docs](docs/) directory.
 
-useradd --create-home --home-dir /home/cert --user-group --shell /bin/bash cert
+# Funded by
 
-su - cert
+This project was partially funded by the CEF framework
 
-git clone https://github.com/certat/do-portal.git
-```
-
-Backend and frontend configuration needs to be in sync.
-See `frontend/nginx.conf`, `backend/config.cfg.docker` and `frontend/config/envs/docker.json`.
-
-## Backend
-
-```bash
-cd /home/cert/do-portal/backend
-```
-
-Create config file and save as `backend/config.cfg`
-
-```bash
-export DO_LOCAL_CONFIG=/home/cert/do-portal/backend/config.cfg
-python3 -m venv ~/do-portal
-source ./bin/activate
-pip install -U pip setuptools
-pip install -r requirements.txt
-mkdir logs
-```
-
-## Database
-
-```bash
-createdb do_portal;
-mv misc/migrations misc/tmp-migrations
-python manage.py db init;
-python manage.py db migrate;
-python manage.py db upgrade;
-python manage.py initializedb;
-python manage.py insertmasteruser;
-python demodata.py addyaml
-rm -rf misc/migrations
-mv misc/tmp-migrations misc/migrations
-
-psql -U do_portal -c "CREATE SCHEMA fody";
-psql -U do_portal -d do_portal --echo-errors --file=install/contactdb_schema_only.pgdump
-
-python manage.py run -h 0.0.0.0 -p 8081
-```
-
-## Frontend
-
-```bash
-cd /home/cert/do-portal/frontend
-```
-
-Create configuration file and save it as `config/envs/production.json`
-```bash
-npm install
-PATH=$(npm bin):$PATH bower install
-PATH=$(npm bin):$PATH grunt
-```
-Create the nginx configuration and save it as `/etc/nginx/sites-available/portal-frontend`.
-
-```bash
-ln -s /etc/nginx/sites-available/portal-frontend /etc/nginx/sites-enabled/portal-frontend
-systemctl restart nginx
-```
-
-# Docker
-
-An installation based on docker is also possible
-
-## Requirements
- 1) install docker
- 2) install docker-compose
-
-## Installation
-```bash
-git clone https://github.com/certat/do-portal.git
-```
-## run portal
-```bash
-docker-compose up
-```
-## edit /etc/hosts file
-
-add the following lines
-
-```
-   127.0.0.1       epplication_app
-   127.0.0.1       portal-frontend
-   127.0.0.1       portal-backend
-```
-
-This is necessary that the reverse proxy running inside the docker network
-sends your request to the correct container.
-
-## Run ui-tests
-```bash
-cd epplication
-bash test.sh
-```
+![Co-financed by the Connecting Europe Facility of the European Union](docs/images/cef_logo.png)
