@@ -40,6 +40,7 @@ mkdir logs
 
 ## Database
 
+### Install
 ```bash
 createdb do_portal;
 mv misc/migrations misc/tmp-migrations
@@ -56,7 +57,14 @@ psql -U do_portal -c "CREATE SCHEMA fody";
 psql -U do_portal -d do_portal --echo-errors --file=install/contactdb_schema_only.pgdump
 
 python manage.py run -h 0.0.0.0 -p 8081
+
 ```
+
+### Upgrade
+python manage.py db migrate;
+python manage.py db upgrade;
+
+if an error occurs the table "alembic_version" in the database has to upgraded to the correct version
 
 ## Frontend
 
