@@ -38,7 +38,7 @@ def set_cp_settings(ripe_org_hdl, org_id):
 
     try:
         forg_x_org = FodyOrg_X_Organization.query.filter_by \
-             (organization_id=org_id, _ripe_org_hdl=ripe_org_hdl).one();
+             (organization_id=org_id, _ripe_org_hdl=ripe_org_hdl, deleted=0).one();
     except NoResultFound:
         abort(404)
 

@@ -558,7 +558,7 @@ class User(UserMixin, Model, SerializerMixin):
                    select * from sub_orgs where deleted = 0 limit :b_limit offset :b_offset
                 """), {'b_parent_org_id': org_id, 'b_limit': limit, 'b_offset': offset});
 
-        self._organizations_list = []
+        # self._organizations_list = []
 
         for r in results.fetchall():
             h = {}
@@ -576,7 +576,7 @@ class User(UserMixin, Model, SerializerMixin):
                    select * from sub_orgs limit :b_limit offset :b_offset
                 """), {'b_parent_org_id': org_id, 'b_limit': limit, 'b_offset': offset});
 
-        self._org_ids = []
+        # self._org_ids = []
         for row in results:
             self._org_ids.append(row[0])
 
@@ -586,20 +586,17 @@ class User(UserMixin, Model, SerializerMixin):
         """ self MUST be a logged in admin, we find all nodes (and subnodes)
             where the user is admin an return ALL memeberships of those nodes
             in the org tree """
-        # Or = self.user_memberships.membership_role.filter(MembershipRole.name == 'OrgAdmin' )
+        self._organizations_list = []
+        self._org_ids = []
         # there must be a better way to write this
         admin_role = self.get_role_by_name('OrgAdmin')
-        # orgs_admin = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).first() #.filter(MembershipRole.name == 'OrgAdmin' )
-#        orgs_admin = OrganizationMembership.query.filter(OrganizationMembership.use = self, membership_role_id = admin_role.id).first()
-
-
-#        orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).all()
-        orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id, deleted = 0).all()
+        orgs_admins = OrganizationMembership.query.filter_by(
+            user_id = self.id, membership_role_id = admin_role.id, deleted = 0).all()
 
         if (not orgs_admins):
            return []
 
-        self._orgs = [orgs_admins]
+        self._orgs = orgs_admins
         self._org_ids = [org.organization.id for org in orgs_admins]
 
         # find all orgs where the org.id is the parent_org_id recursivly
@@ -612,6 +609,8 @@ class User(UserMixin, Model, SerializerMixin):
            self._org_tree(oa.organization_id)
         return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids)).filter(OrganizationMembership.deleted == 0)
 
+
+
     def get_organizations(self, limit = 1000, offset = 0):
         """returns a list of Organization records"""
         self.get_organization_memberships()
@@ -620,6 +619,7 @@ class User(UserMixin, Model, SerializerMixin):
         return Organization.query.filter(Organization.id.in_(self._org_ids)).limit(limit).offset(offset)
 
     def get_organizations_raw(self, limit = 5, offset = 0):
+        # import pdb; pdb.set_trace()
         """returns a list of Organization records"""
         self.get_organization_memberships()
         if not self._org_ids:
@@ -1824,6 +1824,7 @@ class OrganizationMembership(Model, SerializerMixin):
     coc = deferred(db.Column(db.Text))
     coc_filename = db.Column(db.String(255))
     _sms_alerting = db.Column('sms_alerting', db.Integer, default=0)
+    db.UniqueConstraint('membership_role_id', 'user_id', 'organization_id', name='uk_membership')
 
     def mark_as_deleted(self, delete_last_membership = False):
         mc = self.user.user_memberships_dyn.filter_by(deleted = 0).count()

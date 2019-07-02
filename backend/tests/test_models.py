@@ -176,7 +176,7 @@ def test_login():
                           'energyorg-gas'], \
         'correct list of orgs for energyorg'
 
-    '''
+'''
 def test_organizations_raw():
     (admin, auth) = User.authenticate('admin@energyorg.at', 'blaBla12$')
     assert auth is True
@@ -188,8 +188,6 @@ def test_organizations_raw():
                           'energyorg-electricity-transmission',
                           'energyorg-gas'], \
         'correct list of orgs for energyorg'
-    '''
-
 
 
 def test_delete_membership():
@@ -197,7 +195,7 @@ def test_delete_membership():
     with pytest.raises(AttributeError):
         um = u.user_memberships[0]
         um.mark_as_deleted()
-
+'''
 
 def test_update_incorrect_data():
     u = User.query.filter_by(name=App.user.name).first()
@@ -233,7 +231,7 @@ def test_delete_user():
         assert um.deleted == 1, \
             'All memeberships also have to be marked as deleted'
         assert um.ts_deleted <= datetime.datetime.utcnow()
-    assert i == 1, 'exactly one membership'
+    assert i == 2, 'exactly one membership'
 
 
 # https://domainis.univie.ac.at/mantis/view.php?id=4071
@@ -243,8 +241,8 @@ def test_read_org_with_more_admins():
     # Organization.query.get_or_404(org_id)
     orgs = admin.get_organizations()
     assert [o.full_name for o in orgs] == \
-        ['eorg-electricity'], 'correct orgs'
-    assert len([o.id for o in orgs]) == 1, 'OrgAdmin for 1  orgs'
+        ['eorg-electricity', 'eorg-gas'], 'correct orgs'
+    assert len([o.id for o in orgs]) == 2, 'OrgAdmin for 1  orgs'
 
 def test_delete_organization_with_childs():
     eorg = Organization.query.filter_by(abbreviation='eorg').one()
