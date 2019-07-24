@@ -89,7 +89,8 @@ angular.module('cpApp')
                      mobile: m.mobile,
                      street: m.street,
                      zip: m.zip,
-                     city: m.city
+                     city: m.city,
+                     comment: m.comment
                     }
                   );
                 });
@@ -142,6 +143,7 @@ angular.module('cpApp')
           { field: 'street' },
           { field: 'zip' },
           { field: 'city' },
+          { field: 'comment', visible: false },
         ],
         onRegisterApi: function(gridApi) {
           $scope.gridApi = gridApi;
