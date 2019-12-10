@@ -98,7 +98,7 @@ docker-compose up
 add the following lines
 
 ```
-   127.0.0.1       epplication_app
+   127.0.0.1       epplication-app
    127.0.0.1       portal-frontend
    127.0.0.1       portal-backend
 ```
