@@ -8,7 +8,7 @@ RUN    apt-get update \
        ssdeep exiftool libfuzzy-dev \
        libffi-dev p7zip-full libncurses-dev \
        libxslt-dev lib32z1-dev libpq-dev \
-       python3-venv python3-dev python3-pip \
+       python3-venv python3-dev python3-pip python3-setuptools \
        postgresql-client-9.6 \
     && rm -rf /var/lib/apt/lists/*
 
@@ -27,7 +27,7 @@ ENV DO_LOCAL_CONFIG /home/cert/do-portal/config.cfg
 WORKDIR /home/cert/do-portal
 RUN python3 -m venv ~/do-portal
 
-RUN /bin/bash -c "source ./bin/activate && pip install -U pip setuptools && pip install -r requirements.txt"
+RUN /bin/bash -c "source ./bin/activate && pip install -r requirements.txt"
 
 COPY --chown=cert:cert . /home/cert/do-portal
 RUN mkdir logs
