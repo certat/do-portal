@@ -19,12 +19,22 @@ services:
             - VIRTUAL_HOST=portal-backend
         depends_on:
             - portal-db
+        volumes:
+            - type: bind
+              source: ./backend
+              target: /home/cert/do-portal/
 
     portal-frontend:
         container_name: portal-frontend
         build: ./frontend
         environment:
             - VIRTUAL_HOST=portal-frontend
+        depends_on:
+            - portal-backend
+        volumes:
+            - type: bind
+              source: ./frontend
+              target: /home/cert/customer-portal/
 
     epplication-db:
         image: postgres:9.6-alpine
