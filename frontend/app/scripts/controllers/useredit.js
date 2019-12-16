@@ -107,12 +107,6 @@ angular.module('cpApp')
       _handle_upload_field(m,'coc');
       _handle_upload_field(m,'smime');
 
-      // sms alert mobile validation
-      if (m.sms_alerting && !m.mobile) {
-        notify({classes:'notify-success', message: 'mobile number is required if SMS Alerting is activated.'});
-        return;
-      }
-
       if(m.id) {
         emptyToNull(m);
         Membership.update({'id':m.id}, m, function(resp) {
