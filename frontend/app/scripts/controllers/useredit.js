@@ -123,6 +123,7 @@ angular.module('cpApp')
 
     $scope.create_user = function(){
       _handle_upload_field($scope.user,'picture');
+      if ($scope.user.password === '') { delete $scope.user.password; }
       var data = { user: $scope.user, organization_membership: $scope.memberships[0] };
       User.create({}, data, function(resp){
         $state.go('user_edit', {id: resp.user.id});
