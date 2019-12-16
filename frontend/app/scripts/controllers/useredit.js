@@ -53,7 +53,7 @@ angular.module('cpApp')
     var loadOrgs = function(){
       return Organization.query_list().$promise
                 .then(function(resp){
-                    return resp.organizations;
+                    return resp.organizations.sort(function(a,b){return a.abbreviation > b.abbreviation;});
                   }, function(){});
     };
 
@@ -82,7 +82,7 @@ angular.module('cpApp')
             .then( function( result ) {
               $scope.user          = result.shift();
               $scope.roles         = _array2hash(result.shift());
-              $scope.organizations = _array2hash(result.shift());
+              $scope.organizations = result.shift();
               $scope.countries     = result.shift();
               $scope.memberships   = result.shift();
             }

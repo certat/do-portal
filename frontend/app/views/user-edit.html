@@ -112,7 +112,7 @@
         <div class="col-xs-2">Organization *</div>
         <div class="col-xs-10">
           <select convert-to-number class="form-control input-sm" required positive-integer ng-model="m.organization_id">
-            <option ng-repeat="(id, organization) in organizations" value="{{id}}">{{organization.abbreviation}}</option>
+            <option ng-repeat="o in organizations" value="{{o.id}}">{{o.abbreviation}}</option>
           </select>
         </div>
       </div>
