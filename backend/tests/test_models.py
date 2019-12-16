@@ -32,7 +32,6 @@ def test_user_memberships():
         assert uo.city == 'Wien'
         assert uo.street == 'Karlsplatz 1'
         assert uo.mobile == "+3412312312"
-        assert uo.sms_alerting == 1
         assert uo.organization.full_name == 'Energy CERT Austria'
         assert uo.country.name == 'Austria', 'Country is an object'
         cc = 0

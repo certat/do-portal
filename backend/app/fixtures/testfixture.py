@@ -87,8 +87,6 @@ class testdata:
              user['phone'] = '+12345678'
          if 'mobile' not in user:
              user['mobile'] = '+33456788'
-         if 'sms_alerting' not in user:
-             user['sms_alerting'] = 0
 
          oxu = OrganizationMembership(
             email =  user['email'],
@@ -102,7 +100,6 @@ class testdata:
             organization = org,
             user = u,
             membership_role = role,
-            sms_alerting = user['sms_alerting'],
          )
          db.session.commit()
 

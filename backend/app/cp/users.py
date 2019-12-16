@@ -167,7 +167,6 @@ def get_cp_users_memberships(user_id):
               "mobile": "+436649650926",
               "organization_id": 3,
               "phone": null,
-              "sms_alerting": null,
               "street": "Karlsplatz 1/2/9",
               "user_id": 58,
               "zip": "1010"
@@ -179,7 +178,6 @@ def get_cp_users_memberships(user_id):
               "mobile": "+436649650922",
               "organization_id": 30,
               "phone": null,
-              "sms_alerting": null,
               "user_id": 58
             },
             {
@@ -189,7 +187,6 @@ def get_cp_users_memberships(user_id):
               "mobile": "+436649650922",
               "organization_id": 30,
               "phone": "+436649650922",
-              "sms_alerting": null,
               "user_id": 58
             }
           ]

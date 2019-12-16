@@ -1793,7 +1793,7 @@ class OrganizationMembership(Model, SerializerMixin):
     __public__ = ('id', 'user_id', 'organization_id', 'street', 'zip', 'city',
                   'country', 'comment', 'email', 'phone', 'mobile', 'membership_role_id',
                   'pgp_key_id', 'pgp_key_fingerprint', 'pgp_key', 'smime', 'country_id',
-                  'coc', 'coc_filename', 'smime_filename', 'sms_alerting', )
+                  'coc', 'coc_filename', 'smime_filename', )
 
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
@@ -1823,7 +1823,6 @@ class OrganizationMembership(Model, SerializerMixin):
     smime_filename = db.Column(db.String(255))
     coc = deferred(db.Column(db.Text))
     coc_filename = db.Column(db.String(255))
-    _sms_alerting = db.Column('sms_alerting', db.Integer, default=0)
 
     def mark_as_deleted(self, delete_last_membership = False):
         mc = self.user.user_memberships_dyn.filter_by(deleted = 0).count()
@@ -1831,16 +1830,6 @@ class OrganizationMembership(Model, SerializerMixin):
             raise AttributeError('Last membership may not be deleted')
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
-
-    @property
-    def sms_alerting(self):
-        return self._sms_alerting
-
-    @sms_alerting.setter
-    def sms_alerting(self, sms_alerting):
-        # if sms_alerting == 1 and not self._mobile:
-        #    raise AttributeError('if sms_alerting is set mobile number also has to be set')
-        self._sms_alerting = sms_alerting
 
     @property
     def email(self):
