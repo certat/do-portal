@@ -69,6 +69,7 @@ if [ $select_fody_table = 'f' ]; then
   PGPASSWORD=do_portal psql -U do_portal -h portal-db -d do_portal --echo-errors --file=install/contactdb_schema_only.pgdump
 fi
 
+export FLASK_DEBUG=1
 source ./bin/activate && python manage.py run -h 0.0.0.0 -p 8081
 
 } >&2 # redirect stout to stderr
