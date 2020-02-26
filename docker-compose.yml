@@ -11,6 +11,7 @@ services:
             POSTGRES_DB: do_portal
         volumes:
             - portal_db_data:/var/lib/postgresql/data
+            - ./docker_initdb.sh:/docker-entrypoint-initdb.d/docker_initdb.sh
 
     portal-backend:
         container_name: portal-backend
