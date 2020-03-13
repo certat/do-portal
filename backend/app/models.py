@@ -9,7 +9,7 @@ import yaml
 from urllib.error import HTTPError
 import onetimepass
 from app import db, login_manager, config
-from sqlalchemy import desc, event, text
+from sqlalchemy import desc, event, text, or_
 from sqlalchemy.orm import aliased, deferred
 from sqlalchemy.dialects import postgres
 from flask_sqlalchemy import BaseQuery
@@ -259,10 +259,13 @@ class MailmanMember(MailmanModel):
 class User(UserMixin, Model, SerializerMixin):
     """User model"""
     __tablename__ = 'users'
-    __public__ = ('id', 'name', 'api_key', 'otp_enabled', 'picture', 'birthdate', 'title', 'origin', 'email', 'picture_filename')
+    __public__ = ('id', 'name', 'api_key', 'otp_enabled', 'picture', 'birthdate', \
+                  'title', 'origin', 'email', 'picture_filename', 'alias_user_id')
+
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
+    alias_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     name = db.Column(db.String(255), nullable=False)
     _password = db.Column('password', db.String(255), nullable=False, default=binascii.hexlify(os.urandom(12)).decode())
     _email = db.Column('email', db.String(255), unique=True)
@@ -281,6 +284,8 @@ class User(UserMixin, Model, SerializerMixin):
     _orgs = []
     _org_ids = []
     _organizations_list = []
+
+    aliased_users = db.relationship('User')
 
     user_memberships = db.relationship(
         'OrganizationMembership',
@@ -467,6 +472,13 @@ class User(UserMixin, Model, SerializerMixin):
             db.session.commit()
             return user
 
+    def create_alias_user(self, organization_id = None):
+        user = User(name = '#' + self.name , password = 'XXXX%%123xx',
+                    otp_enabled = False, alias_user_id = self.id)
+        db.session.add(user)
+        # db.session.commit()
+        return user
+
     def generate_api_key(self):
         rand = self.random_str()
         return hashlib.sha256(rand.encode()).hexdigest()
@@ -592,7 +604,6 @@ class User(UserMixin, Model, SerializerMixin):
         # orgs_admin = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).first() #.filter(MembershipRole.name == 'OrgAdmin' )
 #        orgs_admin = OrganizationMembership.query.filter(OrganizationMembership.use = self, membership_role_id = admin_role.id).first()
 
-
 #        orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).all()
         orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id, deleted = 0).all()
 
@@ -610,7 +621,10 @@ class User(UserMixin, Model, SerializerMixin):
         for oa in orgs_admins:
            # self._org_tree_iterator(oa.organization_id)
            self._org_tree(oa.organization_id)
-        return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids)).filter(OrganizationMembership.deleted == 0)
+
+        oms = OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids)) \
+                                          .filter(OrganizationMembership.deleted == 0)
+        return oms
 
     def get_organizations(self, limit = 1000, offset = 0):
         """returns a list of Organization records"""
@@ -635,8 +649,9 @@ class User(UserMixin, Model, SerializerMixin):
         for om in oms:
             if om.user.id not in ud:
                 if om.user.deleted != 1:
-                    users.append(om.user)
+                    users.append(om.user)                
                 ud[om.user.id] = 1
+
         return users
 
     def get_memberships(self, membership_id = None):
@@ -1793,7 +1808,7 @@ class OrganizationMembership(Model, SerializerMixin):
     __public__ = ('id', 'user_id', 'organization_id', 'street', 'zip', 'city',
                   'country', 'comment', 'email', 'phone', 'mobile', 'membership_role_id',
                   'pgp_key_id', 'pgp_key_fingerprint', 'pgp_key', 'smime', 'country_id',
-                  'coc', 'coc_filename', 'smime_filename', )
+                  'coc', 'coc_filename', 'smime_filename')
 
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)

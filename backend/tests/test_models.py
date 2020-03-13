@@ -143,6 +143,28 @@ def test_create_user_with_duplicate_email():
     with pytest.raises(AttributeError):
         newuser.email = 'test@bla.com'
 
+def test_create_alias_user():
+    u = User.query.filter_by(name='eorgmaster').first()
+    alias_user = u.create_alias_user()
+    print("\n" + alias_user.name + "\n")
+    role = MembershipRole.query.filter_by(name='CISO').first()
+    energy_org = Organization.query.filter_by(abbreviation='energyorg').one()
+    oxu = OrganizationMembership(
+        phone='+123214711',
+        mobile='+12321312',
+        email='asda@ddasd.at',
+        organization=energy_org,
+        user=alias_user,
+        membership_role=role,
+        pgp_key_id='asdasdasd',
+        pgp_key_fingerprint='ADFEFEF123123',
+        pgp_key='asdasasfasfasf',
+        smime='asdasdasd',
+        coc=b'asasda')
+    db.session.add(oxu)
+    db.session.commit()
+
+
 
 def test_login():
     # energyorgciso is not allowed to login
@@ -164,7 +186,7 @@ def test_login():
     assert auth is True
 
     # admin@energyorg has 4 contacts via organization_memberships
-    assert admin.get_organization_memberships().count() == 4
+    assert admin.get_organization_memberships().count() == 5
 
     # full_names =
     #     list(map(lambda org: org.full_name, admin.get_organizations()))
@@ -225,7 +247,7 @@ def test_delete_user():
     assert App.user.ts_deleted
     db.session.commit()
     admin = User.query.filter_by(name="EnergyOrg Admin").first()
-    assert len(admin.get_users()) == 3, 'EnergyOrg Admin now has 3 users'
+    assert len(admin.get_users()) == 4, 'EnergyOrg Admin now has 3 users'
     i = 0
     for um in App.user.user_memberships:
         i += 1
@@ -260,6 +282,7 @@ def test_delete_organization_with_childs():
     with pytest.raises(AttributeError):
         eorg.mark_as_deleted()
 
+'''
 def test_organization_notification_settings():
     eorg = Organization.query.filter_by(abbreviation='eorg').one()
     eorg.ripe_handles = ['ORG-AGNS1-RIPE', 'ORG-AAPA1-RIPE']
@@ -268,3 +291,4 @@ def test_organization_notification_settings():
 
     for eorg_ripe_org in eorg.ripe_organizations:
         print(FodyOrganization(eorg_ripe_org.ripe_org_hdl).asns)
+'''        
