@@ -140,13 +140,13 @@ def test_create_orgadmin():
 
 def test_create_user_with_duplicate_email():
     newuser = User(name=App.username)
-    with pytest.raises(AttributeError):
+    with pytest.raises(ValueError):
         newuser.email = 'test@bla.com'
 
 def test_create_alias_user():
     u = User.query.filter_by(name='eorgmaster').first()
     alias_user = u.create_alias_user()
-    print("\n" + alias_user.name + "\n")
+    # print("\n" + alias_user.name + "\n")
     role = MembershipRole.query.filter_by(name='CISO').first()
     energy_org = Organization.query.filter_by(abbreviation='energyorg').one()
     oxu = OrganizationMembership(
