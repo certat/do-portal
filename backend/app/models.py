@@ -351,7 +351,7 @@ class User(UserMixin, Model, SerializerMixin):
         user = User.query.filter_by(_email=email).first()
         if user:
             if self.id != user.id:
-                raise AttributeError(email, 'duplicate email')
+                raise ValueError(email, 'duplicate email', user)
         self._email = email
 
     @classmethod
@@ -474,7 +474,7 @@ class User(UserMixin, Model, SerializerMixin):
 
     def create_alias_user(self, organization_id = None):
         user = User(name = '#' + self.name , password = 'XXXX%%123xx',
-                    otp_enabled = False, alias_user_id = self.id)
+                    otp_enabled = False, alias_user_id = self.id, deleted = 0)
         db.session.add(user)
         # db.session.commit()
         return user
@@ -520,7 +520,8 @@ class User(UserMixin, Model, SerializerMixin):
     def mark_as_deleted(self):
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
-        self.email = str(time.time()) + self.email
+        if self.email:
+            self.email = str(time.time()) + self.email
         db.session.add(self)
         for um in self.user_memberships:
             um.mark_as_deleted(delete_last_membership = True)

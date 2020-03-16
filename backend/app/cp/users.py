@@ -326,14 +326,19 @@ def add_cp_user():
     """
     try:
         user = User.fromdict(request.json['user'])
-        membership = OrganizationMembership.fromdict(
-                    request.json['organization_membership'])
+        user_create_message = 'User added'
+    except ValueError as ae:
+        existing_user = ae.args[2]
+        user = existing_user.create_alias_user()
+        user_create_message = 'User aliased'
+        # return ApiResponse({'message': 'user already exits ' + str(ae.args[2].id), }, 422, {})
     except AttributeError as ae:
         return ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?' + str(ae) ,}, 422, {})
 
-
     # The role and organization must exist and the current user must be able to
     # admin the organization.
+    membership = OrganizationMembership.fromdict(
+        request.json['organization_membership'])
 
     role = MembershipRole.query.get_or_404(membership.membership_role_id)
     org = Organization.query.get_or_404(membership.organization_id)
@@ -348,7 +353,7 @@ def add_cp_user():
     db.session.commit()
     return ApiResponse({'user': user.serialize(),
             'organization_membership': membership.serialize(),
-            'message': 'User added'}, 201, \
+            'message': user_create_message}, 201, \
            {'Location': url_for('cp.get_cp_user', user_id=user.id)})
 
 
@@ -414,6 +419,10 @@ def update_cp_user(user_id):
     user = User.query.filter(
         User.id == user_id
     ).first()
+
+    if user.alias_user_id:
+        return ApiResponse({'message': 'User is an aliased user and may not be updated'}, 422, {})
+
     if not user:
         return redirect(url_for('cp.add_cp_user'))
     if not g.user.may_handle_user(user):
@@ -421,7 +430,7 @@ def update_cp_user(user_id):
 
     try:
         user.from_json(request.json)
-    except AttributeError:
+    except AttributeError as ae:
         return ApiResponse({'message': 'Attribute update error. Invalid email, phone or mobile?' + str(ae),}, 422, {})
 
     try:

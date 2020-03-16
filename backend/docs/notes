@@ -42,3 +42,5 @@ dp_ipdevel=# select name, api_key from users;
  eorgmaster                    | 339e0f4a648b85cbeb8299d85684f8efd02da2c28f244a10c6dea10a39dfd2c7
  E-Org User                    | 1aa5fa556e73744464e12e5464542fde651382fd179a78eda401857b4ea89ab5
 
+
+mh@debian10:~/cert/do-portal$ curl -s 'http://portal-backend:8081/cp/1.0/organization_memberships' -H 'Connection: keep-alive' -H 'Accept: application/json, text/plain, */*' -H 'DNT: 1' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36' -H 'Origin: http://portal-frontend:8081' -H 'Referer: http://portal-frontend:8081/' -H 'Accept-Language: en-US,en;q=0.9,de;q=0.8,es;q=0.7' -H 'Cookie: rm=2|a1a427dfd4a5048a44184cf2d9326b53fc0bc3bff6964e522afdfcae54502bae6a768049289d0762edc4597184b18c76354a6b06d538c041f32792f8a2c0ca55' --compressed --insecure | jq .organization_memberships[].email

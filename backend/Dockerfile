@@ -14,6 +14,7 @@ RUN    apt-get update \
        libxslt-dev lib32z1-dev libpq-dev \
        python3-venv python3-dev python3-pip python3-setuptools \
        postgresql-client-9.6 \
+       procps \
     && rm -rf /var/lib/apt/lists/*
 
 ARG CONTAINER_UID=1000

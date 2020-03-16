@@ -70,6 +70,11 @@ if [ $select_fody_table = 'f' ]; then
 fi
 
 export FLASK_DEBUG=1
-source ./bin/activate && python manage.py run -h 0.0.0.0 -p 8081
+source ./bin/activate 
+while :
+do
+python manage.py run -h 0.0.0.0 -p 8081
+sleep 1
+done
 
 } >&2 # redirect stout to stderr
