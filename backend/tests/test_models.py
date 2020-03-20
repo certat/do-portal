@@ -282,6 +282,10 @@ def test_delete_organization_with_childs():
     with pytest.raises(AttributeError):
         eorg.mark_as_deleted()
 
+def test_delete_unused_users():
+    count = User.delete_unused_users()
+    print("*** {}".format(count))
+
 '''
 def test_organization_notification_settings():
     eorg = Organization.query.filter_by(abbreviation='eorg').one()
