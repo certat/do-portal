@@ -483,6 +483,20 @@ class User(UserMixin, Model, SerializerMixin):
         rand = self.random_str()
         return hashlib.sha256(rand.encode()).hexdigest()
 
+    @staticmethod
+    def delete_unused_users():
+        '''
+        select id, name, email, deleted from users where id not in
+          (select user_id from organization_memberships om where om.deleted = 0) and
+          deleted = 0;
+        '''
+        subquery = db.session.query(OrganizationMembership.user_id).filter_by(deleted=0)
+        unused_users = User.query.filter_by(deleted=0) \
+                 .filter(User.id.notin_(subquery))
+        for user in unused_users:
+            user.mark_as_deleted()
+            db.session.add(user)
+        return unused_users.count()
 
     @staticmethod
     def random_str(length=64):
@@ -1840,9 +1854,10 @@ class OrganizationMembership(Model, SerializerMixin):
     coc = deferred(db.Column(db.Text))
     coc_filename = db.Column(db.String(255))
 
+    # OrganisationMembership.mark_as_deleted
     def mark_as_deleted(self, delete_last_membership = False):
-        mc = self.user.user_memberships_dyn.filter_by(deleted = 0).count()
-        if mc == 1 and delete_last_membership == False:
+        mc = self.user.user_memberships_dyn.filter_by(deleted = 0)
+        if mc.count() == 1 and delete_last_membership is False:
             raise AttributeError('Last membership may not be deleted')
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
