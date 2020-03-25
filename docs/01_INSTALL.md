@@ -70,6 +70,7 @@ if an error occurs the table "alembic_version" in the database has to upgraded t
 
 ```bash
 cd /home/cert/do-portal/frontend
+cp secret.json.example secret.json
 ```
 
 Create configuration file and save it as `config/envs/production.json`
