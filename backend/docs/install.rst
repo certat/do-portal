@@ -224,3 +224,17 @@ You can now access the interface at `http://doportal` with user
 with only the hostname `doportal` and port 80, others do not work!
 
 Now you can setup a webserver to serve the application.
+
+Bootstrap Database - Default Data
+=================================
+
+.. code-block:: bash
+
+     python demodata.py addyaml
+
+this uses "install/testdata.yaml" to prime the database
+
+the same structure may be used to insert your initial masteruser
+
+in app/fixtures/testfixture.py all the methods to prime the database are implemented
+
