@@ -367,6 +367,10 @@ class User(UserMixin, Model, SerializerMixin):
         delta = datetime.timedelta(seconds = 900)
         self._reset_token_valid_to = datetime.datetime.today() + delta
 
+    @property
+    def reset_token_valid_to(self):
+        return self._reset_token_valid_to
+
     @classmethod
     def authenticate(cls, email, password):
         user = cls.query.filter(cls._email == email).first()
@@ -468,6 +472,8 @@ class User(UserMixin, Model, SerializerMixin):
             raise AttributeError('Token already used')
         user.password = passwd
         user.reset_token = None
+        user._reset_token_valid_to = None
+        
         db.session.add(user)
         db.session.commit()
 
