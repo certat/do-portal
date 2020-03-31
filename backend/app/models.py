@@ -260,7 +260,8 @@ class User(UserMixin, Model, SerializerMixin):
     """User model"""
     __tablename__ = 'users'
     __public__ = ('id', 'name', 'api_key', 'otp_enabled', 'picture', 'birthdate', \
-                  'title', 'origin', 'email', 'picture_filename', 'alias_user_id')
+                  'title', 'origin', 'email', 'picture_filename', 'alias_user_id', \
+                  'reset_token', 'reset_token_valid_to')
 
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
@@ -280,6 +281,8 @@ class User(UserMixin, Model, SerializerMixin):
     birthdate = db.Column(db.Date)
     title = db.Column(db.String(255))
     origin = db.Column(db.String(255))
+    _reset_token = db.Column(db.String(255))
+    _reset_token_valid_to = db.Column(db.DateTime)
 
     _orgs = []
     _org_ids = []
@@ -353,6 +356,11 @@ class User(UserMixin, Model, SerializerMixin):
             if self.id != user.id:
                 raise ValueError(email, 'duplicate email', user)
         self._email = email
+
+    @property
+    def reset_token(self):
+
+
 
     @classmethod
     def authenticate(cls, email, password):
