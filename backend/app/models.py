@@ -359,8 +359,13 @@ class User(UserMixin, Model, SerializerMixin):
 
     @property
     def reset_token(self):
+        return self._reset_token
 
-
+    @reset_token.setter
+    def reset_token(self, reset_token):
+        self._reset_token = reset_token 
+        delta = datetime.timedelta(seconds = 900)
+        self._reset_token_valid_to = datetime.datetime.today() + delta
 
     @classmethod
     def authenticate(cls, email, password):
@@ -392,7 +397,6 @@ class User(UserMixin, Model, SerializerMixin):
             send_email('Austrian Energy CERT - Kontaktdatenbank: Account-Aktivierung/Passwort-Reset', [user.email],
                    'auth/email/ec_reset_password', user=user,
                    token=token.decode("utf-8"), email=email )
-
             db.session.add(user)
             db.session.commit()
             return token
@@ -426,6 +430,7 @@ class User(UserMixin, Model, SerializerMixin):
         s = TimedJSONWebSignatureSerializer(
             current_app.config['SECRET_KEY'], expiry
         )
+        self.reset_token = s.dumps({'user_id': self.id}).decode("utf-8")
         return s.dumps({'user_id': self.id})
 
     def reset_password(self, token, new_pass):
@@ -459,7 +464,10 @@ class User(UserMixin, Model, SerializerMixin):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
         data = s.loads(token)
         user = cls.get(data.get('user_id'))
+        if user.reset_token is None:
+            raise AttributeError('Token already used')
         user.password = passwd
+        user.reset_token = None
         db.session.add(user)
         db.session.commit()
 
