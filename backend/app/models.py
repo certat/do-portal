@@ -9,7 +9,7 @@ import yaml
 from urllib.error import HTTPError
 import onetimepass
 from app import db, login_manager, config
-from sqlalchemy import desc, event, text, or_
+from sqlalchemy import desc, event, text, or_, UniqueConstraint
 from sqlalchemy.orm import aliased, deferred
 from sqlalchemy.dialects import postgres
 from flask_sqlalchemy import BaseQuery
@@ -1846,6 +1846,9 @@ class OrganizationMembership(Model, SerializerMixin):
                   'country', 'comment', 'email', 'phone', 'mobile', 'membership_role_id',
                   'pgp_key_id', 'pgp_key_fingerprint', 'pgp_key', 'smime', 'country_id',
                   'coc', 'coc_filename', 'smime_filename')
+    __table_args__ = (
+        db.UniqueConstraint('user_id', 'organization_id', 'membership_role_id', 'deleted', name='role_unique'),
+    )
 
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
