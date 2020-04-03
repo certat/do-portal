@@ -10,4 +10,7 @@
   display_name: 'CISO'
 - name: 'private'
   display_name: 'Private'
+- name: 'SPoC'
+  display_name: 'Single Point of Contact'
+  email_required: 1
 

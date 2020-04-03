@@ -344,6 +344,9 @@ class User(UserMixin, Model, SerializerMixin):
 
     @property
     def email(self):
+        if self.alias_user_id:
+            parent_user = User.get(self.alias_user_id)
+            return parent_user.email
         return self._email
 
     @email.setter
@@ -1790,7 +1793,7 @@ class Country(Model, SerializerMixin):
 
 class MembershipRole(Model, SerializerMixin):
     __tablename__ = 'membership_roles'
-    __public__ = ('id', 'name', 'display_name')
+    __public__ = ('id', 'name', 'display_name', 'email_required')
     query_class = FilteredQuery
     name = db.Column(db.String(255), nullable=False)
     display_name = db.Column(db.String(255), nullable=False)
@@ -1800,6 +1803,7 @@ class MembershipRole(Model, SerializerMixin):
         'OrganizationMembership',
         back_populates='membership_role'
     )
+    email_required = db.Column(db.Integer, default=0)
 
     __mapper_args__ = {
         'order_by': name
@@ -1809,6 +1813,7 @@ class MembershipRole(Model, SerializerMixin):
     def __insert_defaults():
         # this role has to exist
         roles = [['OrgAdmin', 'Administrator Organisation']]
+        #    Short Name, Long Name, Email required
         default_roles = [
            ['tech-c', 'Domain Technical Contact (tech-c)'],
            ['abuse-c', 'Domain Abuse Contact (abuse-c)'],
@@ -1920,21 +1925,23 @@ class OrganizationMembership(Model, SerializerMixin):
 
 
 """ watch for insert on Org Memberships """
-def org_mem_listerner(mapper, connection, org_mem):
+def org_mem_listener(mapper, connection, org_mem):
+    print("changing membership " + str(org_mem.id), str(org_mem.user.id))
     if org_mem.membership_role and org_mem.membership_role.name == 'OrgAdmin':
         # XXX org_mem.user.api_key = org_mem.user.generate_api_key()
         # print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
         # print(org_mem.membership_role.name,  org_mem.email)
-        password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii') + 'Ba1%'
-        org_mem.user.password = password
+        # password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii') + 'Ba1%'
+        # org_mem.user.password = password
         token=org_mem.user.generate_reset_token()
         # current_app.log.debug(token)
-        send_email('energy-cert account', [org_mem.user.email],
-               'auth/email/ec_activate_account', org_mem=org_mem,
-               token=token)
+        send_email('Organisation Admintrator account', [org_mem.user.email],
+               'auth/email/org_account_admin', org_mem=org_mem,
+               token=token.decode("utf-8"))
 
 
-event.listen(OrganizationMembership, 'after_insert', org_mem_listerner, retval=True, propagate=True)
+event.listen(OrganizationMembership, 'after_insert', org_mem_listener, retval=True, propagate=True)
+event.listen(OrganizationMembership, 'after_update', org_mem_listener, retval=True, propagate=True)
 
 
 @login_manager.user_loader
