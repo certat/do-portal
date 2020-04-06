@@ -32,7 +32,7 @@ Create config file and save as `backend/config.cfg`
 ```bash
 export DO_LOCAL_CONFIG=/home/cert/do-portal/backend/config.cfg
 python3 -m venv ~/do-portal
-source ./bin/activate
+source ~/do-portal/bin/activate
 pip install -U pip setuptools
 pip install -r requirements.txt
 mkdir logs
