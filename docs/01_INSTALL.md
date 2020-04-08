@@ -41,8 +41,10 @@ mkdir logs
 ## Database
 
 ### Install
+Create the PostgreSQL Database and User matching with the configuration.
+
 ```bash
-createdb do_portal;
+
 mv misc/migrations misc/tmp-migrations
 python manage.py db init;
 python manage.py db migrate;
@@ -52,7 +54,9 @@ python manage.py insertmasteruser;
 python demodata.py addyaml
 rm -rf misc/migrations
 mv misc/tmp-migrations misc/migrations
+```
 
+```bash
 psql -U do_portal -c "CREATE SCHEMA fody";
 psql -U do_portal -d do_portal --echo-errors --file=install/contactdb_schema_only.pgdump
 
@@ -61,8 +65,10 @@ python manage.py run -h 0.0.0.0 -p 8081
 ```
 
 ### Upgrade
+```bash
 python manage.py db migrate;
 python manage.py db upgrade;
+```
 
 if an error occurs the table "alembic_version" in the database has to upgraded to the correct version
 
