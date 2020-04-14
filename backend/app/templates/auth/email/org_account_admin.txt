@@ -1,0 +1,18 @@
+Lieber {{ org_mem.user.name }},
+
+Dein Benutzername ist {{  org_mem.user.email }}. Du bist als Administrator der Organisation {{ org_mem.organization.full_name }} eingetragen
+Bitte ändere dein Passwort
+Bitte klicke auf den folgenden Link:
+{{ config.CP_SERVER }}/#!/activate-account?token={{ token }}&email={{  org_mem.user.email }}
+
+------------------------------------
+
+Dear {{ org_mem.user.name }}
+
+Your username is {{ org_mem.user.email }}. You are administrator of organization {{ org_mem.organization.full_name }}
+Please change your password
+Please click on following link:
+{{ config.CP_SERVER }}/#!/activate-account?token={{ token }}&email={{  org_mem.user.email }}
+
+{% include 'auth/email/signature.txt' %}
+

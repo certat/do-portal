@@ -344,6 +344,7 @@ def update_cp_organization_membership(membership_id):
         return  ApiResponse({'message': str(ae),}, 422, {})
 
     db.session.add(membership)
+    db.session.add(membership.user)
     db.session.commit()
     return  ApiResponse({'message': 'Organization membership saved'})
 
