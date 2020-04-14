@@ -28,6 +28,8 @@ sudo -u postgres psql do_portal < backend/install/contactdb_schema_only.pgdump
 ```
 
 And then we can set the permissions and create a new user called fody. This user only has access to the needed tables.
+A separate schema "fody" is used for the imported data. This allows clear separation of data, software and privileges.
+By setting the default search path for the user, the import afterwards automatically use this schema.
 ```bash
 sudo -u postgres psql do_portal
 CREATE USER fody WITH PASSWORD '$PASSWORD';
@@ -58,4 +60,20 @@ pushd $(date -I)
 ~cp-server/fody_importer/intelmq_venv/bin/python ~cp-server/fody_importer/intelmq-certbund-contact/intelmq_certbund_contact/ripe/ripe_diff.py --restrict-to-country AT --conninfo "user=fody dbname=do_portal password=$PASSWORD host=localhost"
 popd
 rm $(date -I)
+```
+
+Data structure
+--------------
+
+The following tables are relevant:
+
+```
+do_portal=> \dt+ fody.*_automatic
+ fody   | contact_automatic                 | table |
+ fody   | network_automatic                 | table |
+[...]
+ fody   | organisation_automatic            | table |
+ fody   | organisation_to_asn_automatic     | table |
+[...]
+ fody   | organisation_to_network_automatic | table |
 ```
