@@ -35,7 +35,7 @@ class testdata:
    def addyaml(yamlfile = "install/testdata.yaml"):
       """Add sample data from yaml file"""
       with open(yamlfile, 'r') as stream:
-           data_loaded = yaml.load(stream)
+           data_loaded = yaml.load(stream, yaml.Loader)
 
       for org in data_loaded['org']:
          if 'full_name' not in org:

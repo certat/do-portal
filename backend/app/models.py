@@ -29,6 +29,8 @@ import time
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 import re
 
+import sys
+
 # from pprint import pprint
 
 #: we don't have an app context yet,
@@ -287,6 +289,7 @@ class User(UserMixin, Model, SerializerMixin):
     _orgs = []
     _org_ids = []
     _organizations_list = []
+    multi_tree_org_id = []
 
     aliased_users = db.relationship('User')
 
@@ -344,6 +347,9 @@ class User(UserMixin, Model, SerializerMixin):
 
     @property
     def email(self):
+        if self.alias_user_id:
+            parent_user = User.get(self.alias_user_id)
+            return '# alias user # ' + parent_user.email
         return self._email
 
     @email.setter
@@ -359,10 +365,14 @@ class User(UserMixin, Model, SerializerMixin):
 
     @property
     def name(self):
-        if self.alias_user_id:
+        if self.alias_user_id is not None:
             parent_user = User.get(self.alias_user_id)
             return '# alias user # ' + parent_user.name
         return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = name
 
     @property
     def reset_token(self):
@@ -450,7 +460,7 @@ class User(UserMixin, Model, SerializerMixin):
        
          
         user.reset_token = s.dumps({'user_id': user.id}).decode("utf-8")
-        db.session.add(user)
+        # add user AND alias user(s) in caller #  db.session.add(user)
         return s.dumps({'user_id': user.id})
 
     def reset_password(self, token, new_pass):
@@ -514,7 +524,6 @@ class User(UserMixin, Model, SerializerMixin):
         user = User(name = '#' + self.name , password = 'XXXX%%123xx',
                     otp_enabled = False, alias_user_id = self.id, deleted = 0)
         db.session.add(user)
-        # db.session.commit()
         return user
 
     def generate_api_key(self):
@@ -565,7 +574,7 @@ class User(UserMixin, Model, SerializerMixin):
         """
         oms = self.get_organization_memberships()
         for um in user.user_memberships:
-           if um.organization_id in self._org_ids:
+           if um.organization_id in self.multi_tree_org_id:
               return True
         return False
 
@@ -584,12 +593,13 @@ class User(UserMixin, Model, SerializerMixin):
             may manipulate the organization of the parameter list
         """
         self.get_organization_memberships()
-        if org.id in self._org_ids:
+        if org.id in self.multi_tree_org_id:
             return True
         return False
 
     _tree_cache = {};
 
+    '''
     def _org_tree_iterator(self, org_id):
         if org_id in self._tree_cache:
            self._tree_cache[org_id] += 1
@@ -602,7 +612,7 @@ class User(UserMixin, Model, SerializerMixin):
            self._orgs.append(sub_org.organization_memberships)
            self._org_ids.append(sub_org.id)
            self._org_tree_iterator(sub_org.id)
-
+    '''
 
     def _org_tree(self, org_id, limit = 1000, offset = 0):
         results = db.engine.execute(
@@ -644,7 +654,8 @@ class User(UserMixin, Model, SerializerMixin):
         self._org_ids = []
         for row in results:
             self._org_ids.append(row[0])
-
+        return self._org_ids
+ 
 
     def get_organization_memberships(self):
         """ returns a list of OrganizationMembership records"""
@@ -669,22 +680,24 @@ class User(UserMixin, Model, SerializerMixin):
         # find all orgs where the org.id is the parent_org_id recursivly
         #  for org in orgs_admin:
 
-        ### old implementation ####
-
+        
+        self.multi_tree_org_id = []  
         for oa in orgs_admins:
            # self._org_tree_iterator(oa.organization_id)
-           self._org_tree(oa.organization_id)
+           self.multi_tree_org_id.extend(self._org_tree(oa.organization_id))
 
-        oms = OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids)) \
-                                          .filter(OrganizationMembership.deleted == 0)
+        oms = OrganizationMembership.query.filter( \
+                     OrganizationMembership.organization_id.in_(self.multi_tree_org_id)) \
+                     .filter(OrganizationMembership.deleted == 0)
         return oms
 
     def get_organizations(self, limit = 1000, offset = 0):
         """returns a list of Organization records"""
-        self.get_organization_memberships()
+        oms = self.get_organization_memberships()
         if not self._org_ids:
             return []
-        return Organization.query.filter(Organization.id.in_(self._org_ids)).limit(limit).offset(offset)
+        return Organization.query.filter(Organization.id.in_(self.multi_tree_org_id)) \
+                    .limit(limit).offset(offset)
 
     def get_organizations_raw(self, limit = 5, offset = 0):
         """returns a list of Organization records"""
@@ -1836,7 +1849,7 @@ class MembershipRole(Model, SerializerMixin):
 
         try:
             stream = open('install/roles.yaml')
-            data_loaded = yaml.load(stream)
+            data_loaded = yaml.load(stream, yaml.Loader)
             for role in data_loaded:
                 roles.append([role['name'], role['display_name']])
         except IOError:
@@ -1942,7 +1955,7 @@ class OrganizationMembership(Model, SerializerMixin):
 def org_mem_listener(org_mem, value, oldvalue, initiator):
     # print("changing membership " + str(org_mem.id), str(org_mem.user.id))
     admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
-    if value == admin_role.id:
+    if value and value == admin_role.id:
     # if org_mem.membership_role and org_mem.membership_role.name == 'OrgAdmin':
         # XXX org_mem.user.api_key = org_mem.user.generate_api_key()
         # print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)

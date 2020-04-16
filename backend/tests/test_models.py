@@ -24,7 +24,7 @@ def test_countries_inserted():
 
 
 def test_user_memberships():
-    u = User.query.filter_by(name="certmaster").first()
+    u = User.query.filter_by(_name="certmaster").first()
 
     for uo in u.user_memberships:
         assert uo.email == 'cert@master.at'
@@ -42,11 +42,11 @@ def test_user_memberships():
 
 
 def test_get_users():
-    u = User.query.filter_by(name="certmaster").first()
+    u = User.query.filter_by(_name="certmaster").first()
     # c = 0
     # for user in u.get_users():
     #    c += 1
-    assert len(u.get_users()) == 8, 'find all subordinate users - once'
+    assert len(u.get_users()) == 10, 'find all subordinate users - once'
     # assert c == 7, 'find all subordinate users - once'
 
 
@@ -60,7 +60,7 @@ def test_create_user():
     + try to
     """
 
-    admin = User.query.filter_by(name="EnergyOrg Admin").first()
+    admin = User.query.filter_by(_name="EnergyOrg Admin").first()
     assert len(admin.user_memberships) == 1
     org = admin.get_organizations().first()
 
@@ -144,7 +144,7 @@ def test_create_user_with_duplicate_email():
         newuser.email = 'test@bla.com'
 
 def test_create_alias_user():
-    u = User.query.filter_by(name='eorgmaster').first()
+    u = User.query.filter_by(_name='eorgmaster').first()
     alias_user = u.create_alias_user()
     # print("\n" + alias_user.name + "\n")
     role = MembershipRole.query.filter_by(name='CISO').first()
@@ -214,14 +214,14 @@ def test_organizations_raw():
 
 
 def test_delete_membership():
-    u = User.query.filter_by(name=App.user.name).first()
+    u = User.query.filter_by(_name=App.user.name).first()
     with pytest.raises(AttributeError):
         um = u.user_memberships[0]
         um.mark_as_deleted()
 
 
 def test_update_incorrect_data():
-    u = User.query.filter_by(name=App.user.name).first()
+    u = User.query.filter_by(_name=App.user.name).first()
     with pytest.raises(AttributeError):
         u.user_memberships[0].phone = '1235455'
     with pytest.raises(AttributeError):
@@ -231,7 +231,7 @@ def test_update_incorrect_data():
 
 
 def test_update_membership_data():
-    u = User.query.filter_by(name=App.user.name).first()
+    u = User.query.filter_by(_name=App.user.name).first()
     u.user_memberships[0].phone = None
     assert u.user_memberships[0].phone is None, \
         'phone number correctlty set to Null/None'
@@ -246,7 +246,7 @@ def test_delete_user():
     assert App.user.deleted == 1
     assert App.user.ts_deleted
     db.session.commit()
-    admin = User.query.filter_by(name="EnergyOrg Admin").first()
+    admin = User.query.filter_by(_name="EnergyOrg Admin").first()
     assert len(admin.get_users()) == 4, 'EnergyOrg Admin now has 3 users'
     i = 0
     for um in App.user.user_memberships:
@@ -259,12 +259,12 @@ def test_delete_user():
 
 # https://domainis.univie.ac.at/mantis/view.php?id=4071
 def test_read_org_with_more_admins():
-    admin = User.query.filter_by(name="E-Org Gas Admin").first()
+    admin = User.query.filter_by(_name="E-Org Gas Admin").first()
     # oms4user = admin.get_organization_memberships()
     # Organization.query.get_or_404(org_id)
     orgs = admin.get_organizations()
     assert [o.full_name for o in orgs] == \
-        ['eorg-electricity'], 'correct orgs'
+        ['eorg-gas'], 'correct orgs'
     assert len([o.id for o in orgs]) == 1, 'OrgAdmin for 1  orgs'
 
 def test_delete_organization_with_childs():
