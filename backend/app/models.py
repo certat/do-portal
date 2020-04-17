@@ -666,7 +666,12 @@ class User(UserMixin, Model, SerializerMixin):
             where the user is admin an return ALL memeberships of those nodes
             in the org tree """
         admin_role = self.get_role_by_name('OrgAdmin')
-        orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id, deleted = 0).all()
+        
+        stmt_user_ids = db.session.query(User.id). \
+            filter(or_(User.id == self.id, User.alias_user_id == self.id)).subquery()
+        orgs_admins = OrganizationMembership.query. \
+            filter(OrganizationMembership.user_id.in_(stmt_user_ids)). \
+            filter_by(membership_role_id = admin_role.id, deleted = 0).all()
 
         if (not orgs_admins):
            return []
