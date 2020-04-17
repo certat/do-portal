@@ -290,6 +290,7 @@ class User(UserMixin, Model, SerializerMixin):
     _org_ids = []
     _organizations_list = []
     multi_tree_org_id = []
+    multi_tree_org_raw = []
 
     aliased_users = db.relationship('User')
 
@@ -614,7 +615,7 @@ class User(UserMixin, Model, SerializerMixin):
            self._org_tree_iterator(sub_org.id)
     '''
 
-    def _org_tree(self, org_id, limit = 1000, offset = 0):
+    def _org_tree_raw(self, org_id, limit = 1000, offset = 0):
         results = db.engine.execute(
                 text("""with recursive sub_orgs as (
                               select id,
@@ -641,7 +642,9 @@ class User(UserMixin, Model, SerializerMixin):
                 h[k] = r[i]
 
             self._organizations_list.append(h)
+        return self._organizations_list
 
+    def _org_tree(self, org_id, limit = 1000, offset = 0):
         results = db.engine.execute(
                 text("""with recursive sub_orgs as (select id, abbreviation, full_name, display_name, deleted, parent_org_id, 'n/a'::text, 0 depth from organizations
                    where id = :b_parent_org_id
@@ -662,13 +665,7 @@ class User(UserMixin, Model, SerializerMixin):
         """ self MUST be a logged in admin, we find all nodes (and subnodes)
             where the user is admin an return ALL memeberships of those nodes
             in the org tree """
-        # Or = self.user_memberships.membership_role.filter(MembershipRole.name == 'OrgAdmin' )
-        # there must be a better way to write this
         admin_role = self.get_role_by_name('OrgAdmin')
-        # orgs_admin = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).first() #.filter(MembershipRole.name == 'OrgAdmin' )
-#        orgs_admin = OrganizationMembership.query.filter(OrganizationMembership.use = self, membership_role_id = admin_role.id).first()
-
-#        orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id).all()
         orgs_admins = OrganizationMembership.query.filter_by(user_id = self.id, membership_role_id = admin_role.id, deleted = 0).all()
 
         if (not orgs_admins):
@@ -679,12 +676,13 @@ class User(UserMixin, Model, SerializerMixin):
 
         # find all orgs where the org.id is the parent_org_id recursivly
         #  for org in orgs_admin:
-
         
         self.multi_tree_org_id = []  
+        self.multi_tree_org_raw = []  
         for oa in orgs_admins:
            # self._org_tree_iterator(oa.organization_id)
            self.multi_tree_org_id.extend(self._org_tree(oa.organization_id))
+           self.multi_tree_org_raw.extend(self._org_tree_raw(oa.organization_id))
 
         oms = OrganizationMembership.query.filter( \
                      OrganizationMembership.organization_id.in_(self.multi_tree_org_id)) \
@@ -701,10 +699,10 @@ class User(UserMixin, Model, SerializerMixin):
 
     def get_organizations_raw(self, limit = 5, offset = 0):
         """returns a list of Organization records"""
-        self.get_organization_memberships()
+        oms = self.get_organization_memberships()
         if not self._org_ids:
             return []
-        return self._organizations_list
+        return self.multi_tree_org_raw
 
     def get_users(self):
         """returns a list of unique User records"""
