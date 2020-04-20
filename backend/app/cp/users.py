@@ -337,18 +337,23 @@ def add_cp_user():
 
     # The role and organization must exist and the current user must be able to
     # admin the organization.
+    db.session.add(user)
+    
+    # XXX this should be moved out of the controller because of complexity 
+    
+    request_membership = request.json['organization_membership']
+    request_membership['user_id'] = user.id
+    role_id = request_membership['membership_role_id']
+    request_membership['membership_role_id'] = None
     membership = OrganizationMembership.fromdict(
-        request.json['organization_membership'])
+        request_membership)
 
     role = MembershipRole.query.get_or_404(membership.membership_role_id)
     org = Organization.query.get_or_404(membership.organization_id)
     if not g.user.may_handle_organization(org):
         abort(403)
 
-    db.session.add(user)
-    db.session.commit()
-
-    membership.user_id = user.id
+    membership.membership_role_id = role_id
     db.session.add(membership)
     db.session.commit()
     return ApiResponse({'user': user.serialize(),

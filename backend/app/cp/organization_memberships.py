@@ -229,6 +229,7 @@ def add_cp_organization_membership():
     :>json integer id: Organization membership ID
 
     :status 200: Organization membership details were successfully saved
+
     :status 400: Bad request
     :status 401: Authorization failure. The client MAY repeat the request with
         a suitable API-Authorization header field. If the request already
@@ -244,6 +245,7 @@ def add_cp_organization_membership():
         return  ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {})
 
     check_membership_permissions(membership)
+    db.session.add(membership.user)
     db.session.add(membership)
     db.session.commit()
     return  ApiResponse({'organization_membership': membership.serialize(),

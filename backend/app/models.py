@@ -413,9 +413,6 @@ class User(UserMixin, Model, SerializerMixin):
             # password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii')+'aB1$'
             # user.password = password
             token = user.generate_reset_token()
-            current_app.logger.debug('debug token', token)
-            current_app.logger.info('info token', token)
-            print(token)
 
             send_email('Austrian Energy CERT - Kontaktdatenbank: Account-Aktivierung/Passwort-Reset', [user.email],
                    'auth/email/ec_reset_password', user=user,
@@ -1885,7 +1882,7 @@ class OrganizationMembership(Model, SerializerMixin):
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = db.relationship("User", back_populates="user_memberships", lazy='subquery')
+    user = db.relationship("User", back_populates="user_memberships") # , lazy='subquery')
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
     # organization = db.relationship("Organization", back_populates="organization_membership")
     organization = db.relationship("Organization")
@@ -1955,10 +1952,11 @@ class OrganizationMembership(Model, SerializerMixin):
 # def validate_phone(target, value, oldvalue, initiator):
 # def org_mem_listener(mapper, connection, org_mem):
 
+# if user is changed to OrgAdmin
 def org_mem_listener(org_mem, value, oldvalue, initiator):
     # print("changing membership " + str(org_mem.id), str(org_mem.user.id))
     admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
-    if value and value == admin_role.id:
+    if value and value == admin_role.id: 
     # if org_mem.membership_role and org_mem.membership_role.name == 'OrgAdmin':
         # XXX org_mem.user.api_key = org_mem.user.generate_api_key()
         # print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
@@ -1968,8 +1966,8 @@ def org_mem_listener(org_mem, value, oldvalue, initiator):
         token = org_mem.user.generate_reset_token()
         # current_app.log.debug(token)
         send_email('energy-cert account', [org_mem.user.email],
-               'auth/email/ec_activate_account', org_mem=org_mem,
-               token=token)
+               'auth/email/org_account_admin', org_mem=org_mem,
+               token=token.decode("utf-8"))
 
 
 event.listen(OrganizationMembership.membership_role_id, 'set', org_mem_listener, retval=False)
