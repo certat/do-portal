@@ -103,8 +103,8 @@ add the following lines
    127.0.0.1       portal-backend
 ```
 
-This is necessary that the reverse proxy running inside the docker network
-sends your request to the correct container.
+This is necessary for the reverse proxy running inside the docker network
+to send requests to the correct container.
 
 ## Run ui-tests
 ```bash
