@@ -163,9 +163,10 @@
       </div>
 
       <div class="row show-grid">
-        <div class="col-xs-2">Email</div>
+        <div class="col-xs-2">Email{{m.membership_role_id === 1 ? ' *' : ''}}</div>
         <div class="col-xs-10">
-          <input type="text" class="form-control input-sm"
+          <input type="email" class="form-control input-sm"
+                 ng-required="m.membership_role_id === 1"
                  placeholder="Email"
                  ng-model="m.email">
         </div>
