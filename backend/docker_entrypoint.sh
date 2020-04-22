@@ -73,7 +73,7 @@ export FLASK_DEBUG=1
 source ./bin/activate 
 while :
 do
-python manage.py run -h 0.0.0.0 -p 8081
+python -u manage.py run -h 0.0.0.0 -p 8081
 sleep 1
 done
 

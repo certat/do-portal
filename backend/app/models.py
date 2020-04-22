@@ -24,6 +24,7 @@ from app.utils.mixins import SerializerMixin
 from app.utils.inflect import pluralize
 from validate_email import validate_email
 from app.utils.mail import send_email
+from sqlalchemy.exc import IntegrityError    
 import phonenumbers
 import time
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
@@ -572,7 +573,6 @@ class User(UserMixin, Model, SerializerMixin):
         """
         oms = self.get_organization_memberships()
         for um in user.user_memberships:
-           print('org id', self.multi_tree_org_id,um.organization_id)
            if um.organization_id in self.multi_tree_org_id:
               return True
         return False
@@ -592,7 +592,6 @@ class User(UserMixin, Model, SerializerMixin):
             may manipulate the organization of the parameter list
         """
         self.get_organization_memberships()
-        print('may org ids: ', self.multi_tree_org_id, org.id)
         if org.id in self.multi_tree_org_id:
             return True
         return False
@@ -1950,7 +1949,7 @@ class OrganizationMembership(Model, SerializerMixin):
         self._mobile = check_phonenumber(mobile)
 
 
-""" watch for insert on Org Memberships """
+""" watch for change on Org Memberships """
 # def validate_phone(target, value, oldvalue, initiator):
 # def org_mem_listener(mapper, connection, org_mem):
 
@@ -1963,6 +1962,7 @@ def org_mem_listener(org_mem, value, oldvalue, initiator):
         send_email('energy-cert account', [org_mem.user.email],
                'auth/email/org_account_admin', org_mem=org_mem,
                token=token.decode("utf-8"))
+
 
 event.listen(OrganizationMembership.membership_role_id, 'set', org_mem_listener, retval=False)
 # event.listen(OrganizationMembership, 'before_insert', org_mem_listener, retval=False, propagate=False)

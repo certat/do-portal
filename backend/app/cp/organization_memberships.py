@@ -4,7 +4,7 @@ from app.core import ApiResponse
 from app import db
 from app.models import OrganizationMembership, Organization, User
 from . import cp
-
+from sqlalchemy.exc import IntegrityError
 
 @cp.route('/organization_memberships', methods=['GET'])
 def get_cp_organization_memberships():
@@ -172,14 +172,21 @@ def add_cp_organization_membership():
     """
     try:
         membership = OrganizationMembership.fromdict(request.json)
-    except AttributeError:
-        return  ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {})
+        check_membership_permissions(membership)
+        db.session.add(membership)
+    except AttributeError as ae:
+        message = 'Attribute error. Invalid email, phone or mobile?'
+        # message = message + str(ae)
+        return  ApiResponse({'message': message,}, 422, {})
 
-    check_membership_permissions(membership)
-    if membership.user:
+    try:
+        db.session.commit()
         db.session.add(membership.user)
-    db.session.add(membership)
-    db.session.commit()
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return  ApiResponse({'message': 'User already has this in role with this organization',}, 422, {})
+       
     return  ApiResponse({'organization_membership': membership.serialize(),
             'message': 'Organization membership added'}, 201, \
            {'Location': url_for('cp.get_cp_organization_membership',
@@ -269,6 +276,7 @@ def update_cp_organization_membership(membership_id):
     ).first()
     if not membership:
         return redirect(url_for('cp.add_cp_organization_membership'))
+
     check_membership_permissions(membership)
 
     try:
@@ -278,8 +286,14 @@ def update_cp_organization_membership(membership_id):
         return  ApiResponse({'message': str(ae),}, 422, {})
 
     db.session.add(membership)
-    db.session.add(membership.user)
-    db.session.commit()
+    try:
+        db.session.commit()
+        db.session.add(membership.user)
+        db.session.commit()
+      
+    except IntegrityError:
+        db.session.rollback()
+        return  ApiResponse({'message': 'User already has this in role with this organization',}, 422, {})
     return  ApiResponse({'message': 'Organization membership saved'})
 
 
