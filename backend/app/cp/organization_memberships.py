@@ -156,75 +156,6 @@ def get_cp_organization_membership(membership_id):
 def add_cp_organization_membership():
     """Add new organization membership
 
-    **Example request**:
-
-    .. sourcecode:: http
-
-        POST /api/1.0/organization_memberships HTTP/1.1
-        Host: do.cert.europa.eu
-        Accept: application/json
-        Content-Type: application/json
-
-        {
-          "membership_role_id": 12,
-          "user_id": 153,
-          "organization_id": 201,
-          "country_id": 23,
-          "street": "Mustergasse 2/4",
-          "zip": "1234",
-          "phone": "+4315671234",
-          "email": "max@muster.at",
-          "comment": "foo",
-          "pgp_key_id": "abc123",
-          "pgp_key_fingerprint": "def456",
-          "pgp_key": "ghi789",
-          "smime": "something",
-          "coc": "anythnig goes"
-        }
-
-    **Example response**:
-
-    .. sourcecode:: http
-
-        HTTP/1.0 201 CREATED
-        Content-Type: application/json
-
-        {
-          "message": "Organization saved"
-        }
-
-    **Example validation error**:
-
-    .. sourcecode:: http
-
-        HTTP/1.0 400 BAD REQUEST
-        Content-Type: application/json
-
-        {
-          "message": "'membership_role_id' is a required property",
-          "validator": "required"
-        }
-
-    :reqheader Accept: Content type(s) accepted by the client
-    :reqheader API-Authorization: API key. If present authentication and
-            authorization will be attempted.
-    :resheader Content-Type: This depends on `Accept` header or request
-
-    :<json integer membership_role_id: Unique ID of the organization user role
-    :<json integer user_id: Unique ID of the user
-    :<json integer organization_id: Unique ID of the organization
-    :<json string country_id: Unique ID of the country
-    :<json string street: Street address
-    :<json string zip: Zip code
-    :<json string phone: Phone number
-    :<json string email: Email address
-    :<json string comment: Arbitrary comment
-    :<json string pgp_key_id: PGP key ID
-    :<json string pgp_key_fingerprint: PGP key fingerprint
-    :<json string pgp_key: PGP key
-    :<json string smime: S/MIME
-    :<json string coc: Code of Conduct
-
     :>json string message: Status message
     :>json integer id: Organization membership ID
 
@@ -245,7 +176,8 @@ def add_cp_organization_membership():
         return  ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?',}, 422, {})
 
     check_membership_permissions(membership)
-    db.session.add(membership.user)
+    if membership.user:
+        db.session.add(membership.user)
     db.session.add(membership)
     db.session.commit()
     return  ApiResponse({'organization_membership': membership.serialize(),
