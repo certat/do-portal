@@ -263,8 +263,9 @@ class User(UserMixin, Model, SerializerMixin):
     """User model"""
     __tablename__ = 'users'
     __public__ = ('id', 'name', 'api_key', 'otp_enabled', 'picture', 'birthdate', \
-                  'title', 'origin', 'email', 'picture_filename', 'alias_user_id', \
-                  'reset_token', 'reset_token_valid_to')
+                  'title', 'origin', 'email', 'picture_filename', 'alias_user_id')
+
+    __private__ = ('reset_token', 'reset_token_valid_to')
 
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
@@ -341,7 +342,7 @@ class User(UserMixin, Model, SerializerMixin):
             raise AttributeError(password_errors)
         self._password = generate_password_hash(
             password, method='pbkdf2:sha512:100001', salt_length=32
-        )
+        )    
         # self.reset_password_send_email(self.email)
 
     def check_password(self, password):
