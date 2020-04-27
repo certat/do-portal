@@ -563,7 +563,7 @@ def set_password():
     try:
         User.set_password(token, password)
     except AttributeError as e:
-        raise ApiException(str(e), 401)
+        raise ApiException(str(e), 400)
     return ApiResponse({'auth': 'authenticated'})
 
 @auth.route('/bosh-session', methods=['GET'])
