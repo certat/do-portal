@@ -325,13 +325,7 @@ def add_cp_user():
         SHOULD NOT be repeated.
     """
     try:
-        user = User.fromdict(request.json['user'])
-        user_create_message = 'User added'
-    except ValueError as ae:
-        existing_user = ae.args[2]
-        user = existing_user.create_alias_user()
-        user_create_message = 'User aliased'
-        # return ApiResponse({'message': 'user already exits ' + str(ae.args[2].id), }, 422, {})
+        (user, user_create_message) = User.create(request.json['user'])
     except AttributeError as ae:
         return ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?' + str(ae) ,}, 422, {})
 
