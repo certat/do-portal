@@ -1963,6 +1963,13 @@ class OrganizationMembership(Model, SerializerMixin):
     def mobile(self, mobile):
         self._mobile = check_phonenumber(mobile)
 
+    @staticmethod
+    def upsert(organization_membership_dict):
+        membership = OrganizationMembership.fromdict(
+               organization_membership_dict)
+        db.session.add(membership)
+        return (membership, 'Membership created/updated')
+
 
 """ watch for change on Org Memberships """
 '''
