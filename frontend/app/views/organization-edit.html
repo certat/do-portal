@@ -58,13 +58,13 @@
     <div ng-show="org.id" class="row show-grid">
       <div class="col-xs-2"></div>
       <div class="col-xs-2">
-        <input type="text" class="form-control input-sm"
-            placeholder="RIPE handle" ng-model="new_ripe_handle">
+        <input id="add-ripe-handle" type="text" class="form-control input-sm"
+            placeholder="RIPE organization handle" ng-model="new_ripe_handle">
       </div>
       <div class="col-xs-1">
-        <button class="btn btn-default btn-sm" ng-disabled="!new_ripe_handle" ng-click="add_ripe_handle()">
+        <button id="submit-add-ripe_hdl" class="btn btn-default btn-sm" ng-disabled="!new_ripe_handle" ng-click="add_ripe_handle()">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-          Add RIPE handle
+          Add RIPE organization handle
         </button>
       </div>
     </div>

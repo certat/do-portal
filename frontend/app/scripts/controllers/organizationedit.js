@@ -113,7 +113,7 @@ angular.module('cpApp')
                         country: '',
                         street: '',
                         zip: '',
-                        comment: 'RIPE handle: ' + ripe_handle,
+                        comment: 'RIPE organization handle: ' + ripe_handle,
                       });
                   });
 
@@ -249,7 +249,7 @@ angular.module('cpApp')
     $scope.add_ripe_handle = function(){
         if ($scope.org.hasOwnProperty('ripe_handles')) {
           if ($scope.org.ripe_handles.includes($scope.new_ripe_handle)) {
-              notify({classes: 'notify-error', message: 'this RIPE handle already exists.'});
+              notify({classes: 'notify-error', message: 'this RIPE organization handle already exists.'});
               return;
           }
           $scope.org.ripe_handles.push($scope.new_ripe_handle);
@@ -261,7 +261,7 @@ angular.module('cpApp')
           function(){
             notify({
               classes: 'notify-success',
-              message: 'added new RIPE handle: ' + $scope.new_ripe_handle
+              message: 'added new RIPE organization handle: ' + $scope.new_ripe_handle
             });
             $scope.new_ripe_handle = '';
             loadParallel();
@@ -272,13 +272,13 @@ angular.module('cpApp')
         );
     };
     $scope.delete_ripe_handle = function(ripe_handle, index){
-        if( window.confirm('Do you really want to delete this RIPE handle? (' + ripe_handle + ')') ) {
+        if( window.confirm('Do you really want to delete this RIPE organization handle? (' + ripe_handle + ')') ) {
           $scope.org.ripe_handles.splice(index, 1);
           $scope.update_organization(
             function(){
               notify({
                 classes: 'notify-success',
-                message: 'deleted RIPE handle: ' + ripe_handle
+                message: 'deleted RIPE organization handle: ' + ripe_handle
               });
               loadParallel();
             },

@@ -325,19 +325,15 @@ def add_cp_user():
         SHOULD NOT be repeated.
     """
     try:
-        user = User.fromdict(request.json['user'])
-        user_create_message = 'User added'
-    except ValueError as ae:
-        existing_user = ae.args[2]
-        user = existing_user.create_alias_user()
-        user_create_message = 'User aliased'
-        # return ApiResponse({'message': 'user already exits ' + str(ae.args[2].id), }, 422, {})
+        (user, user_create_message) = User.create(request.json['user'])
     except AttributeError as ae:
         return ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?' + str(ae) ,}, 422, {})
+    db.session.commit()
 
     # The role and organization must exist and the current user must be able to
     # admin the organization.
     request_membership = request.json['organization_membership']
+    request_membership['user_id'] = user.id
     org = Organization.query.get_or_404(request_membership['organization_id'])
     role_id = request_membership['membership_role_id']
     role = MembershipRole.query.get_or_404(role_id)
@@ -345,24 +341,13 @@ def add_cp_user():
     if not g.user.may_handle_organization(org):
         abort(403)
 
-    db.session.add(user)
-    
-    # XXX this should be moved out of the controller because of complexity 
-    
-    request_membership['user_id'] = user.id
-    request_membership['membership_role_id'] = None
-    membership = OrganizationMembership.fromdict(
-        request_membership)
-    db.session.add(membership)
-
-    db.session.commit()
-    membership.user_id = user.id
-    membership.membership_role_id = role_id
-    db.session.add(membership)
+    (membership, om_message) = \
+        OrganizationMembership.upsert(request_membership) 
     db.session.commit()
     return ApiResponse({'user': user.serialize(),
             'organization_membership': membership.serialize(),
-            'message': user_create_message}, 201, \
+            'message': user_create_message + ';' + om_message
+           }, 201, \
            {'Location': url_for('cp.get_cp_user', user_id=user.id)})
 
 

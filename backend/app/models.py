@@ -262,10 +262,11 @@ class MailmanMember(MailmanModel):
 class User(UserMixin, Model, SerializerMixin):
     """User model"""
     __tablename__ = 'users'
-    __public__ = ('id', 'name', 'api_key', 'otp_enabled', 'picture', 'birthdate', \
-                  'title', 'origin', 'email', 'picture_filename', 'alias_user_id')
+    __public__ = ('id', 'name', 'otp_enabled', 'picture', 'birthdate', \
+                  'title', 'email', 'picture_filename', 'alias_user_id')
 
-    __private__ = ('reset_token', 'reset_token_valid_to')
+    __private__ = ('reset_token', 'reset_token_valid_to', 'api_key', \
+                   'otp_enabled', 'origin')
 
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
@@ -529,6 +530,19 @@ class User(UserMixin, Model, SerializerMixin):
     def generate_api_key(self):
         rand = self.random_str()
         return hashlib.sha256(rand.encode()).hexdigest()
+
+    @staticmethod
+    def create(user_dict):
+        try:
+            user = User.fromdict(user_dict)
+            message = 'User added'
+        except ValueError as ae:
+            existing_user = ae.args[2]
+            user = existing_user.create_alias_user()    
+            message = 'User aliased'
+
+        db.session.add(user) 
+        return(user, message)
 
     @staticmethod
     def delete_unused_users():
@@ -1949,8 +1963,16 @@ class OrganizationMembership(Model, SerializerMixin):
     def mobile(self, mobile):
         self._mobile = check_phonenumber(mobile)
 
+    @staticmethod
+    def upsert(organization_membership_dict):
+        membership = OrganizationMembership.fromdict(
+               organization_membership_dict)
+        db.session.add(membership)
+        return (membership, 'Membership created/updated')
+
 
 """ watch for change on Org Memberships """
+'''
 # def validate_phone(target, value, oldvalue, initiator):
 # def org_mem_listener(mapper, connection, org_mem):
 
@@ -1959,16 +1981,18 @@ def org_mem_listener(org_mem, value, oldvalue, initiator):
     # print("changing membership " + str(org_mem.id), str(org_mem.user.id))
     admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
     if value and value == admin_role.id: 
-        token = org_mem.user.generate_reset_token()
-        send_email('energy-cert account', [org_mem.user.email],
-               'auth/email/org_account_admin', org_mem=org_mem,
-               token=token.decode("utf-8"))
+        if org_mem.user:
+            token = org_mem.user.generate_reset_token()
+            send_email('energy-cert account', [org_mem.user.email],
+                'auth/email/org_account_admin', org_mem=org_mem,
+                token=token.decode("utf-8"))
 
 
 event.listen(OrganizationMembership.membership_role_id, 'set', org_mem_listener, retval=False)
 # event.listen(OrganizationMembership, 'before_insert', org_mem_listener, retval=False, propagate=False)
 # event.listen(OrganizationMembership, 'before_update', org_mem_listener, retval=False, propagate=False)
 # event.listen(OrganizationMembership, 'set', org_mem_listener, retval=True, propagate=True)
+'''
 
 @login_manager.user_loader
 def load_user(user_id):
