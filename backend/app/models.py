@@ -1964,11 +1964,26 @@ class OrganizationMembership(Model, SerializerMixin):
         self._mobile = check_phonenumber(mobile)
 
     @staticmethod
-    def upsert(organization_membership_dict):
-        membership = OrganizationMembership.fromdict(
-               organization_membership_dict)
+    def upsert(organization_membership_dict, membership = None):
+        if membership:
+            existing_membership_role_id = membership.membership_role_id
+            membership.from_json(organization_membership_dict)
+        else:
+            membership = OrganizationMembership.fromdict(
+                       organization_membership_dict)
+        
+        message = 'Membership saved'
+        httpcode = 201
         db.session.add(membership)
-        return (membership, 'Membership created/updated')
+        admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').one()
+        if membership.membership_role_id == admin_role.id and \
+           existing_membership_role_id != admin_role.id:
+            token = membership.user.generate_reset_token()
+            send_email('energy-cert account', [membership.user.email],
+                'auth/email/org_account_admin', org_mem=membership,
+                token=token.decode("utf-8"))
+
+        return (membership, message)
 
 
 """ watch for change on Org Memberships """

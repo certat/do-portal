@@ -315,6 +315,7 @@ def add_cp_user():
     :>json string message: Status message
     :>json integer id: User ID
 
+
     :status 200: User details were successfully saved
     :status 400: Bad request
     :status 401: Authorization failure. The client MAY repeat the request with
