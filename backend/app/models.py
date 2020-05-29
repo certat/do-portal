@@ -359,7 +359,7 @@ class User(UserMixin, Model, SerializerMixin):
     @email.setter
     def email(self, email):
         email = email.lower()
-        if not validate_email(email):
+        if not self.deleted and not validate_email(email):
             raise AttributeError(email, 'seems not to be a valid email address')
         user = User.query.filter_by(_email=email).first()
         if user:
@@ -395,6 +395,8 @@ class User(UserMixin, Model, SerializerMixin):
 
     @classmethod
     def authenticate(cls, email, password):
+        if not email:
+            return None, False
         user = cls.query.filter(cls._email == email).first()
         if user:
             authenticated = user.check_password(password)
@@ -522,7 +524,7 @@ class User(UserMixin, Model, SerializerMixin):
             return user
 
     def create_alias_user(self, organization_id = None):
-        user = User(name = '#' + self.name , password = 'XXXX%%123xx',
+        user = User(name = '# is alias of ' + str(self.id) , password = 'XX 12 no password set %%',
                     otp_enabled = False, alias_user_id = self.id, deleted = 0)
         db.session.add(user)
         return user

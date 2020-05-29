@@ -423,6 +423,9 @@ def update_cp_user(user_id):
     if not g.user.may_handle_user(user):
         abort(403)
 
+    if 'alias_user_id' in request.json and request.json['alias_user_id'] != user.alias_user_id:
+        return ApiResponse({'message': 'Attribute update error. update of alias_user_id not allowed',}, 422, {})
+
     try:
         user.from_json(request.json)
     except AttributeError as ae:
