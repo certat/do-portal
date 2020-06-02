@@ -1969,22 +1969,49 @@ class OrganizationMembership(Model, SerializerMixin):
     def upsert(organization_membership_dict, membership = None):
         if membership:
             existing_membership_role_id = membership.membership_role_id
-            membership.from_json(organization_membership_dict)
+            if organization_membership_dict['membership_role_id'] ==\
+                   existing_membership_role_id:
+                check_role_id = -1
+            else:
+                check_role_id = existing_membership_role_id
         else:
-            membership = OrganizationMembership.fromdict(
-                       organization_membership_dict)
+            existing_membership_role_id = None
+            check_role_id = organization_membership_dict['membership_role_id']
+
+        # have to check constraint manually because sqlalchemy 
+        # doesnt handle it properly in web context   
+        check_constraint =  OrganizationMembership.query.filter( \
+                 OrganizationMembership.membership_role_id == \
+                            organization_membership_dict['membership_role_id'],
+                 OrganizationMembership.organization_id == \
+                            organization_membership_dict['organization_id'],
+                 OrganizationMembership.user_id == \
+                            organization_membership_dict['user_id'],
+                 OrganizationMembership.deleted == 0).first()
+
+        if check_constraint:
+            raise AttributeError('User already has this in role with this organization')
         
+        try:
+            if membership:
+                membership.from_json(organization_membership_dict)
+            else:
+                membership = OrganizationMembership.fromdict(
+                           organization_membership_dict)
+        except IntegrityError:
+            raise AttributeError('User already has this in role with this organization')
         message = 'Membership saved'
         httpcode = 201
         db.session.add(membership)
-        admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').one()
+        admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
         if membership.membership_role_id == admin_role.id and \
            existing_membership_role_id != admin_role.id:
             token = membership.user.generate_reset_token()
             send_email('energy-cert account', [membership.user.email],
                 'auth/email/org_account_admin', org_mem=membership,
                 token=token.decode("utf-8"))
-
+             
+        db.session.add(membership.user)
         return (membership, message)
 
 

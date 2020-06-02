@@ -490,7 +490,6 @@ def reset_api_key():
 
 @auth.route('/lost_password', methods=['POST'])
 @validate('users', 'lost_password')
-@json_response
 def lost_password():
     """Request a new password
 
@@ -535,8 +534,8 @@ def lost_password():
     try:
         User.reset_password_send_email(request.json['email'])
     except AttributeError:
-        return {'message': 'Attribute error. Invalid email?',}, 422, {}
-    return {'message': 'Password restore email sent'}, 200, {}
+        return ApiResponse({'message': 'Attribute error. Invalid email?',}, 422, {})
+    return ApiResponse({'message': 'Password restore email sent'})
 
 
 @auth.route('/activate-account', methods=['POST'])

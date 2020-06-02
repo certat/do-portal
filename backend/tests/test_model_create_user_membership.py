@@ -5,6 +5,7 @@ from app import db
 import datetime
 import pytest
 from pprint import pprint
+from sqlalchemy.exc import IntegrityError
 
 # from .conftest import assert_msg
 # from app.fixtures import testfixture
@@ -70,6 +71,10 @@ def test_create_user():
     db.session.commit()
     assert organization_membership.membership_role.name == 'OrgAdmin', 'role_id set'
 
+    
+    with pytest.raises(AttributeError):
+        (organization_membership, message) = \
+              OrganizationMembership.upsert(organization_membership_dict)
  
     
 

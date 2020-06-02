@@ -177,9 +177,6 @@ def add_cp_organization_membership():
     except AttributeError as ae:
         message = 'Attribute error. Invalid email, phone or mobile?'
         return  ApiResponse({'message': message,}, 422, {})
-    except IntegrityError:
-        message = 'User already has this in role with this organization'
-        return  ApiResponse({'message': message,}, 422, {})
     except Exception as ae:
         message = "something went wrong, please contact admin: " + str(ae)
         return  ApiResponse({'message': message,}, 418, {})
@@ -195,10 +192,11 @@ def add_cp_organization_membership():
 @validate('organization_memberships', 'update_cp_organization_membership')
 def update_cp_organization_membership(membership_id):
     """Update organization membership details"""
-
+   
     existing_membership = OrganizationMembership.query.filter(
         OrganizationMembership.id == membership_id
-    ).one()
+    ).first()
+
     if not existing_membership:
         return redirect(url_for('cp.add_cp_organization_membership'))
 
@@ -208,12 +206,11 @@ def update_cp_organization_membership(membership_id):
         (membership, message) = OrganizationMembership.upsert(request.json, existing_membership)
         check_membership_permissions(membership)
     except AttributeError as ae:
-        message = 'Attribute error. Invalid email, phone or mobile?' + str(ae)
-        return  ApiResponse({'message': message,}, 422, {})
-    except IntegrityError:
-        message = 'User already has this in role with this organization'
+        db.session.rollback()
+        message = 'Attribute error. Invalid email, phone or mobile? ' + str(ae)
         return  ApiResponse({'message': message,}, 422, {})
     except Exception as ae:
+        db.session.rollback()
         message = "something went wrong, please contact admin: " + str(ae)
         return  ApiResponse({'message': message,}, 418, {})
 
