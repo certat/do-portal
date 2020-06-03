@@ -353,7 +353,7 @@ class User(UserMixin, Model, SerializerMixin):
     def email(self):
         if self.alias_user_id:
             parent_user = User.get(self.alias_user_id)
-            return '# alias user # ' + parent_user.email
+            return parent_user.email
         return self._email
 
     @email.setter
