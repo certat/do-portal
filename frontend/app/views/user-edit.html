@@ -77,7 +77,7 @@
         <div class="col-xs-2">Organizations</div>
         <div class="col-xs-10">
           <div ng-repeat="m in memberships">
-              <a ui-sref="organizations({id: m.organization_id})">{{organizations[m.organization_id].full_name}}</a> ({{roles[m.membership_role_id].display_name}})
+              <a ui-sref="organizations({id: m.organization_id})">{{get_org_by_id(m.organization_id).full_name}}</a> ({{roles[m.membership_role_id].display_name}})
           </div>
         </div>
       </div>
