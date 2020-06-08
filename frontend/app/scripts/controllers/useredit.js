@@ -104,8 +104,8 @@ angular.module('cpApp')
     }
 
     $scope.get_org_by_id = function(oid) {
-        return $scope.organizations.find(o => { return o.id === oid });
-    }
+        return $scope.organizations.find(function(o) { return o.id === oid; });
+    };
     $scope.save_membership = function(m) {
       _handle_upload_field(m,'coc');
       _handle_upload_field(m,'smime');
