@@ -365,6 +365,19 @@ class User(UserMixin, Model, SerializerMixin):
         if user:
             if self.id != user.id:
                 raise ValueError(email, 'duplicate email', user)
+        
+        """
+        see https://github.com/certat/do-portal/issues/112
+        send change email if user is orgadmin for at least one org
+        """
+        if self._email is not None and \
+            (self._email != email) and \
+            self.get_organization_memberships():
+
+            send_email('Email Change', [email, self._email],
+                   'auth/email/change_orgadmin_email', user=self,
+                   newemail=email )
+
         self._email = email
 
     @property

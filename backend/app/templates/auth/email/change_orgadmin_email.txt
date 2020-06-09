@@ -1,0 +1,13 @@
+Lieber {{ user.name }},
+
+Deine email Adresse wurde geändert auf {{ newemail }}
+
+------------------------------------
+
+Dear {{ user.name }}
+
+Your email address was changed to {{ newemail }}
+
+
+{% include 'auth/email/signature.txt' %}
+
