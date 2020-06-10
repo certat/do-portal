@@ -80,9 +80,9 @@ angular.module('cpApp')
     }
 
     $scope.field_is_required = function(field_name, m) {
-        let role_id = m.membership_role_id;
+        var role_id = m.membership_role_id;
         if (!m.membership_role_id) { return false; }
-        let role_name = $scope.roles[m.membership_role_id].display_name;
+        var role_name = $scope.roles[m.membership_role_id].display_name;
 
         if( field_name === 'email' && role_name === 'Single Point of Contact (SPoC)') {
             return true;
