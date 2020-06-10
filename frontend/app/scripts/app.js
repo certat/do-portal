@@ -8,11 +8,12 @@
  *
  * Main module of the application.
  */
+
 angular
   .module('cpApp', ['ngAnimate', 'ngCookies', 'ngMessages', 'ngResource', 'ngSanitize',
     'ngTouch', 'ngCsv', 'ngFileUpload', 'ui.bootstrap', 'ui.select', 'uiSwitch', 'ui.router',
     'angular-loading-bar', 'services.config', 'cgNotify',
-    'ui.grid', 'ui.grid.exporter', 'ui.grid.resizeColumns', 'ui.grid.autoResize'
+    'ui.grid', 'ui.grid.exporter', 'ui.grid.resizeColumns', 'ui.grid.autoResize', 'utils.autofocus'
   ])
   .config(function ($stateProvider) {
     $stateProvider
