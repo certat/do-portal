@@ -3,7 +3,7 @@
   "version": "0.6.5",
   "dependencies": {
     "jquery": "^3.4.1",
-    "angular": "^1.7.8",
+    "angular": "1.8.0",
     "bootstrap": "^3.4.1",
     "angular-animate": "^1.4.0",
     "angular-cookies": "^1.4.0",
@@ -46,5 +46,8 @@
         "src/sha1.js"
       ]
     }
+  },
+  "resolutions": {
+    "angular": ">=1.4.0 1.7.x"
   }
 }
