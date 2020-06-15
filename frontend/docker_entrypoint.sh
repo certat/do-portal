@@ -8,7 +8,7 @@ cd /home/cert/customer-portal
 
 npm install
 
-PATH=$(npm bin):$PATH bower install
+npx bower install
 
 echo 'create config/envs/devel.json.'
 cp config/envs/docker.json config/envs/devel.json
@@ -21,6 +21,6 @@ if [ ! -f secret.json ]; then
     cp secret.json.example secret.json
 fi
 
-PATH=$(npm bin):$PATH grunt serve
+npx grunt serve
 
 } >&2 # redirect stout to stderr
