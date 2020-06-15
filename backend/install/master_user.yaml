@@ -4,7 +4,7 @@ org:
     display_name: "Master Org"
 user:
   - name: master
-    org: MasterOrg
+    org: master
     role: OrgAdmin
     comment: "Master User"
     email: "master@master.master"
