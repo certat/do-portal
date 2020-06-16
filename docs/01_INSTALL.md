@@ -107,6 +107,10 @@ add the following lines
 This is necessary for the reverse proxy running inside the docker network
 to send requests to the correct container.
 
+## Login
+http://portal-frontend:8081
+email/password for the login can be found in `backend/install/master_user.yaml`
+
 ## Run ui-tests
 ```bash
 cd epplication
