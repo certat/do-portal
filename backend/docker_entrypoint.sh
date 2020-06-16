@@ -20,6 +20,11 @@ if [ ! -f config.cfg ]; then
   cp config.cfg.docker config.cfg
 fi
 
+if ! cmp --silent config.cfg config.cfg.docker
+then
+    echo 'Warning: config.cfg differs from config.cfg.docker!'
+fi
+
 echo $DO_LOCAL_CONFIG
 
 until PGPASSWORD=do_portal psql -h portal-db -U do_portal -c '\q'; do
