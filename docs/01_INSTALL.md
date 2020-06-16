@@ -24,7 +24,7 @@ git clone https://github.com/certat/do-portal.git
 cd /home/cert/do-portal/backend
 ```
 
-Create config file and save as `backend/config.cfg`
+Create config file and save as `backend/config.cfg` 
 cp backend/config.cfg.example backend/config.cfg
 
 ```bash
@@ -62,9 +62,9 @@ python manage.py run -h 0.0.0.0 -p 8081
 cd /home/cert/do-portal/frontend
 ```
 
-Create configuration files
-cp frontend/config/envs/devel.json.example frontend/config/envs/devel.json
-cp frontend/config/envs/production.json.example frontend/config/envs/production.json
+Create configuration files 
+cp frontend/config/envs/devel.json.example frontend/config/envs/devel.json 
+cp frontend/config/envs/production.json.example frontend/config/envs/production.json 
 
 ```bash
 npm install
@@ -108,7 +108,7 @@ This is necessary for the reverse proxy running inside the docker network
 to send requests to the correct container.
 
 ## Login
-http://portal-frontend:8081
+http://portal-frontend:8081 
 email/password for the login can be found in `backend/install/master_user.yaml`
 
 ## Run ui-tests
