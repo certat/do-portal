@@ -1,0 +1,5 @@
+{
+  "version": "0.7.0",
+  "webServiceUrl": "http://127.0.0.1:8000/cp/1.0",
+  "authUrl": "http://127.0.0.1:8000/auth"
+}

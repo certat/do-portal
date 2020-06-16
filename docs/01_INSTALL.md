@@ -18,9 +18,6 @@ su - cert
 git clone https://github.com/certat/do-portal.git
 ```
 
-Backend and frontend configuration needs to be in sync.
-See `frontend/nginx.conf`, `backend/config.cfg.docker` and `frontend/config/envs/docker.json`.
-
 ## Backend
 
 ```bash
@@ -28,6 +25,7 @@ cd /home/cert/do-portal/backend
 ```
 
 Create config file and save as `backend/config.cfg`
+cp backend/config.cfg.example backend/config.cfg
 
 ```bash
 export DO_LOCAL_CONFIG=/home/cert/do-portal/backend/config.cfg
@@ -64,7 +62,10 @@ python manage.py run -h 0.0.0.0 -p 8081
 cd /home/cert/do-portal/frontend
 ```
 
-Create configuration file and save it as `config/envs/production.json`
+Create configuration files
+cp frontend/config/envs/devel.json.example frontend/config/envs/devel.json
+cp frontend/config/envs/production.json.example frontend/config/envs/production.json
+
 ```bash
 npm install
 PATH=$(npm bin):$PATH bower install
