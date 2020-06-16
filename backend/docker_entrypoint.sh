@@ -25,8 +25,7 @@ else
   fi
 fi
 
-
-echo $DO_LOCAL_CONFIG
+echo '$DO_LOCAL_CONFIG='$DO_LOCAL_CONFIG
 
 until PGPASSWORD=do_portal psql -h portal-db -U do_portal -c '\q'; do
   echo "Postgres is unavailable - sleeping"
