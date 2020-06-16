@@ -18,12 +18,13 @@ fi
 if [ ! -f config.cfg ]; then
   echo 'create docker config'
   cp config.cfg.docker config.cfg
+else
+  if ! cmp --silent config.cfg config.cfg.docker
+  then
+    echo 'Warning: config.cfg differs from config.cfg.docker!'
+  fi
 fi
 
-if ! cmp --silent config.cfg config.cfg.docker
-then
-    echo 'Warning: config.cfg differs from config.cfg.docker!'
-fi
 
 echo $DO_LOCAL_CONFIG
 
