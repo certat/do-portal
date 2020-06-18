@@ -18,9 +18,14 @@ fi
 if [ ! -f config.cfg ]; then
   echo 'create docker config'
   cp config.cfg.docker config.cfg
+else
+  if ! cmp --silent config.cfg config.cfg.docker
+  then
+    echo 'Warning: config.cfg differs from config.cfg.docker!'
+  fi
 fi
 
-echo $DO_LOCAL_CONFIG
+echo '$DO_LOCAL_CONFIG='$DO_LOCAL_CONFIG
 
 until PGPASSWORD=do_portal psql -h portal-db -U do_portal -c '\q'; do
   echo "Postgres is unavailable - sleeping"

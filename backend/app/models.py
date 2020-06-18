@@ -31,6 +31,9 @@ from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 import re
 
 import sys
+import functools
+
+print = functools.partial(print, flush=True)
 
 # from pprint import pprint
 
@@ -266,7 +269,7 @@ class User(UserMixin, Model, SerializerMixin):
                   'title', 'email', 'picture_filename', 'alias_user_id')
 
     __private__ = ('reset_token', 'reset_token_valid_to', 'api_key', \
-                   'otp_enabled', 'origin')
+                   'otp_enabled', 'origin', 'login_timestamp')
 
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
@@ -288,6 +291,7 @@ class User(UserMixin, Model, SerializerMixin):
     origin = db.Column(db.String(255))
     _reset_token = db.Column(db.String(255))
     _reset_token_valid_to = db.Column(db.DateTime)
+    _login_timestamp = db.Column('login_timestamp', db.DateTime)
 
     _orgs = []
     _org_ids = []
@@ -329,6 +333,14 @@ class User(UserMixin, Model, SerializerMixin):
         return onetimepass.valid_totp(token, self.otp_secret, window=1)
 
     @property
+    def login_timestamp(self):
+        return self._login_timestamp
+
+    @login_timestamp.setter
+    def login_timestamp(self, login_timestamp):
+        self._login_timestamp = login_timestamp
+
+    @property
     def password(self):
         """User password is a read-only property.
 
@@ -353,7 +365,7 @@ class User(UserMixin, Model, SerializerMixin):
     def email(self):
         if self.alias_user_id:
             parent_user = User.get(self.alias_user_id)
-            return '# alias user # ' + parent_user.email
+            return parent_user.email
         return self._email
 
     @email.setter
@@ -365,6 +377,19 @@ class User(UserMixin, Model, SerializerMixin):
         if user:
             if self.id != user.id:
                 raise ValueError(email, 'duplicate email', user)
+        
+        """
+        see https://github.com/certat/do-portal/issues/112
+        send change email if user is orgadmin for at least one org
+        """
+        if self._email is not None and \
+            (self._email != email) and \
+            self.get_organization_memberships():
+
+            send_email('Email Change', [email, self._email],
+                   'auth/email/change_orgadmin_email', user=self,
+                   newemail=email )
+
         self._email = email
 
     @property
@@ -387,7 +412,7 @@ class User(UserMixin, Model, SerializerMixin):
         self._reset_token = reset_token 
         delta = datetime.timedelta(seconds = 900)
         self._reset_token_valid_to = datetime.datetime.today() + delta
-        current_app.logger.info('user', self.id, reset_token)
+        # current_app.logger.debug('user', self.id, reset_token)
 
     @property
     def reset_token_valid_to(self):
@@ -406,6 +431,9 @@ class User(UserMixin, Model, SerializerMixin):
                 authenticated = False
         else:
             authenticated = False
+        user.login_timestamp = datetime.datetime.now()
+        db.session.add(user)
+        db.session.commit()
         return user, authenticated
 
     @classmethod
@@ -744,6 +772,9 @@ class User(UserMixin, Model, SerializerMixin):
             return self.user_memberships_dyn.filter_by(id = membership_id, deleted = 0).first()
         else:
             return self.user_memberships_dyn.filter_by(deleted = 0)
+
+    def is_authenticated(self):
+        print(self.name)
 
 class Permission:
     """Permissions pseudo-model. Uses 8 bits to assign permissions.
@@ -1258,6 +1289,7 @@ class Organization(Model, SerializerMixin):
                   'contact_emails', 'display_name', 'parent_org_id',
                   'parent_org_abbreviation', 'ripe_handles')
                   # 'notification_settings')
+
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(
@@ -1278,7 +1310,6 @@ class Organization(Model, SerializerMixin):
     mail_times = db.Column(db.Integer, default=3600)
     ts_deleted = db.Column(db.DateTime)
     deleted = db.Column(db.Integer, default=0)
-
     # def __init__(self):
     #     self.__parent_org_abbreviation = None
 
@@ -1966,35 +1997,54 @@ class OrganizationMembership(Model, SerializerMixin):
         self._mobile = check_phonenumber(mobile)
 
     @staticmethod
-    def upsert(organization_membership_dict):
-        membership = OrganizationMembership.fromdict(
-               organization_membership_dict)
+    def upsert(organization_membership_dict, membership = None):
+        if membership:
+            existing_membership_role_id = membership.membership_role_id
+            if organization_membership_dict['membership_role_id'] ==\
+                   existing_membership_role_id:
+                check_role_id = -1
+            else:
+                check_role_id = existing_membership_role_id
+        else:
+            existing_membership_role_id = None
+            check_role_id = organization_membership_dict['membership_role_id']
+
+        # have to check constraint manually because sqlalchemy 
+        # doesnt handle it properly in web context   
+        check_constraint =  OrganizationMembership.query.filter( \
+                 OrganizationMembership.membership_role_id == \
+                            organization_membership_dict['membership_role_id'],
+                 OrganizationMembership.organization_id == \
+                            organization_membership_dict['organization_id'],
+                 OrganizationMembership.user_id == \
+                            organization_membership_dict['user_id'],
+                 OrganizationMembership.deleted == 0).first()
+
+        if check_constraint:
+            raise AttributeError('User already has this in role with this organization')
+        
+        try:
+            if membership:
+                membership.from_json(organization_membership_dict)
+            else:
+                membership = OrganizationMembership.fromdict(
+                           organization_membership_dict)
+        except IntegrityError:
+            raise AttributeError('User already has this in role with this organization')
+        message = 'Membership saved'
+        httpcode = 201
         db.session.add(membership)
-        return (membership, 'Membership created/updated')
-
-
-""" watch for change on Org Memberships """
-'''
-# def validate_phone(target, value, oldvalue, initiator):
-# def org_mem_listener(mapper, connection, org_mem):
-
-# if user is changed to OrgAdmin
-def org_mem_listener(org_mem, value, oldvalue, initiator):
-    # print("changing membership " + str(org_mem.id), str(org_mem.user.id))
-    admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
-    if value and value == admin_role.id: 
-        if org_mem.user:
-            token = org_mem.user.generate_reset_token()
-            send_email('energy-cert account', [org_mem.user.email],
-                'auth/email/org_account_admin', org_mem=org_mem,
+        admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
+        if membership.membership_role_id == admin_role.id and \
+           existing_membership_role_id != admin_role.id:
+            token = membership.user.generate_reset_token()
+            send_email('energy-cert account', [membership.user.email],
+                'auth/email/org_account_admin', org_mem=membership,
                 token=token.decode("utf-8"))
+             
+        db.session.add(membership.user)
+        return (membership, message)
 
-
-event.listen(OrganizationMembership.membership_role_id, 'set', org_mem_listener, retval=False)
-# event.listen(OrganizationMembership, 'before_insert', org_mem_listener, retval=False, propagate=False)
-# event.listen(OrganizationMembership, 'before_update', org_mem_listener, retval=False, propagate=False)
-# event.listen(OrganizationMembership, 'set', org_mem_listener, retval=True, propagate=True)
-'''
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -2006,8 +2056,25 @@ def load_user(user_id):
     user_loader stores the returned User object in current_user during every
     flask request.
     """
-    return User.query.get(int(user_id))
+    user = User.query.get(int(user_id))
+    if not user.login_timestamp:
+        return None
 
+    now = datetime.datetime.now()
+    last_active = now - user.login_timestamp 
+
+    # print('inactive', last_active.total_seconds())
+
+    if last_active.total_seconds() > current_app.config['LOGOUT_INACTIVE_SECONDS']:
+        user.login_timestamp = None
+        db.session.add(user)
+        db.session.commit()
+        return None
+
+    user.login_timestamp = datetime.datetime.now()
+    db.session.add(user)
+    db.session.commit()
+    return user
 
 # @login_manager.token_loader
 '''
@@ -2062,12 +2129,11 @@ def load_token(token):
     return None
 '''
 
+
 @login_manager.request_loader
 def load_user_from_request(request):
     """Login users using api_key for header values
     See `<https://flask-login.readthedocs.org/en/latest/#custom-login-using-
-    request-loader`>_
-
     :param request: Flask request
     """
     # first, try to login using the api_key url arg

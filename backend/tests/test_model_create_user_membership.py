@@ -5,6 +5,7 @@ from app import db
 import datetime
 import pytest
 from pprint import pprint
+from sqlalchemy.exc import IntegrityError
 
 # from .conftest import assert_msg
 # from app.fixtures import testfixture
@@ -43,7 +44,7 @@ def test_create_user():
 
     organization_membership_dict = {'email': 'somemail@asdasd.com',
                                     'phone': '+43234234234', 
-                                    'role_id': ciso_role.id,
+                                    'membership_role_id': ciso_role.id,
                                     'organization_id': org.id,
                                     'user_id': user.id,}
                                     
@@ -54,4 +55,27 @@ def test_create_user():
     assert organization_membership.user_id == user.id, 'correct user set'
     assert organization_membership.user.name == 'testi 123', 'user name set'
     assert organization_membership.organization.full_name == org_name2, 'user name set'
+    assert organization_membership.membership_role_id == ciso_role.id, 'role_id set'
+
+    # create OrgAdmin
+    admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').one()
+    
+    organization_membership_dict = {'email': 'somemail@asdasd.com',
+                                    'phone': '+43234234234', 
+                                    'membership_role_id': admin_role.id,
+                                    'organization_id': org.id,
+                                    'user_id': user.id,}
+                                    
+    (organization_membership, message) = \
+          OrganizationMembership.upsert(organization_membership_dict)
+    db.session.commit()
+    assert organization_membership.membership_role.name == 'OrgAdmin', 'role_id set'
+
+    
+    with pytest.raises(AttributeError):
+        (organization_membership, message) = \
+              OrganizationMembership.upsert(organization_membership_dict)
  
+    
+
+

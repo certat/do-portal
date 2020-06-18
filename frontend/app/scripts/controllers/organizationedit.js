@@ -8,30 +8,6 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .directive('convertToNumber', function() {
-    return {
-      require: 'ngModel',
-      link: function(scope, element, attrs, ngModel) {
-          ngModel.$parsers.push(function(val) {
-            return parseInt(val, 10);
-          });
-          ngModel.$formatters.push(function(val) {
-            return '' + val;
-          });
-        }
-    };
-  })
-  .directive('positiveInteger', function() {
-    return {
-      require: 'ngModel',
-      link: function(scope, element, attrs, ctrl) {
-        ctrl.$validators.integer = function(modelValue, viewValue) {
-          var val = parseInt(viewValue, 10);
-	  return (val > 0);
-        };
-      }
-    };
-  })
   .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notify, $stateParams, $q, $state, uiGridConstants, config) {
 
     function _array2hash(arr) {
