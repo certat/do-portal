@@ -116,3 +116,47 @@ email/password for the login can be found in `backend/install/master_user.yaml`
 cd epplication
 bash test.sh
 ```
+
+## Test Data and Fixtures
+
+The docker image both installs necessary fixtures (like membership roles) and some structured testdata
+
+The data files are found in the ./install directory:
+
+roles.yaml
+    contains additional roles which will be appended to default roles defined in the code (see MembershipRole.__insert_defaults in model.py)
+
+
+master_user.yaml
+    contains an organization and user (the minimum necessary to use the do_portal)
+
+    added in the docker_entrypoint file via python3 manage.py insertmasteruser;
+
+
+testdata.yaml
+    contains several hierarchically structured organizations and users for testing
+
+    added in the docker_entrypoint file via python3 demodata.py addyaml
+
+Data Structure
+the files are in the yaml format
+
+'''
+org:
+  - abbreviation: master
+    full_name: "MasterOrg"
+    display_name: "Master Org"
+user:
+  - name: master
+    org: master
+    role: OrgAdmin
+    comment: "Master User"
+    email: "master@master.master"
+    password: "Bla12345%"
+'''
+
+the reference to the organization in the user section is via the abbreviation
+
+
+
+
