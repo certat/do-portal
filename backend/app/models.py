@@ -2066,7 +2066,7 @@ def load_user(user_id):
 
     # print('inactive', last_active.total_seconds())
 
-    if last_active.total_seconds() > current_app.config['LOGOUT_INACTIVE_SECONDS']:
+    if last_active.total_seconds() > current_app.config['LOGOUT_INACTIVE_SECONDS'] + 60:
         user.login_timestamp = None
         db.session.add(user)
         db.session.commit()

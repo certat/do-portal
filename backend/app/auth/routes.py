@@ -102,7 +102,8 @@ def login():
         user, authenticated = User.authenticate(email, password)
         if user and authenticated:
             if login_user(user, remember=True):
-                return ApiResponse({'auth': 'authenticated'})
+                return ApiResponse({'auth': 'authenticated',  
+                        'logout_inactive_seconds': current_app.config['LOGOUT_INACTIVE_SECONDS']})
 
     raise ApiException('Invalid username or password', 401)
 
