@@ -2013,7 +2013,7 @@ class OrganizationMembership(Model, SerializerMixin):
         # doesnt handle it properly in web context   
         check_constraint =  OrganizationMembership.query.filter( \
                  OrganizationMembership.membership_role_id == \
-                            organization_membership_dict['membership_role_id'],
+                            check_role_id,
                  OrganizationMembership.organization_id == \
                             organization_membership_dict['organization_id'],
                  OrganizationMembership.user_id == \
