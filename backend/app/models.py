@@ -47,6 +47,7 @@ def check_phonenumber(phonenumber):
             phonenumber = None
         else:
             x = phonenumbers.parse(phonenumber, None)
+            phonenumber = re.sub(r'\s+', '', phonenumber)
             m = re.search(r'^\+\d+$', phonenumber)
             if not m:
                 raise AttributeError(phonenumber, 'number has to start with a + and may only contain numbers')
