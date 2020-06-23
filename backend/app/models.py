@@ -678,7 +678,7 @@ class User(UserMixin, Model, SerializerMixin):
                    select * from sub_orgs where deleted = 0 limit :b_limit offset :b_offset
                 """), {'b_parent_org_id': org_id, 'b_limit': limit, 'b_offset': offset});
 
-        # self._organizations_list = []
+        self._organizations_list = []
 
         for r in results.fetchall():
             h = {}
@@ -698,7 +698,7 @@ class User(UserMixin, Model, SerializerMixin):
                    select * from sub_orgs limit :b_limit offset :b_offset
                 """), {'b_parent_org_id': org_id, 'b_limit': limit, 'b_offset': offset});
 
-        # self._org_ids = []
+        self._org_ids = []
         for row in results:
             self._org_ids.append(row[0])
         return self._org_ids
@@ -720,7 +720,7 @@ class User(UserMixin, Model, SerializerMixin):
         if (not orgs_admins):
            return []
 
-        self._orgs = orgs_admins
+        self._orgs = [orgs_admins]
         self._org_ids = [org.organization.id for org in orgs_admins]
 
         # find all orgs where the org.id is the parent_org_id recursivly
@@ -738,8 +738,6 @@ class User(UserMixin, Model, SerializerMixin):
                      .filter(OrganizationMembership.deleted == 0)
         return oms
 
-
-
     def get_organizations(self, limit = 1000, offset = 0):
         """returns a list of Organization records"""
         oms = self.get_organization_memberships()
@@ -749,7 +747,6 @@ class User(UserMixin, Model, SerializerMixin):
                     .limit(limit).offset(offset)
 
     def get_organizations_raw(self, limit = 5, offset = 0):
-        # import pdb; pdb.set_trace()
         """returns a list of Organization records"""
         oms = self.get_organization_memberships()
         if not self._org_ids:
