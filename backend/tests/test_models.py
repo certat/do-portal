@@ -24,7 +24,7 @@ def test_countries_inserted():
 
 
 def test_user_memberships():
-    u = User.query.filter_by(name="certmaster").first()
+    u = User.query.filter_by(_name="certmaster").first()
 
     for uo in u.user_memberships:
         assert uo.email == 'cert@master.at'
@@ -32,7 +32,6 @@ def test_user_memberships():
         assert uo.city == 'Wien'
         assert uo.street == 'Karlsplatz 1'
         assert uo.mobile == "+3412312312"
-        assert uo.sms_alerting == 1
         assert uo.organization.full_name == 'Energy CERT Austria'
         assert uo.country.name == 'Austria', 'Country is an object'
         cc = 0
@@ -43,11 +42,11 @@ def test_user_memberships():
 
 
 def test_get_users():
-    u = User.query.filter_by(name="certmaster").first()
+    u = User.query.filter_by(_name="certmaster").first()
     # c = 0
     # for user in u.get_users():
     #    c += 1
-    assert len(u.get_users()) == 8, 'find all subordinate users - once'
+    assert len(u.get_users()) == 10, 'find all subordinate users - once'
     # assert c == 7, 'find all subordinate users - once'
 
 
@@ -61,7 +60,7 @@ def test_create_user():
     + try to
     """
 
-    admin = User.query.filter_by(name="EnergyOrg Admin").first()
+    admin = User.query.filter_by(_name="EnergyOrg Admin").first()
     assert len(admin.user_memberships) == 1
     org = admin.get_organizations().first()
 
@@ -141,8 +140,30 @@ def test_create_orgadmin():
 
 def test_create_user_with_duplicate_email():
     newuser = User(name=App.username)
-    with pytest.raises(AttributeError):
+    with pytest.raises(ValueError):
         newuser.email = 'test@bla.com'
+
+def test_create_alias_user():
+    u = User.query.filter_by(_name='eorgmaster').first()
+    alias_user = u.create_alias_user()
+    # print("\n" + alias_user.name + "\n")
+    role = MembershipRole.query.filter_by(name='CISO').first()
+    energy_org = Organization.query.filter_by(abbreviation='energyorg').one()
+    oxu = OrganizationMembership(
+        phone='+123214711',
+        mobile='+12321312',
+        email='asda@ddasd.at',
+        organization=energy_org,
+        user=alias_user,
+        membership_role=role,
+        pgp_key_id='asdasdasd',
+        pgp_key_fingerprint='ADFEFEF123123',
+        pgp_key='asdasasfasfasf',
+        smime='asdasdasd',
+        coc=b'asasda')
+    db.session.add(oxu)
+    db.session.commit()
+
 
 
 def test_login():
@@ -165,7 +186,7 @@ def test_login():
     assert auth is True
 
     # admin@energyorg has 4 contacts via organization_memberships
-    assert admin.get_organization_memberships().count() == 4
+    assert admin.get_organization_memberships().count() == 5
 
     # full_names =
     #     list(map(lambda org: org.full_name, admin.get_organizations()))
@@ -191,14 +212,14 @@ def test_organizations_raw():
 
 
 def test_delete_membership():
-    u = User.query.filter_by(name=App.user.name).first()
+    u = User.query.filter_by(_name=App.user.name).first()
     with pytest.raises(AttributeError):
         um = u.user_memberships[0]
         um.mark_as_deleted()
 '''
 
 def test_update_incorrect_data():
-    u = User.query.filter_by(name=App.user.name).first()
+    u = User.query.filter_by(_name=App.user.name).first()
     with pytest.raises(AttributeError):
         u.user_memberships[0].phone = '1235455'
     with pytest.raises(AttributeError):
@@ -208,7 +229,7 @@ def test_update_incorrect_data():
 
 
 def test_update_membership_data():
-    u = User.query.filter_by(name=App.user.name).first()
+    u = User.query.filter_by(_name=App.user.name).first()
     u.user_memberships[0].phone = None
     assert u.user_memberships[0].phone is None, \
         'phone number correctlty set to Null/None'
@@ -223,8 +244,8 @@ def test_delete_user():
     assert App.user.deleted == 1
     assert App.user.ts_deleted
     db.session.commit()
-    admin = User.query.filter_by(name="EnergyOrg Admin").first()
-    assert len(admin.get_users()) == 3, 'EnergyOrg Admin now has 3 users'
+    admin = User.query.filter_by(_name="EnergyOrg Admin").first()
+    assert len(admin.get_users()) == 4, 'EnergyOrg Admin now has 3 users'
     i = 0
     for um in App.user.user_memberships:
         i += 1
@@ -236,13 +257,13 @@ def test_delete_user():
 
 # https://domainis.univie.ac.at/mantis/view.php?id=4071
 def test_read_org_with_more_admins():
-    admin = User.query.filter_by(name="E-Org Gas Admin").first()
+    admin = User.query.filter_by(_name="E-Org Gas Admin").first()
     # oms4user = admin.get_organization_memberships()
     # Organization.query.get_or_404(org_id)
     orgs = admin.get_organizations()
     assert [o.full_name for o in orgs] == \
-        ['eorg-electricity', 'eorg-gas'], 'correct orgs'
-    assert len([o.id for o in orgs]) == 2, 'OrgAdmin for 1  orgs'
+        ['eorg-gas'], 'correct orgs'
+    assert len([o.id for o in orgs]) == 1, 'OrgAdmin for 1  orgs'
 
 def test_delete_organization_with_childs():
     eorg = Organization.query.filter_by(abbreviation='eorg').one()
@@ -259,6 +280,11 @@ def test_delete_organization_with_childs():
     with pytest.raises(AttributeError):
         eorg.mark_as_deleted()
 
+def test_delete_unused_users():
+    count = User.delete_unused_users()
+    print("*** {}".format(count))
+
+'''
 def test_organization_notification_settings():
     eorg = Organization.query.filter_by(abbreviation='eorg').one()
     eorg.ripe_handles = ['ORG-AGNS1-RIPE', 'ORG-AAPA1-RIPE']
@@ -267,3 +293,4 @@ def test_organization_notification_settings():
 
     for eorg_ripe_org in eorg.ripe_organizations:
         print(FodyOrganization(eorg_ripe_org.ripe_org_hdl).asns)
+'''        

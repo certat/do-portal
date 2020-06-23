@@ -2,7 +2,7 @@ from flask import g, abort, request, url_for, send_file
 from flask_jsonschema import validate
 from app.core import ApiResponse
 from app import db, app
-from app.models import Organization, Permission, ContactEmail, Email
+from app.models import Organization, Permission, ContactEmail, Email, User
 from app.api.decorators import permission_required
 # from app.models import Organization, ContactEmail, Email
 from . import cp
@@ -562,5 +562,8 @@ def delete_cp_organization(org_id):
         return ApiResponse({'message': str(ae) ,}, 422, {})
 
     db.session.add(o)
+
+    User.delete_unused_users()    
     db.session.commit()
+
     return ApiResponse({'message': 'Organization deleted'})

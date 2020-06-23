@@ -4,11 +4,32 @@
 
 set -e
 
-echo $DO_LOCAL_CONFIG
+cd /home/cert/do-portal
+python3 -m venv ~/do-portal
+
+source ./bin/activate
+pip install -r requirements.txt
+
+if [ ! -d logs ]; then
+  echo 'create logs dir'
+  mkdir logs
+fi
+
+if [ ! -f config.cfg ]; then
+  echo 'create docker config'
+  cp config.cfg.docker config.cfg
+else
+  if ! cmp --silent config.cfg config.cfg.docker
+  then
+    echo 'Warning: config.cfg differs from config.cfg.docker!'
+  fi
+fi
+
+echo '$DO_LOCAL_CONFIG='$DO_LOCAL_CONFIG
 
 until PGPASSWORD=do_portal psql -h portal-db -U do_portal -c '\q'; do
   echo "Postgres is unavailable - sleeping"
-  sleep 1
+  sleep 2
 done
 
 echo "Postgres is up - check schema"
@@ -53,6 +74,12 @@ if [ $select_fody_table = 'f' ]; then
   PGPASSWORD=do_portal psql -U do_portal -h portal-db -d do_portal --echo-errors --file=install/contactdb_schema_only.pgdump
 fi
 
-source ./bin/activate && python manage.py run -h 0.0.0.0 -p 8081
+export FLASK_DEBUG=1
+source ./bin/activate 
+while :
+do
+python -u manage.py run -h 0.0.0.0 -p 8081
+sleep 1
+done
 
 } >&2 # redirect stout to stderr

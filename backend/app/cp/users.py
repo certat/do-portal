@@ -167,7 +167,6 @@ def get_cp_users_memberships(user_id):
               "mobile": "+436649650926",
               "organization_id": 3,
               "phone": null,
-              "sms_alerting": null,
               "street": "Karlsplatz 1/2/9",
               "user_id": 58,
               "zip": "1010"
@@ -179,7 +178,6 @@ def get_cp_users_memberships(user_id):
               "mobile": "+436649650922",
               "organization_id": 30,
               "phone": null,
-              "sms_alerting": null,
               "user_id": 58
             },
             {
@@ -189,7 +187,6 @@ def get_cp_users_memberships(user_id):
               "mobile": "+436649650922",
               "organization_id": 30,
               "phone": "+436649650922",
-              "sms_alerting": null,
               "user_id": 58
             }
           ]
@@ -318,6 +315,7 @@ def add_cp_user():
     :>json string message: Status message
     :>json integer id: User ID
 
+
     :status 200: User details were successfully saved
     :status 400: Bad request
     :status 401: Authorization failure. The client MAY repeat the request with
@@ -328,30 +326,29 @@ def add_cp_user():
         SHOULD NOT be repeated.
     """
     try:
-        user = User.fromdict(request.json['user'])
-        membership = OrganizationMembership.fromdict(
-                    request.json['organization_membership'])
+        (user, user_create_message) = User.create(request.json['user'])
     except AttributeError as ae:
         return ApiResponse({'message': 'Attribute error. Invalid email, phone or mobile?' + str(ae) ,}, 422, {})
-
+    db.session.commit()
 
     # The role and organization must exist and the current user must be able to
     # admin the organization.
+    request_membership = request.json['organization_membership']
+    request_membership['user_id'] = user.id
+    org = Organization.query.get_or_404(request_membership['organization_id'])
+    role_id = request_membership['membership_role_id']
+    role = MembershipRole.query.get_or_404(role_id)
 
-    role = MembershipRole.query.get_or_404(membership.membership_role_id)
-    org = Organization.query.get_or_404(membership.organization_id)
     if not g.user.may_handle_organization(org):
         abort(403)
 
-    db.session.add(user)
-    db.session.commit()
-
-    membership.user_id = user.id
-    db.session.add(membership)
+    (membership, om_message) = \
+        OrganizationMembership.upsert(request_membership) 
     db.session.commit()
     return ApiResponse({'user': user.serialize(),
             'organization_membership': membership.serialize(),
-            'message': 'User added'}, 201, \
+            'message': user_create_message + ';' + om_message
+           }, 201, \
            {'Location': url_for('cp.get_cp_user', user_id=user.id)})
 
 
@@ -417,15 +414,22 @@ def update_cp_user(user_id):
     user = User.query.filter(
         User.id == user_id
     ).first()
+
+    if user.alias_user_id:
+        return ApiResponse({'message': 'User is an aliased user and may not be updated'}, 422, {})
+
     if not user:
         return redirect(url_for('cp.add_cp_user'))
     if not g.user.may_handle_user(user):
         abort(403)
 
+    if 'alias_user_id' in request.json and request.json['alias_user_id'] != user.alias_user_id:
+        return ApiResponse({'message': 'Attribute update error. update of alias_user_id not allowed',}, 422, {})
+
     try:
         user.from_json(request.json)
-    except AttributeError:
-        return ApiResponse({'message': 'Attribute update error. Invalid email, phone or mobile?' + str(ae),}, 422, {})
+    except AttributeError as ae:
+        return ApiResponse({'message': 'Attribute update error. Invalid email, phone or mobile? ' + str(ae),}, 422, {})
 
     try:
         if 'password' in request.json:

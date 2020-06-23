@@ -8,34 +8,10 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .directive('convertToNumber', function() {
-    return {
-      require: 'ngModel',
-      link: function(scope, element, attrs, ngModel) {
-          ngModel.$parsers.push(function(val) {
-            return parseInt(val, 10);
-          });
-          ngModel.$formatters.push(function(val) {
-            return '' + val;
-          });
-        }
-    };
-  })
-  .directive('positiveInteger', function() {
-    return {
-      require: 'ngModel',
-      link: function(scope, element, attrs, ngModel) {
-        ngModel.$validators.integer = function(modelValue, viewValue) {
-          var val = parseInt(viewValue, 10);
-	  return (val > 0);
-        };
-      }
-    };
-  })
   .controller('UsereditCtrl', function ($scope, $filter, $uibModal, User, Organization, Country, Membership, Auth, GridData, notify, $stateParams, $state, $q, FileReader) {
 
     var loadUser = function() {
-      if (!$stateParams.id) { return {}; }
+      if (!$stateParams.id) { return {}; } // new contact
       return User.query({'id': $stateParams.id}).$promise
                 .then(function(resp){
                     if (resp.birthdate) { resp.birthdate = new Date(resp.birthdate); }
@@ -53,7 +29,7 @@ angular.module('cpApp')
     var loadOrgs = function(){
       return Organization.query_list().$promise
                 .then(function(resp){
-                    return resp.organizations;
+                    return resp.organizations.sort(function(a,b){return a.abbreviation > b.abbreviation;});
                   }, function(){});
     };
 
@@ -82,7 +58,7 @@ angular.module('cpApp')
             .then( function( result ) {
               $scope.user          = result.shift();
               $scope.roles         = _array2hash(result.shift());
-              $scope.organizations = _array2hash(result.shift());
+              $scope.organizations = result.shift();
               $scope.countries     = result.shift();
               $scope.memberships   = result.shift();
             }
@@ -103,15 +79,24 @@ angular.module('cpApp')
         });
     }
 
-    $scope.save_membership = function(m) {
+    $scope.field_is_required = function(field_name, m) {
+        var role_id = m.membership_role_id;
+        if (!m.membership_role_id) { return false; }
+        var role_name = $scope.roles[m.membership_role_id].display_name;
+
+        if( field_name === 'email' && role_name === 'Single Point of Contact (SPoC)') {
+            return true;
+        }
+        return false;
+    };
+
+    $scope.get_org_by_id = function(oid) {
+        return $scope.organizations.find(function(o) { return o.id === oid; });
+    };
+    $scope.save_membership = function(m, form) {
+      if (!validateForm(form)) { return; }
       _handle_upload_field(m,'coc');
       _handle_upload_field(m,'smime');
-
-      // sms alert mobile validation
-      if (m.sms_alerting && !m.mobile) {
-        notify({classes:'notify-success', message: 'mobile number is required if SMS Alerting is activated.'});
-        return;
-      }
 
       if(m.id) {
         emptyToNull(m);
@@ -127,8 +112,10 @@ angular.module('cpApp')
       }
     };
 
-    $scope.create_user = function(){
+    $scope.create_user = function(form){
+      if (!validateForm(form)) { return; }
       _handle_upload_field($scope.user,'picture');
+      if ($scope.user.password === '') { delete $scope.user.password; }
       var data = { user: $scope.user, organization_membership: $scope.memberships[0] };
       User.create({}, data, function(resp){
         $state.go('user_edit', {id: resp.user.id});
@@ -136,7 +123,8 @@ angular.module('cpApp')
       }, function(){});
     };
 
-    $scope.update_user = function(){
+    $scope.update_user = function(form){
+      if (!validateForm(form)) { return; }
       var u = $scope.user;
       _handle_upload_field(u,'picture');
       User.update({'id':u.id}, u, function(resp){
@@ -245,5 +233,20 @@ angular.module('cpApp')
       popup: { opened: false },
       open: function() { $scope.birthdate.popup.opened = true; }
     };
+    function validateForm(form) {
+        if (form.$valid) {
+            return true;
+        }
+        else {
+            angular.forEach(form.$error, function (field) {
+                angular.forEach(field, function(errorField){
+                    errorField.$setTouched();
+                    var name = errorField.$$attr.name;
+                    notify({classes:'notify-error', message: 'field "'+name+'" is invalid!'});
+                })
+            });
+            return false;
+        }
+    }
 
   });

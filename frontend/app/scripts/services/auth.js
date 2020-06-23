@@ -8,7 +8,7 @@
  * Factory in the cpApp.
  */
 angular.module('cpApp')
-  .factory('Auth', function ($http, $cookies, $log, Session, config, $location) {
+  .factory('Auth', function ($http, $cookies, $log, Session, config, $location, $rootScope, Idle) {
     // Service logic
     // ...
 
@@ -16,11 +16,18 @@ angular.module('cpApp')
       // this is never used, we pass the cookie with all requests
       // using the authInterceptor
       Session.set('auth', $cookies.get('rm'));
+
+      if (response.data.hasOwnProperty('logout_inactive_seconds') ) {
+          Idle.setIdle(response.data.logout_inactive_seconds);
+      }
+
       return response;
     };
     var uncacheSession = function (response) {
       Session.unset('auth');
       $cookies.remove('username');
+      $rootScope.username = '';
+      $location.path('/login');
       return response;
     };
 

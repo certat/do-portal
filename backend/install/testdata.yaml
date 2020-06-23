@@ -29,7 +29,6 @@ user:
     phone: "+431123456"
     password: "Bla12345%"
     mobile: "+3412312312"
-    sms_alerting: 1
   - name: eorgmaster
     org: eorg
     role: OrgAdmin

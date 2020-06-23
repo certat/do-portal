@@ -9,7 +9,7 @@ import yaml
 from urllib.error import HTTPError
 import onetimepass
 from app import db, login_manager, config
-from sqlalchemy import desc, event, text
+from sqlalchemy import desc, event, text, or_, UniqueConstraint
 from sqlalchemy.orm import aliased, deferred
 from sqlalchemy.dialects import postgres
 from flask_sqlalchemy import BaseQuery
@@ -24,10 +24,16 @@ from app.utils.mixins import SerializerMixin
 from app.utils.inflect import pluralize
 from validate_email import validate_email
 from app.utils.mail import send_email
+from sqlalchemy.exc import IntegrityError    
 import phonenumbers
 import time
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 import re
+
+import sys
+import functools
+
+print = functools.partial(print, flush=True)
 
 # from pprint import pprint
 
@@ -41,6 +47,7 @@ def check_phonenumber(phonenumber):
             phonenumber = None
         else:
             x = phonenumbers.parse(phonenumber, None)
+            phonenumber = re.sub(r'\s+', '', phonenumber)
             m = re.search(r'^\+\d+$', phonenumber)
             if not m:
                 raise AttributeError(phonenumber, 'number has to start with a + and may only contain numbers')
@@ -259,11 +266,17 @@ class MailmanMember(MailmanModel):
 class User(UserMixin, Model, SerializerMixin):
     """User model"""
     __tablename__ = 'users'
-    __public__ = ('id', 'name', 'api_key', 'otp_enabled', 'picture', 'birthdate', 'title', 'origin', 'email', 'picture_filename')
+    __public__ = ('id', 'name', 'otp_enabled', 'picture', 'birthdate', \
+                  'title', 'email', 'picture_filename', 'alias_user_id')
+
+    __private__ = ('reset_token', 'reset_token_valid_to', 'api_key', \
+                   'otp_enabled', 'origin', 'login_timestamp')
+
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'))
-    name = db.Column(db.String(255), nullable=False)
+    alias_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    _name = db.Column('name', db.String(255), nullable=False)
     _password = db.Column('password', db.String(255), nullable=False, default=binascii.hexlify(os.urandom(12)).decode())
     _email = db.Column('email', db.String(255), unique=True)
     api_key = db.Column(db.String(64), nullable=True)
@@ -277,10 +290,17 @@ class User(UserMixin, Model, SerializerMixin):
     birthdate = db.Column(db.Date)
     title = db.Column(db.String(255))
     origin = db.Column(db.String(255))
+    _reset_token = db.Column(db.String(255))
+    _reset_token_valid_to = db.Column(db.DateTime)
+    _login_timestamp = db.Column('login_timestamp', db.DateTime)
 
     _orgs = []
     _org_ids = []
     _organizations_list = []
+    multi_tree_org_id = []
+    multi_tree_org_raw = []
+
+    aliased_users = db.relationship('User')
 
     user_memberships = db.relationship(
         'OrganizationMembership',
@@ -314,6 +334,14 @@ class User(UserMixin, Model, SerializerMixin):
         return onetimepass.valid_totp(token, self.otp_secret, window=1)
 
     @property
+    def login_timestamp(self):
+        return self._login_timestamp
+
+    @login_timestamp.setter
+    def login_timestamp(self, login_timestamp):
+        self._login_timestamp = login_timestamp
+
+    @property
     def password(self):
         """User password is a read-only property.
 
@@ -328,7 +356,7 @@ class User(UserMixin, Model, SerializerMixin):
             raise AttributeError(password_errors)
         self._password = generate_password_hash(
             password, method='pbkdf2:sha512:100001', salt_length=32
-        )
+        )    
         # self.reset_password_send_email(self.email)
 
     def check_password(self, password):
@@ -336,21 +364,65 @@ class User(UserMixin, Model, SerializerMixin):
 
     @property
     def email(self):
+        if self.alias_user_id:
+            parent_user = User.get(self.alias_user_id)
+            return parent_user.email
         return self._email
 
     @email.setter
     def email(self, email):
         email = email.lower()
-        if not validate_email(email):
+        if not self.deleted and not validate_email(email):
             raise AttributeError(email, 'seems not to be a valid email address')
         user = User.query.filter_by(_email=email).first()
         if user:
             if self.id != user.id:
-                raise AttributeError(email, 'duplicate email')
+                raise ValueError(email, 'duplicate email', user)
+        
+        """
+        see https://github.com/certat/do-portal/issues/112
+        send change email if user is orgadmin for at least one org
+        """
+        if self._email is not None and \
+            (self._email != email) and \
+            self.get_organization_memberships():
+
+            send_email('Email Change', [email, self._email],
+                   'auth/email/change_orgadmin_email', user=self,
+                   newemail=email )
+
         self._email = email
+
+    @property
+    def name(self):
+        if self.alias_user_id is not None:
+            parent_user = User.get(self.alias_user_id)
+            return '# alias user # ' + parent_user.name
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = name
+
+    @property
+    def reset_token(self):
+        return self._reset_token
+
+    @reset_token.setter
+    def reset_token(self, reset_token):
+        self._reset_token = reset_token 
+        delta = datetime.timedelta(seconds = 900)
+        self._reset_token_valid_to = datetime.datetime.today() + delta
+        # current_app.logger.debug('user', self.id, reset_token)
+
+    @property
+    def reset_token_valid_to(self):
+        return self._reset_token_valid_to
 
     @classmethod
     def authenticate(cls, email, password):
+        if not email:
+            return None, False
         user = cls.query.filter(cls._email == email).first()
         if user:
             authenticated = user.check_password(password)
@@ -360,6 +432,9 @@ class User(UserMixin, Model, SerializerMixin):
                 authenticated = False
         else:
             authenticated = False
+        user.login_timestamp = datetime.datetime.now()
+        db.session.add(user)
+        db.session.commit()
         return user, authenticated
 
     @classmethod
@@ -371,15 +446,11 @@ class User(UserMixin, Model, SerializerMixin):
                 return False
             # password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii')+'aB1$'
             # user.password = password
-            token=user.generate_reset_token()
-            current_app.logger.debug('debug token', token)
-            current_app.logger.info('info token', token)
-            print(token)
+            token = user.generate_reset_token()
 
             send_email('Austrian Energy CERT - Kontaktdatenbank: Account-Aktivierung/Passwort-Reset', [user.email],
                    'auth/email/ec_reset_password', user=user,
                    token=token.decode("utf-8"), email=email )
-
             db.session.add(user)
             db.session.commit()
             return token
@@ -413,7 +484,16 @@ class User(UserMixin, Model, SerializerMixin):
         s = TimedJSONWebSignatureSerializer(
             current_app.config['SECRET_KEY'], expiry
         )
-        return s.dumps({'user_id': self.id})
+
+        if self.alias_user_id:
+            user = User.get(self.alias_user_id) 
+        else:
+            user = self
+       
+         
+        user.reset_token = s.dumps({'user_id': user.id}).decode("utf-8")
+        # add user AND alias user(s) in caller #  db.session.add(user)
+        return s.dumps({'user_id': user.id})
 
     def reset_password(self, token, new_pass):
         """Reset password. Token is generated by
@@ -446,7 +526,12 @@ class User(UserMixin, Model, SerializerMixin):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
         data = s.loads(token)
         user = cls.get(data.get('user_id'))
+        if user.reset_token is None:
+            raise AttributeError('Token already used')
         user.password = passwd
+        user.reset_token = None
+        user._reset_token_valid_to = None
+        
         db.session.add(user)
         db.session.commit()
 
@@ -467,10 +552,43 @@ class User(UserMixin, Model, SerializerMixin):
             db.session.commit()
             return user
 
+    def create_alias_user(self, organization_id = None):
+        user = User(name = '# is alias of ' + str(self.id) , password = 'XX 12 no password set %%',
+                    otp_enabled = False, alias_user_id = self.id, deleted = 0)
+        db.session.add(user)
+        return user
+
     def generate_api_key(self):
         rand = self.random_str()
         return hashlib.sha256(rand.encode()).hexdigest()
 
+    @staticmethod
+    def create(user_dict):
+        try:
+            user = User.fromdict(user_dict)
+            message = 'User added'
+        except ValueError as ae:
+            existing_user = ae.args[2]
+            user = existing_user.create_alias_user()    
+            message = 'User aliased'
+
+        db.session.add(user) 
+        return(user, message)
+
+    @staticmethod
+    def delete_unused_users():
+        '''
+        select id, name, email, deleted from users where id not in
+          (select user_id from organization_memberships om where om.deleted = 0) and
+          deleted = 0;
+        '''
+        subquery = db.session.query(OrganizationMembership.user_id).filter_by(deleted=0)
+        unused_users = User.query.filter_by(deleted=0) \
+                 .filter(User.id.notin_(subquery))
+        for user in unused_users:
+            user.mark_as_deleted()
+            db.session.add(user)
+        return unused_users.count()
 
     @staticmethod
     def random_str(length=64):
@@ -501,14 +619,15 @@ class User(UserMixin, Model, SerializerMixin):
         """
         oms = self.get_organization_memberships()
         for um in user.user_memberships:
-           if um.organization_id in self._org_ids:
+           if um.organization_id in self.multi_tree_org_id:
               return True
         return False
 
     def mark_as_deleted(self):
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
-        self.email = str(time.time()) + self.email
+        if self.email:
+            self.email = str(time.time()) + self.email
         db.session.add(self)
         for um in self.user_memberships:
             um.mark_as_deleted(delete_last_membership = True)
@@ -519,12 +638,13 @@ class User(UserMixin, Model, SerializerMixin):
             may manipulate the organization of the parameter list
         """
         self.get_organization_memberships()
-        if org.id in self._org_ids:
+        if org.id in self.multi_tree_org_id:
             return True
         return False
 
     _tree_cache = {};
 
+    '''
     def _org_tree_iterator(self, org_id):
         if org_id in self._tree_cache:
            self._tree_cache[org_id] += 1
@@ -537,9 +657,9 @@ class User(UserMixin, Model, SerializerMixin):
            self._orgs.append(sub_org.organization_memberships)
            self._org_ids.append(sub_org.id)
            self._org_tree_iterator(sub_org.id)
+    '''
 
-
-    def _org_tree(self, org_id, limit = 1000, offset = 0):
+    def _org_tree_raw(self, org_id, limit = 1000, offset = 0):
         results = db.engine.execute(
                 text("""with recursive sub_orgs as (
                               select id,
@@ -566,7 +686,9 @@ class User(UserMixin, Model, SerializerMixin):
                 h[k] = r[i]
 
             self._organizations_list.append(h)
+        return self._organizations_list
 
+    def _org_tree(self, org_id, limit = 1000, offset = 0):
         results = db.engine.execute(
                 text("""with recursive sub_orgs as (select id, abbreviation, full_name, display_name, deleted, parent_org_id, 'n/a'::text, 0 depth from organizations
                    where id = :b_parent_org_id
@@ -579,19 +701,21 @@ class User(UserMixin, Model, SerializerMixin):
         # self._org_ids = []
         for row in results:
             self._org_ids.append(row[0])
-
+        return self._org_ids
+ 
 
     def get_organization_memberships(self):
         """ returns a list of OrganizationMembership records"""
         """ self MUST be a logged in admin, we find all nodes (and subnodes)
             where the user is admin an return ALL memeberships of those nodes
             in the org tree """
-        self._organizations_list = []
-        self._org_ids = []
-        # there must be a better way to write this
         admin_role = self.get_role_by_name('OrgAdmin')
-        orgs_admins = OrganizationMembership.query.filter_by(
-            user_id = self.id, membership_role_id = admin_role.id, deleted = 0).all()
+        
+        stmt_user_ids = db.session.query(User.id). \
+            filter(or_(User.id == self.id, User.alias_user_id == self.id)).subquery()
+        orgs_admins = OrganizationMembership.query. \
+            filter(OrganizationMembership.user_id.in_(stmt_user_ids)). \
+            filter_by(membership_role_id = admin_role.id, deleted = 0).all()
 
         if (not orgs_admins):
            return []
@@ -601,30 +725,36 @@ class User(UserMixin, Model, SerializerMixin):
 
         # find all orgs where the org.id is the parent_org_id recursivly
         #  for org in orgs_admin:
-
-        ### old implementation ####
-
+        
+        self.multi_tree_org_id = []  
+        self.multi_tree_org_raw = []  
         for oa in orgs_admins:
            # self._org_tree_iterator(oa.organization_id)
-           self._org_tree(oa.organization_id)
-        return OrganizationMembership.query.filter(OrganizationMembership.organization_id.in_(self._org_ids)).filter(OrganizationMembership.deleted == 0)
+           self.multi_tree_org_id.extend(self._org_tree(oa.organization_id))
+           self.multi_tree_org_raw.extend(self._org_tree_raw(oa.organization_id))
+
+        oms = OrganizationMembership.query.filter( \
+                     OrganizationMembership.organization_id.in_(self.multi_tree_org_id)) \
+                     .filter(OrganizationMembership.deleted == 0)
+        return oms
 
 
 
     def get_organizations(self, limit = 1000, offset = 0):
         """returns a list of Organization records"""
-        self.get_organization_memberships()
+        oms = self.get_organization_memberships()
         if not self._org_ids:
             return []
-        return Organization.query.filter(Organization.id.in_(self._org_ids)).limit(limit).offset(offset)
+        return Organization.query.filter(Organization.id.in_(self.multi_tree_org_id)) \
+                    .limit(limit).offset(offset)
 
     def get_organizations_raw(self, limit = 5, offset = 0):
         # import pdb; pdb.set_trace()
         """returns a list of Organization records"""
-        self.get_organization_memberships()
+        oms = self.get_organization_memberships()
         if not self._org_ids:
             return []
-        return self._organizations_list
+        return self.multi_tree_org_raw
 
     def get_users(self):
         """returns a list of unique User records"""
@@ -635,8 +765,9 @@ class User(UserMixin, Model, SerializerMixin):
         for om in oms:
             if om.user.id not in ud:
                 if om.user.deleted != 1:
-                    users.append(om.user)
+                    users.append(om.user)                
                 ud[om.user.id] = 1
+
         return users
 
     def get_memberships(self, membership_id = None):
@@ -645,6 +776,9 @@ class User(UserMixin, Model, SerializerMixin):
             return self.user_memberships_dyn.filter_by(id = membership_id, deleted = 0).first()
         else:
             return self.user_memberships_dyn.filter_by(deleted = 0)
+
+    def is_authenticated(self):
+        print(self.name)
 
 class Permission:
     """Permissions pseudo-model. Uses 8 bits to assign permissions.
@@ -1159,6 +1293,7 @@ class Organization(Model, SerializerMixin):
                   'contact_emails', 'display_name', 'parent_org_id',
                   'parent_org_abbreviation', 'ripe_handles')
                   # 'notification_settings')
+
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(
@@ -1179,7 +1314,6 @@ class Organization(Model, SerializerMixin):
     mail_times = db.Column(db.Integer, default=3600)
     ts_deleted = db.Column(db.DateTime)
     deleted = db.Column(db.Integer, default=0)
-
     # def __init__(self):
     #     self.__parent_org_abbreviation = None
 
@@ -1768,7 +1902,7 @@ class MembershipRole(Model, SerializerMixin):
 
         try:
             stream = open('install/roles.yaml')
-            data_loaded = yaml.load(stream)
+            data_loaded = yaml.load(stream, yaml.Loader)
             for role in data_loaded:
                 roles.append([role['name'], role['display_name']])
         except IOError:
@@ -1793,7 +1927,10 @@ class OrganizationMembership(Model, SerializerMixin):
     __public__ = ('id', 'user_id', 'organization_id', 'street', 'zip', 'city',
                   'country', 'comment', 'email', 'phone', 'mobile', 'membership_role_id',
                   'pgp_key_id', 'pgp_key_fingerprint', 'pgp_key', 'smime', 'country_id',
-                  'coc', 'coc_filename', 'smime_filename', 'sms_alerting', )
+                  'coc', 'coc_filename', 'smime_filename')
+    __table_args__ = (
+        db.UniqueConstraint('user_id', 'organization_id', 'membership_role_id', 'deleted', name='role_unique'),
+    )
 
     query_class = FilteredQuery
     id = db.Column(db.Integer, primary_key=True)
@@ -1823,25 +1960,14 @@ class OrganizationMembership(Model, SerializerMixin):
     smime_filename = db.Column(db.String(255))
     coc = deferred(db.Column(db.Text))
     coc_filename = db.Column(db.String(255))
-    _sms_alerting = db.Column('sms_alerting', db.Integer, default=0)
-    db.UniqueConstraint('membership_role_id', 'user_id', 'organization_id', name='uk_membership')
 
+    # OrganisationMembership.mark_as_deleted
     def mark_as_deleted(self, delete_last_membership = False):
-        mc = self.user.user_memberships_dyn.filter_by(deleted = 0).count()
-        if mc == 1 and delete_last_membership == False:
+        mc = self.user.user_memberships_dyn.filter_by(deleted = 0)
+        if mc.count() == 1 and delete_last_membership is False:
             raise AttributeError('Last membership may not be deleted')
         self.deleted = 1
         self.ts_deleted = datetime.datetime.utcnow()
-
-    @property
-    def sms_alerting(self):
-        return self._sms_alerting
-
-    @sms_alerting.setter
-    def sms_alerting(self, sms_alerting):
-        # if sms_alerting == 1 and not self._mobile:
-        #    raise AttributeError('if sms_alerting is set mobile number also has to be set')
-        self._sms_alerting = sms_alerting
 
     @property
     def email(self):
@@ -1874,23 +2000,54 @@ class OrganizationMembership(Model, SerializerMixin):
     def mobile(self, mobile):
         self._mobile = check_phonenumber(mobile)
 
+    @staticmethod
+    def upsert(organization_membership_dict, membership = None):
+        if membership:
+            existing_membership_role_id = membership.membership_role_id
+            if organization_membership_dict['membership_role_id'] ==\
+                   existing_membership_role_id:
+                check_role_id = -1
+            else:
+                check_role_id = existing_membership_role_id
+        else:
+            existing_membership_role_id = None
+            check_role_id = organization_membership_dict['membership_role_id']
 
-""" watch for insert on Org Memberships """
-def org_mem_listerner(mapper, connection, org_mem):
-    if org_mem.membership_role and org_mem.membership_role.name == 'OrgAdmin':
-        # XXX org_mem.user.api_key = org_mem.user.generate_api_key()
-        # print(org_mem.membership_role.name,  org_mem.email, org_mem.user.email, org_mem.user._password)
-        # print(org_mem.membership_role.name,  org_mem.email)
-        password = binascii.hexlify(os.urandom(random.randint(6, 8))).decode('ascii') + 'Ba1%'
-        org_mem.user.password = password
-        token=org_mem.user.generate_reset_token()
-        # current_app.log.debug(token)
-        send_email('energy-cert account', [org_mem.user.email],
-               'auth/email/ec_activate_account', org_mem=org_mem,
-               token=token)
+        # have to check constraint manually because sqlalchemy 
+        # doesnt handle it properly in web context   
+        check_constraint =  OrganizationMembership.query.filter( \
+                 OrganizationMembership.membership_role_id == \
+                            check_role_id,
+                 OrganizationMembership.organization_id == \
+                            organization_membership_dict['organization_id'],
+                 OrganizationMembership.user_id == \
+                            organization_membership_dict['user_id'],
+                 OrganizationMembership.deleted == 0).first()
 
-
-event.listen(OrganizationMembership, 'after_insert', org_mem_listerner, retval=True, propagate=True)
+        if check_constraint:
+            raise AttributeError('User already has this in role with this organization')
+        
+        try:
+            if membership:
+                membership.from_json(organization_membership_dict)
+            else:
+                membership = OrganizationMembership.fromdict(
+                           organization_membership_dict)
+        except IntegrityError:
+            raise AttributeError('User already has this in role with this organization')
+        message = 'Membership saved'
+        httpcode = 201
+        db.session.add(membership)
+        admin_role = MembershipRole.query.filter_by(name = 'OrgAdmin').first()
+        if membership.membership_role_id == admin_role.id and \
+           existing_membership_role_id != admin_role.id:
+            token = membership.user.generate_reset_token()
+            send_email('energy-cert account', [membership.user.email],
+                'auth/email/org_account_admin', org_mem=membership,
+                token=token.decode("utf-8"))
+             
+        db.session.add(membership.user)
+        return (membership, message)
 
 
 @login_manager.user_loader
@@ -1903,8 +2060,25 @@ def load_user(user_id):
     user_loader stores the returned User object in current_user during every
     flask request.
     """
-    return User.query.get(int(user_id))
+    user = User.query.get(int(user_id))
+    if not user.login_timestamp:
+        return None
 
+    now = datetime.datetime.now()
+    last_active = now - user.login_timestamp 
+
+    # print('inactive', last_active.total_seconds())
+
+    if last_active.total_seconds() > current_app.config['LOGOUT_INACTIVE_SECONDS'] + 60:
+        user.login_timestamp = None
+        db.session.add(user)
+        db.session.commit()
+        return None
+
+    user.login_timestamp = datetime.datetime.now()
+    db.session.add(user)
+    db.session.commit()
+    return user
 
 # @login_manager.token_loader
 '''
@@ -1959,12 +2133,11 @@ def load_token(token):
     return None
 '''
 
+
 @login_manager.request_loader
 def load_user_from_request(request):
     """Login users using api_key for header values
     See `<https://flask-login.readthedocs.org/en/latest/#custom-login-using-
-    request-loader`>_
-
     :param request: Flask request
     """
     # first, try to login using the api_key url arg

@@ -8,11 +8,8 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('HeaderCtrl', function ($scope, $location, Auth, $rootScope) {
+  .controller('HeaderCtrl', function ($scope, Auth) {
     $scope.logout = function () {
-      Auth.logout().then(function () {
-        $rootScope.username = '';
-        $location.path('/login');
-      });
+      Auth.logout();
     };
   });

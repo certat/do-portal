@@ -11,6 +11,7 @@ services:
             POSTGRES_DB: do_portal
         volumes:
             - portal_db_data:/var/lib/postgresql/data
+            - ./docker_initdb.sh:/docker-entrypoint-initdb.d/docker_initdb.sh
 
     portal-backend:
         container_name: portal-backend
@@ -19,16 +20,26 @@ services:
             - VIRTUAL_HOST=portal-backend
         depends_on:
             - portal-db
+        volumes:
+            - type: bind
+              source: ./backend
+              target: /home/cert/do-portal/
 
     portal-frontend:
         container_name: portal-frontend
         build: ./frontend
         environment:
             - VIRTUAL_HOST=portal-frontend
+        depends_on:
+            - portal-backend
+        volumes:
+            - type: bind
+              source: ./frontend
+              target: /home/cert/customer-portal/
 
-    epplication_db:
+    epplication-db:
         image: postgres:9.6-alpine
-        container_name: epplication_db
+        container_name: epplication-db
         environment:
             POSTGRES_USER: epplication
             POSTGRES_PASSWORD: epplication
@@ -36,25 +47,25 @@ services:
         volumes:
             - epplication_db_data:/var/lib/postgresql/data
 
-    epplication_selenium:
+    epplication-selenium:
         image: selenium/standalone-firefox-debug
-        container_name: epplication_selenium
+        container_name: epplication-selenium
         volumes:
             - /dev/shm:/dev/shm
         ports:
             - "5900:5900"
 
-    epplication_app:
-        container_name: epplication_app
+    epplication-app:
+        container_name: epplication-app
         image: davewood/epplication:latest
         depends_on:
-            - epplication_db
-            - epplication_selenium
+            - epplication-db
+            - epplication-selenium
         volumes:
             - epplication_app_data_job_exports:/home/epplication/EPPlication/root/job_exports
             - epplication_app_data_ssh_keys:/home/epplication/EPPlication/ssh_keys
         environment:
-            - VIRTUAL_HOST=epplication_app
+            - VIRTUAL_HOST=epplication-app
 
     proxy:
         container_name: proxy
@@ -64,7 +75,7 @@ services:
         ports:
             - "8081:80"
         depends_on:
-            - epplication_app
+            - epplication-app
             - portal-frontend
             - portal-backend
 

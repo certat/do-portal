@@ -63,7 +63,7 @@ PyMySQL==0.7.6
 pyOpenSSL==18.0.0
 PyQRCode==1.2.1
 pyrabbit==1.1.0
-pytest==2.9.2
+pytest==3.0.0
 pytest-cov==2.3.0
 pytest-flake8==0.6
 pytest-xdist==1.14

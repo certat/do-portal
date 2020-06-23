@@ -168,11 +168,6 @@ module.exports = function (grunt) {
 
     // Add vendor prefixed styles
     postcss: {
-      options: {
-        processors: [
-          require('autoprefixer')({browsers: ['last 1 version']})
-        ]
-      },
       server: {
         options: {
           map: true

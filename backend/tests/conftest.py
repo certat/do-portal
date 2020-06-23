@@ -62,13 +62,13 @@ def db(request, app):
     """Create test database tables"""
     _db.reflect()
     _db.drop_all()
+    _db.session.commit()
     # Create the tables based on the current model
     _db.create_all()
     MembershipRole._MembershipRole__insert_defaults()
     Country._Country__insert_defaults()
-    # user = User.create_test_user()
     testfixture.testdata.addyaml()
-    user = User.query.filter_by(name="certmaster").first()
+    user = User.query.filter_by(_name="certmaster").first()
     TestClient.test_user = user
     TestClient._api_user = user
     TestClient.test_user.organization_id = Organization.query.filter_by(abbreviation='cert').first().id
@@ -87,7 +87,7 @@ def session(request, monkeypatch):
     # committing (redirect to flush() instead)
     # https://alextechrants.blogspot.com/2014/01/unit-testing-sqlalchemy-apps-part-2.html
     # monkeypatch.setattr(_db.session, 'commit', _db.session.flush)
-    monkeypatch.setattr(_db.session, 'remove', lambda: None)
+    # monkeypatch.setattr(_db.session, 'remove', lambda: None)
 
 
 @pytest.fixture(autouse=True)

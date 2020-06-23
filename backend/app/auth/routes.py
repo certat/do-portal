@@ -102,7 +102,8 @@ def login():
         user, authenticated = User.authenticate(email, password)
         if user and authenticated:
             if login_user(user, remember=True):
-                return ApiResponse({'auth': 'authenticated'})
+                return ApiResponse({'auth': 'authenticated',  
+                        'logout_inactive_seconds': current_app.config['LOGOUT_INACTIVE_SECONDS']})
 
     raise ApiException('Invalid username or password', 401)
 
@@ -490,7 +491,6 @@ def reset_api_key():
 
 @auth.route('/lost_password', methods=['POST'])
 @validate('users', 'lost_password')
-@json_response
 def lost_password():
     """Request a new password
 
@@ -535,8 +535,8 @@ def lost_password():
     try:
         User.reset_password_send_email(request.json['email'])
     except AttributeError:
-        return {'message': 'Attribute error. Invalid email?',}, 422, {}
-    return {'message': 'Password restore email sent'}, 200, {}
+        return ApiResponse({'message': 'Attribute error. Invalid email?',}, 422, {})
+    return ApiResponse({'message': 'Password restore email sent'})
 
 
 @auth.route('/activate-account', methods=['POST'])
@@ -563,7 +563,7 @@ def set_password():
     try:
         User.set_password(token, password)
     except AttributeError as e:
-        raise ApiException(str(e), 401)
+        raise ApiException(str(e), 400)
     return ApiResponse({'auth': 'authenticated'})
 
 @auth.route('/bosh-session', methods=['GET'])

@@ -35,7 +35,7 @@ class testdata:
    def addyaml(yamlfile = "install/testdata.yaml"):
       """Add sample data from yaml file"""
       with open(yamlfile, 'r') as stream:
-           data_loaded = yaml.load(stream)
+           data_loaded = yaml.load(stream, yaml.Loader)
 
       for org in data_loaded['org']:
          if 'full_name' not in org:
@@ -87,8 +87,6 @@ class testdata:
              user['phone'] = '+12345678'
          if 'mobile' not in user:
              user['mobile'] = '+33456788'
-         if 'sms_alerting' not in user:
-             user['sms_alerting'] = 0
 
          oxu = OrganizationMembership(
             email =  user['email'],
@@ -102,7 +100,6 @@ class testdata:
             organization = org,
             user = u,
             membership_role = role,
-            sms_alerting = user['sms_alerting'],
          )
          db.session.commit()
 

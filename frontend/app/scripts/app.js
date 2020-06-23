@@ -8,12 +8,40 @@
  *
  * Main module of the application.
  */
+
 angular
   .module('cpApp', ['ngAnimate', 'ngCookies', 'ngMessages', 'ngResource', 'ngSanitize',
     'ngTouch', 'ngCsv', 'ngFileUpload', 'ui.bootstrap', 'ui.select', 'uiSwitch', 'ui.router',
-    'angular-loading-bar', 'services.config', 'cgNotify',
-    'ui.grid', 'ui.grid.exporter', 'ui.grid.resizeColumns', 'ui.grid.autoResize'
+    'angular-loading-bar', 'services.config', 'cgNotify', 'ngIdle',
+    'ui.grid', 'ui.grid.exporter', 'ui.grid.resizeColumns', 'ui.grid.autoResize', 'utils.autofocus'
   ])
+  .directive('convertToNumber', function() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+          ngModel.$parsers.push(function(val) {
+            return parseInt(val, 10);
+          });
+          ngModel.$formatters.push(function(val) {
+            return '' + val;
+          });
+        }
+    };
+  })
+  .directive('positiveInteger', function() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$validators.positive_integer = function(modelValue, viewValue) {
+          if (!attrs.required && ngModel.$isEmpty(modelValue)) {
+            return true;
+          }
+          var val = parseInt(viewValue, 10);
+	  return (val > 0);
+        };
+      }
+    };
+  })
   .config(function ($stateProvider) {
     $stateProvider
       .state('home', {
@@ -216,7 +244,20 @@ angular
     $httpProvider.interceptors.push('authInterceptor');
     $httpProvider.defaults.withCredentials = true;
   }])
-  .run(function($rootScope, notify, $cookies, config){
+  .config(function(IdleProvider) {
+    IdleProvider.idle(10); // default logout after 10s, this will be overriden on login
+    IdleProvider.timeout(0);
+    IdleProvider.keepalive(false);
+  })
+  .run(function($rootScope, notify, $cookies, config, Idle, Auth){
+
+    $rootScope.$on('IdleStart', function() {
+      if ( Auth.isLoggedIn() ) {
+        notify({classes: 'notify-error', message: 'Logout due to inactivity.'});
+        Auth.logout();
+      }
+    });
+    Idle.watch();
 
     $rootScope.enableStatistics = config.enableStatistics;
 

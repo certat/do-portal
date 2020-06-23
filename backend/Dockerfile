@@ -1,4 +1,8 @@
 FROM debian:stretch
+#FROM debian:stretch-slim
+
+# create man dirs manually because otherwise psql won't install on debian-slim
+#RUN for i in {1..8}; do mkdir -p "/usr/share/man/man$i"; done
 
 RUN    apt-get update \
     && apt-get install -y \
@@ -8,30 +12,22 @@ RUN    apt-get update \
        ssdeep exiftool libfuzzy-dev \
        libffi-dev p7zip-full libncurses-dev \
        libxslt-dev lib32z1-dev libpq-dev \
-       python3-venv python3-dev python3-pip \
+       python3-venv python3-dev python3-pip python3-setuptools \
        postgresql-client-9.6 \
+       procps \
     && rm -rf /var/lib/apt/lists/*
 
+ARG CONTAINER_UID=1000
 RUN useradd --create-home --home-dir /home/cert \
-            --user-group --shell /bin/bash cert
+            --uid $CONTAINER_UID --user-group --shell /bin/bash cert
 
-COPY --chown=cert:cert requirements.txt /home/cert/do-portal/requirements.txt
-WORKDIR /home/cert
 USER cert
+WORKDIR /home/cert/do-portal
 
 ENV LANGUAGE en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LC_ALL C.UTF-8
 ENV DO_LOCAL_CONFIG /home/cert/do-portal/config.cfg
-
-WORKDIR /home/cert/do-portal
-RUN python3 -m venv ~/do-portal
-
-RUN /bin/bash -c "source ./bin/activate && pip install -U pip setuptools && pip install -r requirements.txt"
-
-COPY --chown=cert:cert . /home/cert/do-portal
-RUN mkdir logs
-RUN cp config.cfg.docker config.cfg
 
 EXPOSE 8081
 

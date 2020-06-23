@@ -27,8 +27,12 @@ def get_cp_settings(ripe_org_hdl, org_id):
              (organization_id=org_id, _ripe_org_hdl=ripe_org_hdl).one();
     except NoResultFound:
         abort(404)
+    try:
+        notification_settings = forg_x_org.notification_settings
+    except AttributeError:
+        return ApiResponse({})
 
-    return ApiResponse(forg_x_org.notification_settings)
+    return ApiResponse(notification_settings)
 
 @cp.route('/ripe/settings/<int:org_id>/<string:ripe_org_hdl>', methods=['PUT', 'POST'])
 def set_cp_settings(ripe_org_hdl, org_id):

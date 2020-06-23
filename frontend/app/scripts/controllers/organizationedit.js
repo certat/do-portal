@@ -8,30 +8,6 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .directive('convertToNumber', function() {
-    return {
-      require: 'ngModel',
-      link: function(scope, element, attrs, ngModel) {
-          ngModel.$parsers.push(function(val) {
-            return parseInt(val, 10);
-          });
-          ngModel.$formatters.push(function(val) {
-            return '' + val;
-          });
-        }
-    };
-  })
-  .directive('positiveInteger', function() {
-    return {
-      require: 'ngModel',
-      link: function(scope, element, attrs, ctrl) {
-        ctrl.$validators.integer = function(modelValue, viewValue) {
-          var val = parseInt(viewValue, 10);
-	  return (val > 0);
-        };
-      }
-    };
-  })
   .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notify, $stateParams, $q, $state, uiGridConstants, config) {
 
     function _array2hash(arr) {
@@ -113,7 +89,7 @@ angular.module('cpApp')
                         country: '',
                         street: '',
                         zip: '',
-                        comment: 'RIPE handle: ' + ripe_handle,
+                        comment: 'RIPE organization handle: ' + ripe_handle,
                       });
                   });
 
@@ -249,7 +225,7 @@ angular.module('cpApp')
     $scope.add_ripe_handle = function(){
         if ($scope.org.hasOwnProperty('ripe_handles')) {
           if ($scope.org.ripe_handles.includes($scope.new_ripe_handle)) {
-              notify({classes: 'notify-error', message: 'this RIPE handle already exists.'});
+              notify({classes: 'notify-error', message: 'this RIPE organization handle already exists.'});
               return;
           }
           $scope.org.ripe_handles.push($scope.new_ripe_handle);
@@ -261,7 +237,7 @@ angular.module('cpApp')
           function(){
             notify({
               classes: 'notify-success',
-              message: 'added new RIPE handle: ' + $scope.new_ripe_handle
+              message: 'added new RIPE organization handle: ' + $scope.new_ripe_handle
             });
             $scope.new_ripe_handle = '';
             loadParallel();
@@ -272,13 +248,13 @@ angular.module('cpApp')
         );
     };
     $scope.delete_ripe_handle = function(ripe_handle, index){
-        if( window.confirm('Do you really want to delete this RIPE handle? (' + ripe_handle + ')') ) {
+        if( window.confirm('Do you really want to delete this RIPE organization handle? (' + ripe_handle + ')') ) {
           $scope.org.ripe_handles.splice(index, 1);
           $scope.update_organization(
             function(){
               notify({
                 classes: 'notify-success',
-                message: 'deleted RIPE handle: ' + ripe_handle
+                message: 'deleted RIPE organization handle: ' + ripe_handle
               });
               loadParallel();
             },
