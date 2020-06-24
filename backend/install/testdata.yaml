@@ -66,3 +66,12 @@ user:
     org: energyorg-electricity-transmission
     role: OrgAdmin
     email: "admin-electricity-transmission@energyorg.at"
+domain:
+  - domain_name: "cert.at"
+    org: cert
+  - domain_name: "eorg.at"
+    org: eorg
+  - domain_name: "eorg.at"
+    org: eorg-gas
+  - domain_name: "eorg_gas.at"
+    org: eorg-gas
