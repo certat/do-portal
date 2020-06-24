@@ -20,6 +20,7 @@ cp = Blueprint('cp', __name__)
 from . import routes  # noqa
 from . import organizations, vulnerabilities, deliverable_files, fqdns  # noqa
 from . import membership_roles, countries, organization_memberships, users  # noqa
+from . import domains
 from . import errors  # noqa
 from . import fody  # noqa
 from . import grafana  # noqa

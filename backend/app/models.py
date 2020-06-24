@@ -1523,7 +1523,7 @@ class Organization(Model, SerializerMixin):
         for um in self.organization_memberships:
             um.mark_as_deleted(delete_last_membership = True)
         for domain in self.domains:
-            domain.mark_as_deleted()
+            domain.delete()
 
     # STUB
     def has_child_organizations(self):
@@ -2084,31 +2084,38 @@ def load_user(user_id):
 class Domain(Model, SerializerMixin):
     __tablename__ = 'domains'
     __public__ = ('id', 'domain_name')
+    __table_args__ = (
+            db.UniqueConstraint('organization_id', 'domain_name'),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
-    deleted = db.Column(db.Integer, default=0)
-    organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id', ondelete="CASCADE"))
-    organization = db.relationship('Organization', back_populates='domains')
+    #deleted = db.Column(db.Integer, default=0)
     # FQDN darf 255 Zeichen nicht ueberschreiten
     _domain_name = db.Column('domain_name', db.String(255), nullable=False)
-    UniqueConstraint('organization_id', '_domain_name')
+    organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id', ondelete="CASCADE"), nullable=False)
+    organization = db.relationship('Organization', back_populates='domains')
 
     @property
     def domain_name(self):
-        return self._name
+        return self._domain_name
 
     @domain_name.setter
     def domain_name(self, domain_name):
         if not isinstance(domain_name, str):
             raise TypeError('empty domain name.')
-        domain_name.strip()
+        domain_name = domain_name.strip()
         if not domain_name:
             raise ValueError('empty domain name.')
         if domain_name:
             self._domain_name = domain_name
 
-    def mark_as_deleted(self):
-        self.deleted = 1
+    #def mark_as_deleted(self):
+    #    self.deleted = 1
+
+    def delete(self):
+        if self.id:
+            domain = Domain.query.get(self.id)
+            db.session.delete(domain)
 
 
 # @login_manager.token_loader
