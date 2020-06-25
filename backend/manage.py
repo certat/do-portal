@@ -272,5 +272,17 @@ def adduser(password, name, email):
     click.echo('User {0} was registered successfully.'.format(email))
 
 
+
+@cli.command()
+@click.argument('delete_stale_ripe_handles', doit=False)
+def delete_stale_ripe_handles(filename):
+    """
+    do_portal=# 
+    delete from fodyorg_x_organization where ripe_org_hdl not in 
+        (select ripe_org_hdl from fody.organisation_automatic);
+    """
+    pass
+
+
 if __name__ == '__main__':
     cli()
