@@ -274,8 +274,8 @@ def adduser(password, name, email):
 
 
 @cli.command()
-@click.argument('delete_stale_ripe_handles', doit=False)
-def delete_stale_ripe_handles(filename):
+@click.argument('doit', required=False)
+def delete_stale_ripe_handles(doit):
     """
     do_portal=# 
     delete from fodyorg_x_organization where ripe_org_hdl not in 
