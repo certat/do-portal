@@ -987,6 +987,24 @@ class FodyOrg_X_Organization(Model, SerializerMixin):
          db.session.add(ns)
          self._notification_settings
 
+    @staticmethod
+    def delete_stale(delete = False):
+        stale_handles = db.engine.execute(
+            text("""
+            select ripe_org_hdl, organization_id, id from fodyorg_x_organization where ripe_org_hdl not in
+                (select ripe_org_hdl from fody.organisation_automatic)
+            """
+            ))
+        
+        for row in stale_handles:
+            handle = row[0]
+            organization_id = row[1]
+            id = row[2]
+            print(id, handle, organization_id)
+            if delete:
+                print("deleting");
+                fxo = FodyOrg_X_Organization.query.get(id)
+                db.session.delete(fxo)
 
 
 class NotificationSetting(Model, SerializerMixin):

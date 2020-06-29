@@ -13,6 +13,7 @@ from flask.cli import FlaskGroup
 from app import db
 from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, Vulnerability, Tag
+from app.models import FodyOrg_X_Organization
 from app.models import ContactEmail, emails_organizations, tags_vulnerabilities
 from app.models import Role, ReportType, MembershipRole, Country
 from app.fixtures import testfixture
@@ -274,14 +275,15 @@ def adduser(password, name, email):
 
 
 @cli.command()
-@click.argument('doit', required=False)
-def delete_stale_ripe_handles(doit):
+@click.option('--delete', required=False, is_flag=True)
+def delete_stale_ripe_handles(delete):
+    FodyOrg_X_Organization.delete_stale(delete) 
     """
     do_portal=# 
     delete from fodyorg_x_organization where ripe_org_hdl not in 
         (select ripe_org_hdl from fody.organisation_automatic);
     """
-    pass
+    db.session.commit()
 
 
 if __name__ == '__main__':

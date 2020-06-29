@@ -52,6 +52,9 @@ index 1027df0..d3676db 100644
  popd
  rm $(date -I)
  ```
+
+insert into fody.organisation_automatic (name, ripe_org_hdl, ti_handle, first_handle, import_source, import_time) values ('test org2', 'ORG-TEST2-RIPE', 'xxx', 'xxx', 'test', current_timestamp);
+
 +
 +delete a row from fody.organisation_automatic
 +--------------------------------------------
