@@ -1542,8 +1542,6 @@ class Organization(Model, SerializerMixin):
         self.ts_deleted = datetime.datetime.utcnow()
         for um in self.organization_memberships:
             um.mark_as_deleted(delete_last_membership = True)
-        #for domain in self.domains:
-        #    domain.delete()
         self.domains.delete()
 
     # STUB
