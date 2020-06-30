@@ -15,6 +15,7 @@ from app.models import User, Organization, IpRange, Fqdn, Asn, Email
 from app.models import OrganizationGroup, Vulnerability, Tag
 from app.models import ContactEmail, emails_organizations, tags_vulnerabilities
 from app.models import Role, ReportType, OrganizationMembership, MembershipRole
+from app.models import Domain
 from app.models import Country
 
 class testdata:
@@ -102,6 +103,11 @@ class testdata:
             membership_role = role,
          )
          db.session.commit()
+      for domain in data_loaded['domain']:
+         org = Organization.query.filter_by(abbreviation=domain['org']).first()
+         d = Domain.query.filter_by(_domain_name=domain['domain_name'], organization_id=org.id).first()
+         if not d:
+            d = Domain(domain_name=domain['domain_name'], organization=org)
 
    def print():
       """output sample data"""

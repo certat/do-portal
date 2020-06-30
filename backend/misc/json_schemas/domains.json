@@ -1,0 +1,29 @@
+{
+  "add_cp_domain": {
+    "type": "object",
+    "properties": {
+      "domain_name": {
+        "type": "string"
+      },
+      "organization_id": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "domain_name",
+      "organization_id"
+    ]
+  },
+  "update_cp_domain": {
+    "type": "object",
+    "properties": {
+      "domain_name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "domain_name"
+    ]     
+  }
+}
+

@@ -1462,6 +1462,9 @@ class Organization(Model, SerializerMixin):
         backref='notification_settings_for_organization'
     )
 
+    #domains = db.relationship('Domain', back_populates='organization', lazy='dynamic',  order_by='Domain._domain_name')
+    domains = db.relationship('Domain', back_populates='organization', lazy='dynamic')
+
     @ripe_handles.setter
     def ripe_handles(self, ripe_handles):
         current_ripe_handles = [ro.ripe_org_hdl for ro in self.ripe_organizations]
@@ -1539,6 +1542,9 @@ class Organization(Model, SerializerMixin):
         self.ts_deleted = datetime.datetime.utcnow()
         for um in self.organization_memberships:
             um.mark_as_deleted(delete_last_membership = True)
+        #for domain in self.domains:
+        #    domain.delete()
+        self.domains.delete()
 
     # STUB
     def has_child_organizations(self):
@@ -2095,6 +2101,40 @@ def load_user(user_id):
     db.session.commit()
     return user
 
+
+class Domain(Model, SerializerMixin):
+    __tablename__ = 'domains'
+    __public__ = ('id', 'domain_name')
+    __table_args__ = (
+            db.UniqueConstraint('organization_id', 'domain_name'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    # FQDN darf 255 Zeichen nicht ueberschreiten
+    _domain_name = db.Column('domain_name', db.String(255), nullable=False)
+    organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id', ondelete="CASCADE"), nullable=False)
+    organization = db.relationship('Organization', back_populates='domains')
+
+    @property
+    def domain_name(self):
+        return self._domain_name
+
+    @domain_name.setter
+    def domain_name(self, domain_name):
+        if not isinstance(domain_name, str):
+            raise TypeError('empty domain name.')
+        domain_name = domain_name.strip()
+        if not domain_name:
+            raise ValueError('empty domain name.')
+        if domain_name:
+            self._domain_name = domain_name
+
+    def delete(self):
+        if self.id:
+            domain = Domain.query.get(self.id)
+            db.session.delete(domain)
+
+
 # @login_manager.token_loader
 '''
 def load_token(token):
@@ -2174,3 +2214,6 @@ def load_user_from_request(request):
 
     # finally, return None if both methods did not login the user
     return None
+
+
+
