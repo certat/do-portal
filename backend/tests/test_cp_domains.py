@@ -19,6 +19,7 @@ class TDS:
     domain4 = 'domain4.at'
     domainupdate = 'domainupdated.at'
     domainwrong = ' '
+    domainother = 'domainother.at'
     testuser_nomember = {   "email": 'nomember@testuser.at',
                             "name": 'nomember testuser',
                             "password": 'Bla12345%',
@@ -28,6 +29,13 @@ class TDS:
                         }
     testuser_notadmin = {   "email": 'notadmin@testuser.at',
                             "name": 'not admin testuser',
+                            "password": 'Bla12345%',
+                            "birthdate": datetime.datetime.utcnow(),
+                            "title": 'TestTitle.',
+                            "origin": 'testdata'
+                        }
+    testuser_otheradm = {   "email": 'otheradmin@testuser.at',
+                            "name": 'other admin testuser',
                             "password": 'Bla12345%',
                             "birthdate": datetime.datetime.utcnow(),
                             "title": 'TestTitle.',
@@ -49,7 +57,7 @@ class TDS:
         return role
 
     @staticmethod
-    def adminuser():
+    def topadminuser():
         email='cert@master.at'
         user = User.query.filter_by(_email=email).one()
         assert user, 'test broken. admin user not found'
@@ -81,8 +89,24 @@ class TDS:
     @staticmethod
     def testuser_not_admin():
         org = TDS.getOrganization(TDS.orgnotadmin)
-        user = TDS.getUser(TDS.testuser_notadmin)
+        user = TDS.getUser(TDS.testuser_otheradm)
         role = TDS.notadminrole()
+        oxu = OrganizationMembership.query.filter_by(organization=org, user=user, membership_role=role).first()
+        if not oxu:
+            oxu = OrganizationMembership(
+                                        organization=org,
+                                        user=user,
+                                        membership_role=role)
+            db.session.add(oxu)
+            db.session.commit()
+        assert oxu, 'test broken. membership not found.'
+        return user
+
+    @staticmethod
+    def testuser_other_admin():
+        org = TDS.getOrganization(TDS.org2)
+        user = TDS.getUser(TDS.testuser_otheradm)
+        role = TDS.adminrole()
         oxu = OrganizationMembership.query.filter_by(organization=org, user=user, membership_role=role).first()
         if not oxu:
             oxu = OrganizationMembership(
@@ -125,18 +149,12 @@ class TDS:
 ###########################################################
 
 
-def test_testfunctions(client):
-    user1 = TDS.testuser_no_member()
-    user2 = TDS.testuser_no_member()
-    assert user1.id == user2.id
-
-
 def test_create_toporg_domain(client):
     org = TDS.getTopOrganization()
     count_domains = Domain.query.filter_by(organization_id=org.id).count()
     expectedcount = count_domains + 1
 
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
 
     rv = client.post(
         url_for('cp.add_cp_domain'),
@@ -147,15 +165,16 @@ def test_create_toporg_domain(client):
     )
     assert_msg(rv, value='Domain added', response_code=201)
 
-    assert expectedcount == Domain.query.filter_by(organization_id=org.id).count(), 'after insert domain: wrong count of domains'
+    assert expectedcount == Domain.query.filter_by(organization_id=org.id).count(), 'after insert domain: wrong count of domains by sql query'
+    assert expectedcount == org.domains.count(), 'after insert domain: wrong count of domains by Organization.domains'
     
 
 def test_create_neworg_domain(client):
     org = TDS.getOrganization(TDS.org1)
-    count_domains = Domain.query.filter_by(organization_id=org.id).count()
+    count_domains = org.domains.count()
     expectedcount = count_domains + 1
 
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
 
     rv = client.post(
         url_for('cp.add_cp_domain'),
@@ -166,15 +185,16 @@ def test_create_neworg_domain(client):
     )
     assert_msg(rv, value='Domain added', response_code=201)
 
-    assert expectedcount == Domain.query.filter_by(organization_id=org.id).count(), 'after insert domain: wrong count of domains'
+    assert expectedcount == Domain.query.filter_by(organization_id=org.id).count(), 'after insert domain: wrong count of domains by sql query'
+    assert expectedcount == org.domains.count(), 'after insert domain: wrong count of domains by Organization.domains'
 
 
 def test_create_neworg_existing_domain(client):
     org = TDS.getOrganization(TDS.org1)
-    count_domains = Domain.query.filter_by(organization_id=org.id).count()
+    count_domains = org.domains.count()
     expectedcount = count_domains
 
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
 
     rv = client.post(
         url_for('cp.add_cp_domain'),
@@ -184,15 +204,15 @@ def test_create_neworg_existing_domain(client):
         )
     )
     assert_msg(rv, value='already exists', response_code=422)
-    assert expectedcount == Domain.query.filter_by(organization_id=org.id).count(), 'after insert domain: wrong count of domains'
+    assert expectedcount == org.domains.count(), 'after insert domain: wrong count of domains'
 
 
 def test_create_same_domain_other_organization(client):
     org = TDS.getOrganization(TDS.org1)
-    count_domains = Domain.query.filter_by(organization_id=org.id).count()
+    count_domains = org.domains.count()
     expectedcount = count_domains + 1
 
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
 
     rv = client.post(
         url_for('cp.add_cp_domain'),
@@ -202,13 +222,13 @@ def test_create_same_domain_other_organization(client):
         )
     )
     assert_msg(rv, value='Domain added', response_code=201)
-    assert expectedcount == Domain.query.filter_by(organization_id=org.id).count(), 'after insert domain: wrong count of domains'
+    assert expectedcount == org.domains.count(), 'after insert domain: wrong count of domains'
 
 
 #test: create domain without any authorization for organization
 def test_create_domain_not_authorized(client):
     org = TDS.getOrganization(TDS.org1)
-    count_domains = Domain.query.filter_by(organization_id=org.id).count()
+    count_domains = org.domains.count()
     expectedcount = count_domains
 
     client.api_user = TDS.testuser_no_member()
@@ -221,7 +241,7 @@ def test_create_domain_not_authorized(client):
         )
     )
     assert_msg(rv, value='Unauthorized', response_code=401)
-    assert expectedcount == Domain.query.filter_by(organization_id=org.id).count(), 'after insert domain: wrong count of domains'
+    assert expectedcount == org.domains.count(), 'after insert domain: wrong count of domains'
 
 
 #test: create domain with authorization other then admin
@@ -243,10 +263,11 @@ def test_create_domain_wrong_role(client):
     assert_msg(rv, value='Unauthorized', response_code=401)
     assert expectedcount == Domain.query.count(), 'after insert domain: wrong count of domains'
 
+
 def test_get_domains_by_organization(client):
     org = TDS.getOrganization(TDS.org1)
 
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
 
     rv = client.get(
         url_for('cp.get_cp_organization_domains', organization_id=org.id),
@@ -261,10 +282,34 @@ def test_get_domains_by_organization(client):
     assert set(domains) == set(expected), 'Result set not as expected' 
 
 
+def test_get_domains_other_organization(client):
+    org = TDS.getOrganization(TDS.org2)
+    count_domains = org.domains.count()
+    expectedcount = count_domains + 1
+
+    client.api_user = TDS.testuser_other_admin()
+
+    rv = client.post(
+        url_for('cp.add_cp_domain'),
+        json=dict(
+            domain_name = TDS.domainother,
+            organization_id = org.id
+        )
+    )
+    assert_msg(rv, value='Domain added', response_code=201)
+    assert expectedcount == org.domains.count(), 'test broken. wrong count of domains'
+
+    org = TDS.getOrganization(TDS.org1)
+    rv = client.get(
+        url_for('cp.get_cp_organization_domains', organization_id=org.id),
+    )
+    assert_msg(rv, value='Unauthorized', response_code=401)
+
+
 def test_update_domain_wrong_name(client):
     newname=TDS.domainwrong
     domain = TDS.getDomain(TDS.org1, TDS.domain2)
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
     rv = client.put(
         url_for('cp.update_cp_domain',
                 domain_id=domain.id),
@@ -276,10 +321,8 @@ def test_update_domain_wrong_name(client):
 
 def test_create_test_ds_for_update_domain_existing(client):
     org = TDS.getTopOrganization()
-    count_domains = Domain.query.filter_by(organization_id=org.id).count()
-    expectedcount = count_domains + 1
 
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
 
     rv = client.post(
         url_for('cp.add_cp_domain'),
@@ -294,7 +337,7 @@ def test_create_test_ds_for_update_domain_existing(client):
 def test_update_domain_existing(client):
     newname=TDS.domain1
     domain = TDS.getDomain(TDS.org1, TDS.domain2)
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
     rv = client.put(
         url_for('cp.update_cp_domain',
                 domain_id=domain.id),
@@ -324,18 +367,18 @@ def test_update_domain_unauthorized(client):
 
 def test_update_domain(client):
     domain = TDS.getDomain(TDS.org1, TDS.domain3)
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
     rv = client.put(
         url_for('cp.update_cp_domain',
                 domain_id=domain.id),
         json=dict(domain_name=TDS.domainupdate)
     )
-    assert rv.status_code == 200
+    assert rv.status_code == 200, 'domain could not be updated'
 
 
 def test_get_domain(client):
     domain = TDS.getDomain(TDS.org1, TDS.domainupdate)
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
 
     rv = client.get(
         url_for('cp.get_cp_domain', domain_id=domain.id),
@@ -352,11 +395,12 @@ def test_get_domain_not_authorized(client):
     )
     assert_msg(rv, value='Unauthorized', response_code=401)
 
+
 def test_delete_domain_not_authorized(client):
     orgname = TDS.org1
     domain = TDS.getDomain(orgname, TDS.domainupdate)
     org = TDS.getOrganization(orgname)
-    count_domains = Domain.query.filter_by(organization_id=org.id).count()
+    count_domains = org.domains.count()
     expectedcount = count_domains
 
     client.api_user = TDS.testuser_not_admin()
@@ -365,40 +409,63 @@ def test_delete_domain_not_authorized(client):
         url_for('cp.delete_cp_domain', domain_id=domain.id)
     )
     assert_msg(rv, value='Unauthorized', response_code=401)
-    assert expectedcount == Domain.query.filter_by(organization_id=org.id).count(), 'after insert domain: wrong count of domains'
+    assert expectedcount == org.domains.count(), 'after insert domain: wrong count of domains'
+
 
 def test_delete_domain(client):
     orgname = TDS.org1
     domain = TDS.getDomain(orgname, TDS.domainupdate)
+    domainid = domain.id
     org = TDS.getOrganization(orgname)
     count_domains = Domain.query.filter_by(organization_id=org.id).count()
     expectedcount = count_domains - 1
 
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
 
     rv = client.delete(
         url_for('cp.delete_cp_domain', domain_id=domain.id)
     )
     assert_msg(rv, value='Domain deleted', response_code=200)
-    assert expectedcount == Domain.query.filter_by(organization_id=org.id).count(), 'after insert domain: wrong count of domains'
+    assert expectedcount == org.domains.count(), 'after insert domain: wrong count of domains'
+
+    #test get on deleted domain
+    rv = client.get(
+        url_for('cp.get_cp_domain', domain_id=domainid),
+    )
+    assert_msg(rv, value='Resource not found', response_code=404)
+
+    #test update on deleted domain
+    rv = client.put(
+        url_for('cp.update_cp_domain',
+                domain_id=domainid),
+        json=dict(domain_name=TDS.domainupdate)
+    )
+    assert_msg(rv, value='Resource not found', response_code=404)
 
 
-def test_delete_organization(client):
+def test_delete_organization_and_getdomains(client):
     orgname = TDS.org1
     org = TDS.getOrganization(orgname)
-    count_domains = Domain.query.filter_by(organization_id=org.id).count()
+    count_domains = org.domains.count()
     count_all_domains = Domain.query.count()
     expectedcount = count_all_domains - count_domains
 
-    client.api_user = TDS.adminuser()
+    client.api_user = TDS.topadminuser()
 
     rv = client.delete(
         url_for('cp.delete_cp_organization', org_id=org.id)
     )
     assert_msg(rv, value='Organization deleted', response_code=200)
-    assert 0 == Domain.query.filter_by(organization_id=org.id).count(), 'after delete organization: existing domains for organization'
+    assert Organization.query.filter_by(abbreviation=orgname).count() == 0, 'Organization has not been deleted properly.'
+    assert 0 == org.domains.count(), 'after delete organization: existing domains for organization'
     assert expectedcount == Domain.query.count(), 'after delete organization: wrong count for domains'
 
-    
+    #try to query domains on deleted organization
+    rv = client.get(
+        url_for('cp.get_cp_organization_domains', organization_id=org.id),
+    )
+    assert_msg(rv, value='Resource not found', response_code=404)
 
+
+    
 

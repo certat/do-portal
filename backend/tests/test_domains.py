@@ -36,10 +36,14 @@ def test_create_domain(client):
     db.session.commit()
     assert newdomain, 'domain not created'
 
+    domain = Domain.query.get(newdomain.id)
+    assert domain, 'domain created but not found with get'
     domain = Domain.query.filter_by(_domain_name=TDS.domain1).first()
-    assert domain, 'domain created but not found by domain_name.'
-    domain = Domain.query.filter_by(organization_id=org.id).first()
-    assert domain, 'domain created but not found by organization_id.'
+    assert domain, 'domain created but not found by domain_name'
+    domain = org.domains.filter_by(_domain_name=TDS.domain1).first()
+    assert domain, 'domain created but not found by organization_id'
+    orgtest = domain.organization
+    assert org.id == orgtest.id, 'organization not found by Domain.organization'
 
 
 def test_create_existing_domain(client):
@@ -77,36 +81,29 @@ def test_create_wrong_domain(client):
 
     domain = Domain.query.filter_by(_domain_name=TDS.domainwrong).first()
     assert not domain, 'wrong domain created'
-    domain = Domain.query.filter_by(organization_id=org.id).first()
-    assert not domain, 'wrong domain found by organization_id.'
+    domain = org.domains.first()
+    assert not domain, 'wrong domain found by organization.'
     db.session.rollback()
-
-
-@pytest.mark.skip('domain.mark_as_deleted not implemented. not yet decided')
-def test_mark_as_deleted_organization_alternate_version(client):
-    org = Organization.query.filter_by(abbreviation=TDS.org1, deleted=0).first()
-    assert org, 'test broken. organization not found'
-
-    domains = Domain.query.filter_by(organization_id=org.id, deleted=0)
-    assert domains.count() > 0, 'test broken. no domains found for organization'
-
-    org.mark_as_deleted()
-    db.session.commit()
-    domains = Domain.query.filter_by(organization_id=org.id, deleted=0)
-    assert domains.count() == 0, 'domains not marked as deleted'
 
 
 def test_mark_as_deleted_organization(client):
     org = Organization.query.filter_by(abbreviation=TDS.org1, deleted=0).first()
     assert org, 'test broken. organization not found'
-
-    domains = Domain.query.filter_by(organization_id=org.id)
-    assert domains.count() > 0, 'test broken. no domains found for organization'
+    assert org.domains.count() > 0, 'test broken. no domains found for organization'
+    count_not_org_domains = Domain.query.filter(Domain.organization_id != org.id).count()
+    assert count_not_org_domains != 0, 'test broken. no domains of other organizations found'
 
     org.mark_as_deleted()
+    db.session.add(org)
     db.session.commit()
+    # organization should not be selected, when deleted=1 (FilteredQuery)
+    o = Organization.query.filter_by(abbreviation=TDS.org1).first()
+    assert not o, 'test broken. organization found after mark_as_deleted.'
     domains = Domain.query.filter_by(organization_id=org.id)
     assert domains.count() == 0, 'domains not deleted while organization.mark_as_deleted'
+    assert org.domains.count() == 0, 'domains not deleted while organization.mark_as_deleted'
+    assert count_not_org_domains == Domain.query.filter(Domain.organization_id != org.id).count(),\
+            'domains of other organizations possibly deleted'
 
 
 def test_delete_domain(client):
@@ -116,10 +113,15 @@ def test_delete_domain(client):
     newdomain = Domain(domain_name=TDS.domain2, organization=org)
     db.session.add(newdomain)
     db.session.commit()
-    assert newdomain, 'domain not created'
+    assert newdomain, 'test broken. domain not created'
+
+    domain = org.domains.filter_by(_domain_name=TDS.domain2).one()
+    assert domain, 'test broken. Domain not found'
+    domain.delete()
+    db.session.commit()
 
     domain = Domain.query.filter_by(_domain_name=TDS.domain2).first()
-    assert domain, 'domain created but not found by domain_name.'
-    domain = Domain.query.filter_by(organization_id=org.id).first()
-    assert domain, 'domain created but not found by organization_id.'
+    assert not domain, 'domain deleted, but found by domain_name.'
+    domain = org.domains.first()
+    assert not domain, 'domain deleted but found by organization.'
 

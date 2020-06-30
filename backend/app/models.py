@@ -1443,7 +1443,8 @@ class Organization(Model, SerializerMixin):
         backref='notification_settings_for_organization'
     )
 
-    domains = db.relationship('Domain', back_populates='organization')
+    #domains = db.relationship('Domain', back_populates='organization', lazy='dynamic',  order_by='Domain._domain_name')
+    domains = db.relationship('Domain', back_populates='organization', lazy='dynamic')
 
     @ripe_handles.setter
     def ripe_handles(self, ripe_handles):
@@ -1522,8 +1523,9 @@ class Organization(Model, SerializerMixin):
         self.ts_deleted = datetime.datetime.utcnow()
         for um in self.organization_memberships:
             um.mark_as_deleted(delete_last_membership = True)
-        for domain in self.domains:
-            domain.delete()
+        #for domain in self.domains:
+        #    domain.delete()
+        self.domains.delete()
 
     # STUB
     def has_child_organizations(self):
@@ -2089,7 +2091,6 @@ class Domain(Model, SerializerMixin):
     )
 
     id = db.Column(db.Integer, primary_key=True)
-    #deleted = db.Column(db.Integer, default=0)
     # FQDN darf 255 Zeichen nicht ueberschreiten
     _domain_name = db.Column('domain_name', db.String(255), nullable=False)
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id', ondelete="CASCADE"), nullable=False)
@@ -2108,9 +2109,6 @@ class Domain(Model, SerializerMixin):
             raise ValueError('empty domain name.')
         if domain_name:
             self._domain_name = domain_name
-
-    #def mark_as_deleted(self):
-    #    self.deleted = 1
 
     def delete(self):
         if self.id:
