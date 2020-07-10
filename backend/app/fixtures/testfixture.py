@@ -103,11 +103,14 @@ class testdata:
             membership_role = role,
          )
          db.session.commit()
-      for domain in data_loaded['domain']:
-         org = Organization.query.filter_by(abbreviation=domain['org']).first()
-         d = Domain.query.filter_by(_domain_name=domain['domain_name'], organization_id=org.id).first()
-         if not d:
-            d = Domain(domain_name=domain['domain_name'], organization=org)
+      if 'domain' in data_loaded:
+         for domain in data_loaded['domain']:
+            org = Organization.query.filter_by(abbreviation=domain['org']).first()
+            d = Domain.query.filter_by(_domain_name=domain['domain_name'], organization_id=org.id).first()
+            if not d:
+               d = Domain(domain_name=domain['domain_name'], organization=org)
+               db.session.add(d)
+            db.session.commit()
 
    def print():
       """output sample data"""
