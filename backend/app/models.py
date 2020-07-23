@@ -2102,7 +2102,7 @@ def load_user(user_id):
 
 class Domain(Model, SerializerMixin):
     __tablename__ = 'domains'
-    __public__ = ('id', 'domain_name')
+    __public__ = ('id', 'organization_id', 'domain_name')
     __table_args__ = (
             db.UniqueConstraint('organization_id', 'domain_name'),
     )
