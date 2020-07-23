@@ -118,7 +118,6 @@ def update_cp_domain(domain_id):
     if not domain.organization_id:
         return ApiResponse({'message': 'domain has no organization'}, 403, {})
  
-    #org = Organization.query.filter(Organization.id == domain.organization_id).first()
     org = domain.organization
     if not org:
         return ApiResponse({'message': 'organization doesnt exist'}, 400, {})

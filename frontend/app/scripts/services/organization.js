@@ -46,5 +46,11 @@ angular.module('cpApp')
         url: config.apiConfig.webServiceUrl+'/ripe/settings/:org_id/:ripe_handle',
         method: 'PUT',
       },
+      domains: {
+        url: config.apiConfig.webServiceUrl+'/organizations/:org_id/domains',
+        method: 'GET',
+        isArray: false,
+        withCredentials: true
+      }
     });
   });

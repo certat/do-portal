@@ -7,3 +7,5 @@ secret.json
 /app/scripts/services/config.js
 config/envs/devel.json
 config/envs/production.json
+app/.vscode/
+

@@ -1,0 +1,38 @@
+<div class="panel panel-primary">
+<form novalidate name="myForm">
+  <div class="panel-heading">
+      <h3 class="panel-title">"New Domain"</h3>
+  </div>
+  <div class="panel-body">
+    <div class="well">
+      <div class="row show-grid">
+        <div class="col-xs-12"><strong>Domain Details</strong></div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Organization</div>
+        <div class="col-xs-10">
+          {{organization.id?"":"Organization not found"}}
+          <a ui-sref="organizations({ id: organization.id })">{{ organization.full_name }}</a>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Domain name</div>
+        <div class="col-xs-10">
+          <input name="domain_name" type="text" class="form-control input-sm"
+                 placeholder="domain name"
+                 ng-model="domain.domain_name">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-footer">
+    <button class="btn btn-default btn-sm" ng-click="create_domain()">
+      <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+      Create
+    </button>
+</form>
+</div>
+

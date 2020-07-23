@@ -17,4 +17,4 @@ install/*_roles.yaml
 app/static/data/*
 !app/static/data/99999999.json.zip
 data/*
-
+misc/migrations/migrations/
