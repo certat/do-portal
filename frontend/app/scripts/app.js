@@ -153,6 +153,19 @@ angular
           }
         }
       })
+      .state('domain_create', {
+        url: '/domains/:org_id',
+        views: {
+          header: {
+            templateUrl: 'views/header.html',
+            controller: 'HeaderCtrl'
+          },
+          content: {
+            templateUrl: 'views/domain-create.html',
+            controller: 'DomaincreateCtrl'
+          }
+        }
+      })
       .state('user_list', {
         url: '/user_list',
         views: {

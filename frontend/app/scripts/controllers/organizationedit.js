@@ -8,7 +8,7 @@
  * Controller of the cpApp
  */
 angular.module('cpApp')
-  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Auth, GridData, notify, $stateParams, $q, $state, uiGridConstants, config) {
+  .controller('OrganizationeditCtrl', function ($scope, $filter, $uibModal, Organization, User, Membership, Domain, Auth, GridData, notify, $stateParams, $q, $state, uiGridConstants, config) {
 
     function _array2hash(arr) {
         var hash = {};
@@ -52,6 +52,13 @@ angular.module('cpApp')
                     return resp.organization_memberships;
                   }, function(){});
     };
+
+    var loadDomains = function(org_id) {
+      return Organization.domains({'org_id': org_id}).$promise
+            .then(function(resp) {
+                return resp.domains;
+            }, function(){});
+    }
 
     var loadOrganization = function(org_id) {
       return Organization.query({'id': org_id}).$promise
@@ -103,10 +110,11 @@ angular.module('cpApp')
     };
 
     var loadParallel = function() {
-        return $q.all([ loadUsers(), loadRoles(), loadMemberships(), loadOrganization($stateParams.id) ])
+        return $q.all([ loadUsers(), loadRoles(), loadDomains($stateParams.id), loadMemberships(), loadOrganization($stateParams.id) ])
             .then( function( result ) {
               $scope.users    = _array2hash(result.shift());
               $scope.roles    = _array2hash(result.shift());
+              $scope.domains  = _array2hash(result.shift());
               var memberships = result.shift().filter(function(m){return m.organization_id === parseInt($stateParams.id);});
               var gridData = [];
               $scope.role_names = {};
@@ -290,4 +298,35 @@ angular.module('cpApp')
         }
       );
     };
+    $scope.edit_domain = function(domain) {
+      domain.dirty = true;
+    };
+    $scope.update_domain = function(domain) {
+      var obj = angular.copy(domain);
+      delete obj.dirty;
+      return Domain.update({'id': obj.id}, obj, 
+        function(resp) {
+          delete domain.dirty;
+          notify({classes: 'notify-success', message: resp.message});
+        },
+        function() {
+        }
+      );
+    };
+    $scope.delete_domain = function(domain) {
+      if( window.confirm('Do you really want to delete the domain ' + domain.domain_name + ' for this organization?') ) {
+        return Domain.delete({'id': domain.id}, domain, 
+          function(resp) {
+            loadDomains($scope.org.id).then(function(result) {
+              $scope.domains = result;
+            },
+            function() {
+            });
+            notify({classes: 'notify-success', message: resp.message});
+          },
+          function() {
+          }
+        );
+      }
+    }
   });
