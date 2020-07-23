@@ -279,7 +279,7 @@ def test_get_domains_by_organization(client):
     got = list(rv.json.values())
     domains = [i['domain_name'] for i in got[0]]
     domains.sort()
-    assert set(domains) == set(expected), 'Result set not as expected' 
+    assert set(domains) == set(expected), 'Result set not as expected'
 
 
 def test_get_domains_other_organization(client):
@@ -384,6 +384,11 @@ def test_get_domain(client):
         url_for('cp.get_cp_domain', domain_id=domain.id),
     )
     assert rv.status_code == 200
+    expectedkeys = ['id', 'domain_name', 'organization_id']
+    expectedkeys.sort()
+    gotkeys = list(rv.json.keys())
+    gotkeys.sort()
+    assert gotkeys == expectedkeys
 
 
 def test_get_domain_not_authorized(client):
