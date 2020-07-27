@@ -42,17 +42,21 @@ def get_cp_domain(domain_id):
         SHOULD NOT be repeated.
     :status 404: Not found
     """
-    domain = Domain.query.get_or_404(domain_id)
+    domain = Domain.query.get(domain_id)
     if not domain:
         abort(404)
 
-    #org = Organization.get(domain.organization_id)
     org = domain.organization
     if not org:
         abort(404)
     if not g.user.may_handle_organization(org):
         abort(401)
-    return ApiResponse(domain.serialize())
+
+    #serialize() kills keys where value == 0
+    domain_serialized = domain.serialize()
+    if domain.notification_interval == 0:
+        domain_serialized['notification_interval'] = 0
+    return ApiResponse(domain_serialized)
 
 
 @cp.route('/domains', methods=['POST'])

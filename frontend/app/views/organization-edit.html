@@ -134,14 +134,34 @@
   <div class="panel-body">
     <div class="row show-grid">
       <div class="col-xs-2"><strong>Domain name</strong></div>
+      <div class="col-xs-2"><strong>Protocol</strong></div>
+      <div class="col-xs-2"><strong>Format</strong></div>
+      <div class="col-xs-2"><strong>Interval [s]</strong></div>
     </div>
     <div ng-repeat="domain in domains">
       <div class="row show-grid">
         <div ng-if="!(edit && domain.dirty)">
           <div class="col-xs-2">{{domain.domain_name}}</div>
+          <div class="col-xs-2">{{domain.delivery_protocol}}</div>
+          <div class="col-xs-2">{{domain.delivery_format}}</div>
+          <div class="col-xs-2">{{domain.notification_interval}}</div>
         </div>
         <div ng-if="edit && domain.dirty">
           <div class="col-xs-2"><input class="form-control input-sm" required ng-model="domain.domain_name"></div>
+          <div class="col-xs-2">
+            <select class="form-control input-sm" required ng-model="domain.delivery_protocol">
+              <option ng-repeat="proto in ['Mail', 'REST API', 'AMQP']" ng-checked="proto === domain.delivery_protocol" value="{{proto}}">{{proto}}</option>
+            </select>
+          </div>
+          <div class="col-xs-2">
+            <select class="form-control input-sm" required ng-model="domain.delivery_format">
+              <option ng-repeat="format in ['CSV', 'JSON']" ng-checked="format === domain.delivery_format" value="{{format}}">{{format}}</option>
+            </select>
+          </div>
+          <div class="col-xs-2">
+            <input class="form-control input-sm" required ng-model="domain.notification_interval">
+          </div>
+
           <div class="col-xs-2">
             <button class="btn btn-default btn-sm" ng-click="update_domain(domain)">
               <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>

@@ -384,7 +384,7 @@ def test_get_domain(client):
         url_for('cp.get_cp_domain', domain_id=domain.id),
     )
     assert rv.status_code == 200
-    expectedkeys = ['id', 'domain_name', 'organization_id']
+    expectedkeys = ['id', 'domain_name', 'organization_id', 'delivery_protocol', 'delivery_format', 'notification_interval']
     expectedkeys.sort()
     gotkeys = list(rv.json.keys())
     gotkeys.sort()
