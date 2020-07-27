@@ -25,6 +25,33 @@
                  ng-model="domain.domain_name">
         </div>
       </div>
+
+       <div class="row show-grid">
+        <div class="col-xs-2">Protocol</div>
+        <div class="col-xs-10">
+          <select class="form-control input-sm" required ng-model="domain.delivery_protocol">
+            <option ng-repeat="proto in ['Mail', 'REST API', 'AMQP']" ng-checked="proto === domain.delivery_protocol" value="{{proto}}">{{proto}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Format</div>
+        <div class="col-xs-10">
+          <select class="form-control input-sm" required ng-model="domain.delivery_format">
+            <option ng-repeat="format in ['CSV', 'JSON']" ng-checked="format === domain.delivery_format" value="{{format}}">{{format}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="col-xs-2">Interval [s]</div>
+        <div class="col-xs-10">
+          <div class="col-xs-2">
+            <input class="form-control input-sm" required ng-model="domain.notification_interval">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

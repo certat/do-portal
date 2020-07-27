@@ -2102,7 +2102,7 @@ def load_user(user_id):
 
 class Domain(Model, SerializerMixin):
     __tablename__ = 'domains'
-    __public__ = ('id', 'organization_id', 'domain_name')
+    __public__ = ('id', 'organization_id', 'domain_name', 'delivery_protocol', 'delivery_format', 'notification_interval')
     __table_args__ = (
             db.UniqueConstraint('organization_id', 'domain_name'),
     )
@@ -2112,6 +2112,9 @@ class Domain(Model, SerializerMixin):
     _domain_name = db.Column('domain_name', db.String(255), nullable=False)
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id', ondelete="CASCADE"), nullable=False)
     organization = db.relationship('Organization', back_populates='domains')
+    delivery_protocol = db.Column(db.Enum('Mail', 'REST API', 'AMQP', name='delivery_protocol_enum'), default='Mail')
+    delivery_format = db.Column(db.Enum('CSV', 'JSON', name='delivery_format_enum'), default='CSV')
+    notification_interval = db.Column(db.Integer, default=0)
 
     @property
     def domain_name(self):

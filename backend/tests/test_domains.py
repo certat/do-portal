@@ -14,6 +14,7 @@ class TDS:
     domain1 = 'domain1.at'
     domain2 = 'domain2.at'
     domainwrong = ' '
+    domainwrongenum = 'domain.wrong.enum.at'
 
     @staticmethod
     def getOrganization(orgname):
@@ -77,7 +78,7 @@ def test_create_wrong_domain(client):
         db.session.rollback()
         exception_occured = True
 
-    assert exception_occured or newdomain, 'wrong domain created'
+    assert exception_occured, 'wrong domain created'
 
     domain = Domain.query.filter_by(_domain_name=TDS.domainwrong).first()
     assert not domain, 'wrong domain created'
@@ -124,4 +125,32 @@ def test_delete_domain(client):
     assert not domain, 'domain deleted, but found by domain_name.'
     domain = org.domains.first()
     assert not domain, 'domain deleted but found by organization.'
+
+
+def test_create_domain_wrong_enum(client):
+    org = TDS.getOrganization(TDS.org1)
+    assert org, 'test broken. organization not found'
+
+    exception_occured = False
+    try:
+       newdomain = Domain(domain_name=TDS.domainwrongenum, organization=org, delivery_protocol='xyz')
+       db.session.add(newdomain)
+       db.session.commit()
+    except:
+        db.session.rollback()
+        exception_occured = True
+    assert exception_occured, 'domain created with wrong enum.'
+
+    exception_occured = False
+    try:
+       newdomain = Domain(domain_name=TDS.domainwrongenum, organization=org, delivery_format='xyz')
+       db.session.add(newdomain)
+       db.session.commit()
+    except:
+        db.session.rollback()
+        exception_occured = True
+    assert exception_occured, 'domain created with wrong enum.'
+
+    domain = Domain.query.filter_by(_domain_name=TDS.domainwrongenum).first()
+    assert not domain, 'domain created with wrong enum, found by domain_name.'
 
