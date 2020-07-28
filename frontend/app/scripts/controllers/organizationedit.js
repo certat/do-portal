@@ -15,17 +15,24 @@ angular.module('cpApp')
         arr.forEach(function(i) { hash[i.id] = i; });
         return hash;
     }
+    function _array2hash_domains(arr) {
+        var hash = {};
+        if (arr) {
+          arr.forEach(function(i) { hash[i.domain_name] = i; });
+        }
+        return hash;
+    }
     function get_role_options(roles) {
         var roleOptions = [];
         for(var role_name in roles) {
           roleOptions.push({value: role_name, label: role_name});
         }
         return roleOptions.sort(function(a,b){
-	  var nameA = a.label.toUpperCase();
-	  var nameB = b.label.toUpperCase();
-	  if (nameA < nameB) { return -1; }
-	  if (nameA > nameB) { return 1; }
-	  return 0;
+          var nameA = a.label.toUpperCase();
+          var nameB = b.label.toUpperCase();
+          if (nameA < nameB) { return -1; }
+          if (nameA > nameB) { return 1; }
+          return 0;
         });
     }
     function update_role_filter() {
@@ -56,7 +63,7 @@ angular.module('cpApp')
     var loadDomains = function(org_id) {
       return Organization.domains({'org_id': org_id}).$promise
             .then(function(resp) {
-                return resp.domains;
+                return resp.domains.sort(function(a,b){return a.domain_name > b.domain_name;});
             }, function(){});
     }
 
@@ -114,7 +121,7 @@ angular.module('cpApp')
             .then( function( result ) {
               $scope.users    = _array2hash(result.shift());
               $scope.roles    = _array2hash(result.shift());
-              $scope.domains  = _array2hash(result.shift());
+              $scope.domains  = _array2hash_domains(result.shift());
               var memberships = result.shift().filter(function(m){return m.organization_id === parseInt($stateParams.id);});
               var gridData = [];
               $scope.role_names = {};

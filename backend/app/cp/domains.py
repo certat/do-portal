@@ -27,7 +27,14 @@ def get_cp_organization_domains(organization_id):
         abort(404)
     if not g.user.may_handle_organization(org):
         abort(401)
-    return ApiResponse({'domains': [d.serialize() for d in org.domains.order_by(Domain._domain_name.asc())]})
+    #return ApiResponse({'domains': [d.serialize() for d in org.domains.order_by(Domain._domain_name.asc())]})
+    domains_serialized = []
+    for domain in org.domains:
+        domain_serialized = domain.serialize()
+        if domain.notification_interval == 0:
+            domain_serialized['notification_interval'] = 0
+        domains_serialized.append(domain_serialized)
+    return ApiResponse({'domains': domains_serialized})
 
 
 @cp.route('/domains/<int:domain_id>', methods=['GET'])
