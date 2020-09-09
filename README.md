@@ -1,5 +1,7 @@
 # Constituency Portal
 
+**Important: This project is in maintenance mode and will only receive bug fixes, but no new features. A new version of this software is being developed.**
+
 This is a web-based application for managing contact information with network information, self-administration and statistics integration.
 It is used by CERT.at/GovCERT.at/Austrian Energy CERT to maintain contact information for customers and network owners
 
